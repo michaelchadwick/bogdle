@@ -93,6 +93,9 @@ section#game {
   max-width: 500px;
   width: 100%;
 }
+section#game #score {
+  text-align: center;
+}
 section#game #guess {
   border: 1px solid #529952;
   color: #111;
@@ -113,7 +116,7 @@ section#game #guess.valid.first-guess {
   color: #529952;
 }
 section#game #guess.valid.not-first-guess {
-  color: #192e19;
+  color: #232e19;
 }
 
 section#game #board-container {
@@ -131,8 +134,12 @@ section#game #board-container #board {
   padding: 10px;
   width: 300px;
 }
+section#game #keyboard {
+  margin: 20px auto 0;
+}
 section#game #keyboard button {
   font-size: 20px;
+  width: 100px;
 }
 
 .row {
@@ -158,9 +165,90 @@ section#game #keyboard button {
   border: 2px solid #529952;
   cursor: pointer;
 }
-.tile:hover,
+.tile[data-state='tbd']:hover {
+  background-color: #6dc96d;
+  border: 2px solid #333;
+  color: #fff;
+}
+.tile:disabled,
+.tile[data-state="disabled"] {
+  background-color: #eee;
+  color: #ddd;
+  cursor: not-allowed;
+}
 .tile[data-state='selected'] {
   background-color: #529952;
   border: 2px solid #333;
   color: #fff;
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%; 
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.2); /* Black w/ opacity */
+}
+
+/* The Close Button */
+.modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  height: 24px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 24px;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2px 16px;
+}
+
+/* Modal Content */
+.modal-content {
+  animation: SlideIn 200ms;
+  background-color: #fefefe;
+  border: 1px solid #888;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  margin: auto;
+  overflow-y: auto;
+  padding: 16px;
+  position: relative;
+  width: 80%;
+}
+
+/* Add Animation */
+@keyframes SlideIn {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1
+  }
 }

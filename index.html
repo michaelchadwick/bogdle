@@ -41,8 +41,8 @@
 <body>
   <header>
     <div class="menu-left">
-      <button id="help-button" class="icon" aria-label="Help" tabindex="-1">
-        <i class="fa-solid fa-bars"></i>
+      <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
+        <i class="fa-solid fa-question"></i>
       </button>
     </div>
 
@@ -51,10 +51,10 @@
     </div>
 
     <div class="menu-right">
-      <button id="statistics-button" class="icon" aria-label="Statistics" tabindex="-1">
+      <button id="button-stats" class="icon" aria-label="Statistics" tabindex="-1">
         <i class="fa-solid fa-chart-simple"></i>
       </button>
-      <button id="settings-button" class="icon" aria-label="Settings" tabindex="-1">
+      <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
         <i class="fa-solid fa-gear"></i>
       </button>
     </div>
@@ -63,6 +63,8 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <section id="game">
+    <section id="score"><span id="score-guessed"></span> of <span id="score-total"></span> words</section>
+
     <section id="guess"></section>
 
     <div id="board-container">
@@ -90,15 +92,23 @@
         <button id="buttonSubmit" disabled="">
           <i class="fa-solid fa-check"></i>
         </button>
-        <button id="buttonBackspace">
+        <button id="buttonBackspace" disabled="">
           <i class="fa-solid fa-backspace"></i>
         </button>
-        <button id="buttonShuffle">
+        <button id="buttonShuffle" disabled="">
           <i class="fa-solid fa-shuffle"></i>
         </button>
       </div>
     </div>
   </section>
+
+  <div id="bogdle-modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="bogdle-modal-close" class="modal-close">&times;</span>
+      <div id="bogdle-modal-body" class="modal-body"></div>
+    </div>
+  </div>
 
   <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

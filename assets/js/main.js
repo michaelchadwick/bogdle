@@ -1,15 +1,21 @@
 this.bogdle = this.bogdle || {}
 this.bogdle.selected = []
 this.bogdle.solutionSet = {
-  'wheatmeal': 0,
-  'meal': 0,
-  'mate': 0,
-  'wheel': 0,
-  'wet': 0,
-  'mat': 0,
-  'eat': 0
+  'eat': 0,
+  'hat': 0,
+  'wet': 0
 }
+this.bogdle.solutionSize = Object.keys(this.bogdle.solutionSet).length
 
+this.bogdle.btnHelp = document.getElementById('button-help')
+this.bogdle.btnStats = document.getElementById('button-stats')
+this.bogdle.btnSettings = document.getElementById('button-settings')
+
+this.bogdle.modal = document.getElementById('bogdle-modal')
+this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
+
+this.bogdle.scoreGuessed = document.getElementById('score-guessed')
+this.bogdle.scoreTotal = document.getElementById('score-total')
 this.bogdle.guess = document.getElementById('guess')
 this.bogdle.guessIsValid = false
 this.bogdle.tiles = document.getElementsByClassName('tile')
@@ -17,55 +23,119 @@ this.bogdle.btnSubmit = document.getElementById('buttonSubmit')
 this.bogdle.btnBackspace = document.getElementById('buttonBackspace')
 this.bogdle.btnShuffle = document.getElementById('buttonShuffle')
 
-Array.from(this.bogdle.tiles).forEach(tile => {
-  tile.addEventListener('click', (t) => {
-    var tileStatus = t.target.dataset.state
-    
-    if (tileStatus == 'tbd') {
-      // change tile status
-      t.target.dataset.state = 'selected'
+this.bogdle.gameState = "IN_PROGRESS"
 
-      // push another selected tile onto selected array
-      this.bogdle.selected.push(t.target.dataset.pos)
+function addEventListeners() {
+  // tile interaction
+  Array.from(this.bogdle.tiles).forEach(tile => {
+    tile.addEventListener('click', (t) => {
+      var tileStatus = t.target.dataset.state
+      
+      if (tileStatus == 'tbd') {
+        // change tile status
+        t.target.dataset.state = 'selected'
 
-      // add selected tile to guess
-      this.bogdle.guess.innerHTML += t.target.innerHTML
+        // push another selected tile onto selected array
+        this.bogdle.selected.push(t.target.dataset.pos)
+
+        // add selected tile to guess
+        this.bogdle.guess.innerHTML += t.target.innerHTML
+
+        checkGuess()
+      }
+    })
+  })
+
+  // buttons to open modals
+  this.bogdle.btnHelp.addEventListener('click', () => modalOpen('help'))
+  this.bogdle.btnStats.addEventListener('click', () => modalOpen('stats'))
+  this.bogdle.btnSettings.addEventListener('click', () => modalOpen('settings'))
+
+  document.getElementById('bogdle-modal-close').onclick = function() {
+    modalClose()
+  }
+
+  // submit word
+  this.bogdle.btnSubmit.addEventListener('click', () => {
+    submitWord(this.bogdle.guess.innerHTML)
+  })
+
+  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
+  document.addEventListener('keydown', (e) => {
+    if (e.code == 'Enter') {
+      submitWord(this.bogdle.guess.innerHTML)
+    }
+    if (e.code == 'Backspace' || e.code == 'Delete') {
+      removeLastGuessLetter()
+    }
+  })
+  // use backspace
+  this.bogdle.btnBackspace.addEventListener('click', () => {
+    removeLastGuessLetter()
+  })
+}
+
+// modals
+function modalOpen(type) {
+  this.bogdle.modal.style.display = "flex";
+
+  switch(type) {
+    case 'help':
+      this.bogdle.modalBody.innerHTML = `
+        It's Boggle! Choose letters to make words. Each word is 3-9 letters long. Once you get them all, a helpful modal will pop up congratulating you. Isn't that grand?
+      `
+      break
+    case 'stats':
+      this.bogdle.modalBody.innerHTML = 'stats'
+      break
+    case 'settings':
+      this.bogdle.modalBody.innerHTML = 'settings'
+      break
+    case 'win':
+      this.bogdle.modalBody.innerHTML = 'You Win!'
+      break
+  }
+}
+
+function modalClose() {
+  this.bogdle.modal.style.display = "none";
+}
+
+function removeLastGuessLetter() {
+  if (this.bogdle.gameState == "IN_PROGRESS") {
+    // remove last position from selected array
+    if (this.bogdle.selected.length) {
+      var last = this.bogdle.selected.pop()
+
+      Array.from(this.bogdle.tiles).forEach(tile => {
+        if (tile.dataset.pos == last) {
+          tile.dataset.state = 'tbd'
+        }
+      })
+    }
+
+    // remove last letter of active guess
+    if (this.bogdle.guess.innerHTML.length) {
+      this.bogdle.guess.innerHTML = this.bogdle.guess.innerHTML.slice(0, this.bogdle.guess.innerHTML.length - 1)
 
       checkGuess()
     }
-  })
-})
-
-this.bogdle.btnSubmit.addEventListener('click', () => {
-  submitValid()
-})
-this.bogdle.btnBackspace.addEventListener('click', () => {
-  if (this.bogdle.guess.innerHTML.length) {
-    this.bogdle.guess.innerHTML = this.bogdle.guess.innerHTML.slice(0, this.bogdle.guess.innerHTML.length - 1)
-
-    checkGuess()
   }
-  if (this.bogdle.selected.length) {
-    var last = this.bogdle.selected.pop()
-    Array.from(this.bogdle.tiles).forEach(tile => {
-      if (tile.dataset.pos == last) {
-        tile.dataset.state = 'tbd'
-        console.log('this.bogdle.selected', this.bogdle.selected)
-      }
-    })
-  }
-})
+}
 
 function checkGuess() {
-  console.log('checking guess')
-
   // reset classes
   this.bogdle.guess.classList.remove('valid', 'first-guess', 'not-first-guess')
 
+  // player entered at least one letter
+  if (this.bogdle.guess.innerHTML.length > 0) {
+    this.bogdle.btnBackspace.removeAttribute('disabled')
+  } else {
+    this.bogdle.btnBackspace.setAttribute('disabled', '')
+  }
+
   // player entered valid word length
   if (this.bogdle.guess.innerHTML.length > 2) {
-    console.log('guess length is valid')
-
     var key = this.bogdle.guess.innerHTML
 
     // player guessed a valid word
@@ -87,24 +157,38 @@ function checkGuess() {
       disableSubmit()
     }
   } else { // player guessed an invalid word (not long enough)
-    console.log('guess length is invalid')
-
     this.bogdle.guessIsValid = false
+
     disableSubmit()
   }
 }
 
-function submitValid() {
-  if (this.bogdle.guessIsValid && !this.bogdle.solutionSet[key]) {
-    var key = this.bogdle.guess.innerHTML
-    console.log('yay for submit', key)
-    this.bogdle.solutionSet[key] = 1
-    console.log('key has been marked', this.bogdle.solutionSet)
-    this.bogdle.guess.innerHTML = ''
-    this.bogdle.guess.classList.remove('valid')
+function submitWord(word) {
+  if (this.bogdle.gameState == "IN_PROGRESS") {
+    if (word.length > 2) {
+      if (this.bogdle.guessIsValid && !this.bogdle.solutionSet[word]) {
+        this.bogdle.solutionSet[word] = 1
+        
+        increaseScore()
+        resetInput()
+        saveProgress()
 
-    resetTiles()
+        // check win state
+        checkWinState()
+      } else {
+        alert('Invalid word')
+      }
+    } else {
+      alert('Not enough letters')
+    }
   }
+}
+
+function increaseScore() {
+  // increase score
+  var curGuessed = parseInt(this.bogdle.scoreGuessed.innerHTML)
+  var newAmt = curGuessed += 1
+  this.bogdle.scoreGuessed.innerHTML = newAmt.toString()
 }
 
 function disableSubmit() {
@@ -113,9 +197,61 @@ function disableSubmit() {
   }
 }
 
-function resetTiles() {
+function resetInput() {
+  // reset tiles
   Array.from(this.bogdle.tiles).forEach(tile => {
     tile.dataset.state = 'tbd'
   })
+  // re-disable submit
   disableSubmit()
+  // reset guess
+  this.bogdle.guess.innerHTML = ''
+  this.bogdle.guess.classList.remove('valid')
 }
+
+function resetScore() {
+  document.getElementById('score-guessed').innerHTML = '0'
+  document.getElementById('score-total').innerHTML = this.bogdle.solutionSize
+}
+
+function saveProgress() {
+  var guessedWords = Object.keys(this.bogdle.solutionSet).filter(k => this.bogdle.solutionSet[k])
+
+  var bogdleStateObj = {
+    'gameState': this.bogdle.gameState,
+    'guessedWords': guessedWords,
+    'lastPlayed': new Date().getTime()
+  }
+
+  localStorage.setItem('bogdle-state', JSON.stringify(bogdleStateObj))
+}
+
+function checkWinState() {
+  if (Object.values(this.bogdle.solutionSet).every((val) => val)) {
+    modalOpen('win')
+    disableGame()
+  }
+}
+
+function disableGame() {
+  Array.from(this.bogdle.tiles).forEach(tile => {
+    tile.setAttribute('disabled', '')
+    tile.dataset.state = 'disabled'
+  })
+
+  this.bogdle.gameState = 'GAME_OVER'
+}
+
+function init() {
+  addEventListeners()
+  resetScore()
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == this.bogdle.modal) {
+    this.bogdle.modal.style.display = "none";
+  }
+}
+
+init()
