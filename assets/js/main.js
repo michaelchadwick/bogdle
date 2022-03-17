@@ -6,6 +6,9 @@ this.bogdle.solutionSet = {
   'wet': 0
 }
 this.bogdle.solutionSize = Object.keys(this.bogdle.solutionSet).length
+this.bogdle.gameState = "IN_PROGRESS"
+
+let LS_BOGDLE = 'bogdle-state'
 
 this.bogdle.btnHelp = document.getElementById('button-help')
 this.bogdle.btnStats = document.getElementById('button-stats')
@@ -22,8 +25,6 @@ this.bogdle.tiles = document.getElementsByClassName('tile')
 this.bogdle.btnSubmit = document.getElementById('buttonSubmit')
 this.bogdle.btnBackspace = document.getElementById('buttonBackspace')
 this.bogdle.btnShuffle = document.getElementById('buttonShuffle')
-
-this.bogdle.gameState = "IN_PROGRESS"
 
 function addEventListeners() {
   // tile interaction
@@ -209,26 +210,42 @@ function resetInput() {
   this.bogdle.guess.classList.remove('valid')
 }
 
-function resetScore() {
-  document.getElementById('score-guessed').innerHTML = '0'
+function setScore() {
+  document.getElementById('score-guessed').innerHTML = getGuessedWords().length.toString()
   document.getElementById('score-total').innerHTML = this.bogdle.solutionSize
 }
 
-function saveProgress() {
-  var guessedWords = Object.keys(this.bogdle.solutionSet).filter(k => this.bogdle.solutionSet[k])
+function getGuessedWords() {
+  return Object.keys(this.bogdle.solutionSet).filter(k => this.bogdle.solutionSet[k])
+}
 
+function saveProgress() {
   var bogdleStateObj = {
     'gameState': this.bogdle.gameState,
-    'guessedWords': guessedWords,
-    'lastPlayed': new Date().getTime()
+    'guessedWords': getGuessedWords(),
+    'lastCompletedTime': this.bogdle.lastCompletedTime,
+    'lastPlayedTime': new Date().getTime()
   }
 
-  localStorage.setItem('bogdle-state', JSON.stringify(bogdleStateObj))
+  localStorage.setItem(LS_BOGDLE, JSON.stringify(bogdleStateObj))
+}
+
+function loadProgress() {
+  if (localStorage.getItem(LS_BOGDLE)) {
+    var ls = JSON.parse(localStorage.getItem(LS_BOGDLE))
+    ls.guessedWords.forEach(word => {
+      this.bogdle.solutionSet[word] = 1
+    })
+    checkWinState()
+  }
 }
 
 function checkWinState() {
   if (Object.values(this.bogdle.solutionSet).every((val) => val)) {
     modalOpen('win')
+    this.bogdle.lastCompletedTime = new Date().getTime
+    this.bogdle.gameState = 'GAME_OVER'
+    saveProgress()
     disableGame()
   }
 }
@@ -239,12 +256,14 @@ function disableGame() {
     tile.dataset.state = 'disabled'
   })
 
-  this.bogdle.gameState = 'GAME_OVER'
+  this.bogdle.btnBackspace.setAttribute('disabled', '')
 }
 
 function init() {
   addEventListeners()
-  resetScore()
+  loadProgress()
+
+  setScore()
 }
 
 // When the user clicks anywhere outside of the modal, close it
