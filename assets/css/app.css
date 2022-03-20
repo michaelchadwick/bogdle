@@ -1,6 +1,7 @@
 body {
   color: #111;
   font-family: 'Changa', sans-serif;
+  font-size: 16px;
   font-weight: 300;
   height: 100%;
   margin: 0;
@@ -12,22 +13,22 @@ body {
  * HEADER
  */
 header {
+  align-items: center;
+  border-bottom: 1px solid #529952;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: nowrap;
-  padding: 0 16px;
+  justify-content: space-between;
   height: 50px;
-  border-bottom: 1px solid #529952;
+  padding: 0 16px;
 }
 header .menu-left {
+  align-items: center;
   display: flex;
+  justify-content: flex-start;
   margin: 0;
   padding: 0;
-  align-items: center;
   width: 70px;
-  justify-content: flex-start;
 }
 header .title {
   font-family: 'Changa', sans-serif;
@@ -51,22 +52,22 @@ header .menu-right {
 }
 
 button {
+  align-items: center;
+  background-color: #ddd;
+  border: 0;
+  border-radius: 4px;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
   font-family: inherit;
   font-weight: bold;
-  border: 0;
-  padding: 0;
-  margin: 0 6px 0 0;
   height: 58px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  background-color: #ddd;
-  color: #111;
-  flex: 1;
-  display: flex;
   justify-content: center;
-  align-items: center;
+  margin: 0 6px 0 0;
+  padding: 0;
   text-transform: uppercase;
+  user-select: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0.3);
 }
 button:disabled {
@@ -83,24 +84,19 @@ button.icon {
   padding: 0 4px;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 5px;
-}
 .tile {
-  width: 100%;
-  display: inline-flex;
-  justify-content: center;
   align-items: center;
-  font-size: 2rem;
-  line-height: 2rem;
-  font-weight: bold;
-  vertical-align: middle;
   box-sizing: border-box;
   color: #000;
+  display: inline-flex;
+  font-size: 2rem;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 2rem;
+  vertical-align: middle;
   text-transform: uppercase;
   user-select: none;
+  width: 100%;
 }
 .tile[data-state='tbd'] {
   border: 2px solid #529952;
@@ -130,35 +126,49 @@ section#game {
   display: flex;
   flex-direction: column;
   height: calc(100% - 50px);
-  margin: 1em auto 0;
-  max-width: 600px;
+  margin: 0.5em auto 0;
+  max-width: 500px;
   width: 100%;
 }
-section#game #score {
-  text-align: center;
-}
-section#game #guess {
-  border: 1px solid #529952;
-  color: #111;
-  font-family: 'Changa', sans-serif;
-  font-size: 40px;
-  height: 75px;
-  line-height: 1.9em;
-  text-align: center;
-  text-transform: uppercase;
-  transition: 100ms;
-  vertical-align: middle;
-}
-section#game #guess.valid {
-  font-size: 50px;
-  line-height: 1.5em;
-}
-section#game #guess.valid.first-guess {
-  color: #529952;
-}
-section#game #guess.valid.not-first-guess {
-  color: #232e19;
-}
+  section#game #score {
+    text-align: center;
+  }
+  section#game #guess-container {
+    align-content: center;
+    align-items: center;
+    color: #111;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'Changa', sans-serif;
+    font-size: 2.5em;
+    font-weight: 700;
+    height: 80px;
+    line-height: 0.8;
+    margin: 0 auto;
+    text-align: center;
+    text-transform: uppercase;
+    transition: all 100ms ease;
+    vertical-align: middle;
+    word-break: break-word;
+    word-wrap: break-word;
+  }
+    section#game #guess-container #guess.valid {
+      font-size: 1.15em;
+      line-height: 0.8;
+      transition: all 200ms ease;
+    }
+      section#game #guess-container #guess.valid.first-guess {
+        color: #28a828;
+        font-size: 1.2em;
+        line-height: 0.8;
+        transition: all 100ms ease;
+      }
+      section#game #guess-container #guess.valid.not-first-guess {
+        color: #2f722f;
+        font-size: 1.15em;
+        line-height: 0.8;
+        transition: all 200ms ease;
+      }
 
 section#game #board-container {
   display: flex;
@@ -167,29 +177,35 @@ section#game #board-container {
   flex-grow: 1;
   overflow: hidden;
 }
-section#game #board-container #board {
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-gap: 5px;
-  height: 300px;
-  padding: 10px;
-  width: 300px;
-}
-section#game #keyboard {
-  margin: 20px auto 0;
-}
-section#game #keyboard .row {
-  grid-template-columns: repeat(4, 1fr);
-}
-section#game #keyboard button {
-  font-size: 20px;
-  width: 100px;
-}
-section#game #keyboard button:hover:not([disabled]) {
-  background-color: #888;
-  border: 1px solid #111;
-  color: #fff;
-}
+  section#game #board-container #board {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 5px;
+    height: 300px;
+    padding: 10px;
+    width: 300px;
+  }
+    section#game #board-container #board .row {
+      display: grid;
+      grid-gap: 5px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  section#game #keyboard {
+    margin: 0 8px;
+  }
+    section#game #keyboard .row {
+      display: flex;
+      margin: 0 auto 8px;
+    }
+    section#game #keyboard button {
+      font-size: 20px;
+      width: 100px;
+    }
+      section#game #keyboard button:hover:not([disabled]) {
+        background-color: #888;
+        border: 1px solid #111;
+        color: #fff;
+      }
 
 .modal {
   display: none;
@@ -199,9 +215,9 @@ section#game #keyboard button:hover:not([disabled]) {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.2); /* Black w/ opacity */
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.2);
 }
 .modal.temp {
   background-color: transparent;

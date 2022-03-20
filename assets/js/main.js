@@ -1,3 +1,5 @@
+let LS_BOGDLE = 'bogdle-state'
+
 this.bogdle = this.bogdle || {}
 this.bogdle.selected = []
 this.bogdle.solutionSet = {}
@@ -7,81 +9,29 @@ this.bogdle.config.gameState = 'IN_PROGRESS'
 this.bogdle.config.lastCompletedTime = null
 this.bogdle.config.lastPlayedTime = null
 
-let LS_BOGDLE = 'bogdle-state'
-
-this.bogdle.btnHelp = document.getElementById('button-help')
-this.bogdle.btnStats = document.getElementById('button-stats')
-this.bogdle.btnSettings = document.getElementById('button-settings')
-
-this.bogdle.modal = document.getElementById('bogdle-modal')
-this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
-
 this.bogdle.scoreGuessed = document.getElementById('score-guessed')
 this.bogdle.scoreTotal = document.getElementById('score-total')
 this.bogdle.guess = document.getElementById('guess')
+
+// board tiles
 this.bogdle.tiles = document.getElementsByClassName('tile')
+
+// clickable DOM buttons
+this.bogdle.btnHelp = document.getElementById('button-help')
+this.bogdle.btnStats = document.getElementById('button-stats')
+this.bogdle.btnSettings = document.getElementById('button-settings')
 this.bogdle.btnSubmit = document.getElementById('buttonSubmit')
 this.bogdle.btnBackspace = document.getElementById('buttonBackspace')
 this.bogdle.btnShowList = document.getElementById('buttonShowList')
 this.bogdle.btnShuffle = document.getElementById('buttonShuffle')
 
-function addEventListeners() {
-  // tile interaction
-  Array.from(this.bogdle.tiles).forEach(tile => {
-    tile.addEventListener('click', (t) => {
-      var tileStatus = t.target.dataset.state
+/******************
+ * public methods *
+ ******************/
 
-      if (tileStatus == 'tbd') {
-        // change tile status
-        t.target.dataset.state = 'selected'
-
-        // push another selected tile onto selected array
-        this.bogdle.selected.push(t.target.dataset.pos)
-
-        // add selected tile to guess
-        this.bogdle.guess.innerHTML += t.target.innerHTML
-
-        checkGuess()
-      }
-    })
-  })
-
-  // buttons to open modals
-  this.bogdle.btnHelp.addEventListener('click', () => modalOpen('help'))
-  this.bogdle.btnStats.addEventListener('click', () => modalOpen('stats'))
-  this.bogdle.btnSettings.addEventListener('click', () => modalOpen('settings'))
-
-  // modal close button
-  document.getElementById('bogdle-modal-close').onclick = function() {
-    modalClose()
-  }
-
-  // submit word
-  this.bogdle.btnSubmit.addEventListener('click', () => {
-    submitWord(this.bogdle.guess.innerHTML)
-  })
-
-  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
-  document.addEventListener('keydown', (e) => {
-    if (e.code == 'Enter') {
-      submitWord(this.bogdle.guess.innerHTML)
-    }
-    if (e.code == 'Backspace' || e.code == 'Delete') {
-      removeLastGuessLetter()
-    }
-  })
-
-  // use backspace
-  this.bogdle.btnBackspace.addEventListener('click', () => {
-    removeLastGuessLetter()
-  })
-
-  this.bogdle.btnShowList.addEventListener('click', () => {
-    modalOpen('show-list')
-  })
-
-  // console.log('added event listeners')
-}
+// modals
+this.bogdle.modal = document.getElementById('bogdle-modal')
+this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
 
 // modals
 function modalOpen(type, noOverlay) {
@@ -156,6 +106,7 @@ function modalClose() {
   this.bogdle.modal.style.display = 'none';
 }
 
+// remove last letter in DOM guess div
 function removeLastGuessLetter() {
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     // remove last position from selected array
@@ -173,37 +124,12 @@ function removeLastGuessLetter() {
     if (this.bogdle.guess.innerHTML.length) {
       this.bogdle.guess.innerHTML = this.bogdle.guess.innerHTML.slice(0, this.bogdle.guess.innerHTML.length - 1)
 
-      checkGuess()
+      _checkGuess()
     }
   }
 }
 
-function checkGuess() {
-  // reset classes
-  this.bogdle.guess.classList.remove('valid', 'first-guess', 'not-first-guess')
-
-  // player entered valid word length
-  if (this.bogdle.guess.innerHTML.length > 2) {
-    var key = this.bogdle.guess.innerHTML
-
-    // player guessed a valid word
-    if (key in this.bogdle.solutionSet) {
-      this.bogdle.guess.classList.toggle('valid')
-
-      // and it's the first time
-      if (!this.bogdle.solutionSet[key]) {
-        this.bogdle.guess.classList.add('first-guess')
-      } else {
-        this.bogdle.guess.classList.add('not-first-guess')
-      }
-    } else { // player guessed an invalid word (not on list)
-
-    }
-  } else { // player guessed an invalid word (not long enough)
-
-  }
-}
-
+// submit a guess
 function submitWord(word) {
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     if (word.length > 2) {
@@ -214,11 +140,11 @@ function submitWord(word) {
           this.bogdle.config.lastPlayedTime = new Date().getTime()
           saveProgress()
 
-          increaseScore()
-          resetInput()
+          _increaseScore()
+          _resetInput()
 
           // check win state
-          checkWinState()
+          _checkWinState()
         } else {
           modalOpen('repeated-word', true)
         }
@@ -231,38 +157,12 @@ function submitWord(word) {
   }
 }
 
-function increaseScore() {
-  // increase score
-  var curGuessed = parseInt(this.bogdle.scoreGuessed.innerHTML)
-  var newAmt = curGuessed += 1
-  this.bogdle.scoreGuessed.innerHTML = newAmt.toString()
-}
-
-function resetInput() {
-  // reset tiles
-  Array.from(this.bogdle.tiles).forEach(tile => {
-    tile.dataset.state = 'tbd'
-  })
-  // reset guess
-  this.bogdle.guess.innerHTML = ''
-  this.bogdle.guess.classList.remove('valid')
-}
-
-function setScore() {
-  // console.log('setting score...')
-
-  document.getElementById('score-guessed').innerHTML = getGuessedWords().length.toString()
-  document.getElementById('score-total').innerHTML = this.bogdle.solutionSize
-
-  var scoreString = `${document.getElementById('score-guessed').innerHTML} of ${document.getElementById('score-total').innerHTML}`
-
-  // console.log('!score set!', scoreString)
-}
-
+// get list of words already guessed correctly
 function getGuessedWords() {
   return Object.keys(this.bogdle.solutionSet).filter(k => this.bogdle.solutionSet[k])
 }
 
+// local storage
 function saveProgress() {
   // console.log('saving localStorage progress...')
 
@@ -281,7 +181,6 @@ function saveProgress() {
     console.error('error: localStorage could not be set')
   }
 }
-
 function loadProgress() {
   // console.log('loading progress...')
 
@@ -310,12 +209,115 @@ function loadProgress() {
 
   // console.log('!progress loaded!', JSON.stringify(this.bogdle.solutionSet))
 
-  setScore()
+  _setScore()
 
-  checkWinState()
+  _checkWinState()
 }
 
-function loadSolutionSet() {
+// start the engine
+this.bogdle.init = () => {
+  // console.log('init started')
+
+  _addEventListeners()
+
+  // gets solution set via fetch(); if success, load any LS progress and set score display
+  _loadSolutionSet()
+
+  // console.log('!bogdle inited!')
+}
+
+/***********
+ * private *
+ ***********/
+
+// score functions
+function _increaseScore() {
+  // increase score
+  var curGuessed = parseInt(this.bogdle.scoreGuessed.innerHTML)
+  var newAmt = curGuessed += 1
+  this.bogdle.scoreGuessed.innerHTML = newAmt.toString()
+}
+function _setScore() {
+  // console.log('setting score...')
+
+  document.getElementById('score-guessed').innerHTML = getGuessedWords().length.toString()
+  document.getElementById('score-total').innerHTML = this.bogdle.solutionSize
+
+  var scoreString = `${document.getElementById('score-guessed').innerHTML} of ${document.getElementById('score-total').innerHTML}`
+
+  // console.log('!score set!', scoreString)
+}
+
+// game state checking
+function _checkGuess() {
+  // reset classes
+  this.bogdle.guess.classList.remove('valid', 'first-guess', 'not-first-guess')
+
+  // player entered valid word length
+  if (this.bogdle.guess.innerHTML.length > 2) {
+    var key = this.bogdle.guess.innerHTML
+
+    // player guessed a valid word
+    if (key in this.bogdle.solutionSet) {
+      this.bogdle.guess.classList.toggle('valid')
+
+      // and it's the first time
+      if (!this.bogdle.solutionSet[key]) {
+        this.bogdle.guess.classList.add('first-guess')
+      } else {
+        this.bogdle.guess.classList.add('not-first-guess')
+      }
+    } else { // player guessed an invalid word (not on list)
+
+    }
+  } else { // player guessed an invalid word (not long enough)
+
+  }
+}
+function _checkWinState() {
+  // console.log('checking for win state...')
+
+  if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
+    // console.log('_checkWinState(): game finished')
+
+    // display modal win thingy
+    modalOpen('win')
+
+    // set config stuff
+    this.bogdle.config.gameState = 'GAME_OVER'
+    if (this.bogdle.config.lastCompletedTime == null) {
+      this.bogdle.config.lastCompletedTime = new Date().getTime()
+    }
+
+    // disable inputs (until future daily re-enabling)
+    _disableGame()
+  } else {
+    // console.log('_checkWinState(): game still in progress')
+  }
+
+  // save to localStorage
+  saveProgress()
+}
+
+// internal DOM reset methods
+function _resetInput() {
+  // reset tiles
+  Array.from(this.bogdle.tiles).forEach(tile => {
+    tile.dataset.state = 'tbd'
+  })
+  // reset guess
+  this.bogdle.guess.innerHTML = ''
+  this.bogdle.guess.classList.remove('valid')
+}
+function _disableGame() {
+  Array.from(this.bogdle.tiles).forEach(tile => {
+    tile.setAttribute('disabled', '')
+    tile.dataset.state = 'disabled'
+  })
+}
+
+// load (today's) solution set from json
+function _loadSolutionSet() {
   // console.log('loading solution set...')
 
   fetch('./assets/json/test-solution-set.json')
@@ -334,52 +336,71 @@ function loadSolutionSet() {
     })
 }
 
-function checkWinState() {
-  // console.log('checking for win state...')
+// add event listeners to DOM
+function _addEventListeners() {
+  // tile interaction
+  Array.from(this.bogdle.tiles).forEach(tile => {
+    tile.addEventListener('click', (t) => {
+      var tileStatus = t.target.dataset.state
 
-  if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
-    // console.log('checkWinState(): game finished')
+      if (tileStatus == 'tbd') {
+        // change tile status
+        t.target.dataset.state = 'selected'
 
-    // display modal win thingy
-    modalOpen('win')
+        // push another selected tile onto selected array
+        this.bogdle.selected.push(t.target.dataset.pos)
 
-    // set config stuff
-    this.bogdle.config.gameState = 'GAME_OVER'
-    if (this.bogdle.config.lastCompletedTime == null) {
-      this.bogdle.config.lastCompletedTime = new Date().getTime()
-    }
+        // add selected tile to guess
+        this.bogdle.guess.innerHTML += t.target.innerHTML
 
-    // disable inputs (until future daily re-enabling)
-    disableGame()
-  } else {
-    // console.log('checkWinState(): game still in progress')
+        _checkGuess()
+      }
+    })
+  })
+
+  // buttons to open modals
+  this.bogdle.btnHelp.addEventListener('click', () => modalOpen('help'))
+  this.bogdle.btnStats.addEventListener('click', () => modalOpen('stats'))
+  this.bogdle.btnSettings.addEventListener('click', () => modalOpen('settings'))
+
+  // modal close button
+  document.getElementById('bogdle-modal-close').onclick = function() {
+    modalClose()
   }
 
-  // save to localStorage
-  saveProgress()
-}
-
-function disableGame() {
-  Array.from(this.bogdle.tiles).forEach(tile => {
-    tile.setAttribute('disabled', '')
-    tile.dataset.state = 'disabled'
+  // submit word
+  this.bogdle.btnSubmit.addEventListener('click', () => {
+    submitWord(this.bogdle.guess.innerHTML)
   })
-}
 
-function init() {
-  // console.log('init()')
+  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
+  document.addEventListener('keydown', (e) => {
+    if (e.code == 'Enter') {
+      submitWord(this.bogdle.guess.innerHTML)
+    }
+    if (e.code == 'Backspace' || e.code == 'Delete') {
+      removeLastGuessLetter()
+    }
+  })
 
-  addEventListeners()
+  // use backspace
+  this.bogdle.btnBackspace.addEventListener('click', () => {
+    removeLastGuessLetter()
+  })
 
-  // gets solution set via fetch(); if success, load any LS progress and set score display
-  loadSolutionSet()
-}
+  this.bogdle.btnShowList.addEventListener('click', () => {
+    modalOpen('show-list')
+  })
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
   if (event.target == this.bogdle.modal) {
     this.bogdle.modal.style.display = 'none';
   }
 }
 
-init()
+  // console.log('added event listeners')
+}
+
+// set up game
+this.bogdle.init()
