@@ -417,6 +417,17 @@ function _loadSolutionSet() {
     })
 }
 
+function _resizeBoard() {
+  var boardContainer = document.querySelector('#board-container')
+
+  var containerHeight = Math.min(Math.floor(boardContainer.clientHeight), 350)
+  var tileHeight = 2.5 * Math.floor(containerHeight / 3)
+
+  var board = document.querySelector('#board')
+  board.style.width = `${containerHeight}px`
+  board.style.height = `${tileHeight}px`
+}
+
 // add event listeners to DOM
 function _addEventListeners() {
   // tile interaction
@@ -490,6 +501,9 @@ function _addEventListeners() {
       this.bogdle.modal.style.display = 'none';
     }
   })
+
+  window.onload = _resizeBoard
+  window.onresize = _resizeBoard
 
   // console.log('added event listeners')
 }
