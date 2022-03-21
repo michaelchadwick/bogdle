@@ -34,6 +34,7 @@ this.bogdle.buttons = {
 }
 
 // board tiles
+this.bogdle.letters = ['w', 'h', 'e', 'a', 't', 'm', 'e', 'a', 'l']
 this.bogdle.tiles = document.getElementsByClassName('tile')
 
 /******************
@@ -261,6 +262,9 @@ this.bogdle.init = () => {
   // if success, load any LS progress and set score display
   _loadSolutionSet()
 
+  // choose letters randomly from set
+  _shuffleTiles()
+
   // console.log('!bogdle inited!')
 }
 
@@ -352,7 +356,7 @@ function _checkWinState() {
     saveProgress()
 
     // disable inputs (until future daily re-enabling)
-    _disableGame()
+    _disableTiles()
   } else {
     // console.log('_checkWinState(): game still in progress')
   }
@@ -368,8 +372,25 @@ function _resetInput() {
   this.bogdle.guess.innerHTML = ''
   this.bogdle.guess.classList.remove('valid')
 }
+// shuffle all tiles
+function _shuffleTiles() {
+  let letters = this.bogdle.letters
+
+  var j, x, index;
+  for (index = letters.length - 1; index > 0; index--) {
+    j = Math.floor(Math.random() * (index + 1));
+    x = letters[index];
+    letters[index] = letters[j];
+    letters[j] = x;
+  }
+
+  Array.from(this.bogdle.tiles).forEach((tile, i) => {
+    tile.innerHTML = letters[i]
+  })
+}
+
 // disable all tiles
-function _disableGame() {
+function _disableTiles() {
   Array.from(this.bogdle.tiles).forEach(tile => {
     tile.setAttribute('disabled', '')
     tile.dataset.state = 'disabled'
@@ -418,17 +439,17 @@ function _addEventListeners() {
     })
   })
 
-  // ? buttons to open modals
+  // ❔ buttons to open modals
   this.bogdle.buttons.btnHelp.addEventListener('click', () => modalOpen('help'))
   this.bogdle.buttons.btnStats.addEventListener('click', () => modalOpen('stats'))
   this.bogdle.buttons.btnSettings.addEventListener('click', () => modalOpen('settings'))
 
-  // x modal close button
+  // ❌ modal close button
   this.bogdle.buttons.btnModalClose.addEventListener('click', () => {
     modalClose()
   })
 
-  // ✔ submit word
+  // ✅ submit word
   this.bogdle.buttons.btnSubmit.addEventListener('click', () => {
     submitWord(this.bogdle.guess.innerHTML)
   })
@@ -438,12 +459,17 @@ function _addEventListeners() {
     removeLastGuessLetter()
   })
 
+  // 🔀 shuffle
+  this.bogdle.buttons.btnShuffle.addEventListener('click', () => {
+    _shuffleTiles()
+  })
+
   // := show list of words
   this.bogdle.buttons.btnShowList.addEventListener('click', () => {
     modalOpen('show-list')
   })
 
-  // := show list of words
+  // 🗑️ reset progress (i.e. set LS to defaults)
   this.bogdle.buttons.btnResetProgress.addEventListener('click', () => {
     _resetProgress()
   })
