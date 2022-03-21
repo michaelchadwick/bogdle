@@ -232,6 +232,11 @@ function loadProgress() {
     // set last played
     this.bogdle.config.lastPlayedTime = lsConfig.lastPlayedTime
 
+    // never played before? show help modal
+    if (this.bogdle.config.lastPlayedTime == null) {
+      modalOpen('help')
+    }
+
     // console.log('!localStoragekey loaded!', JSON.parse(localStorage.getItem(LS_BOGDLE_KEY)))
 
     if (this.bogdle.config.gameState != "GAME_OVER") {
@@ -241,6 +246,7 @@ function loadProgress() {
     }
   } else {
     // console.log('no localStorage key found; defaults being set')
+    modalOpen('help')
 
     saveProgress()
   }
@@ -261,9 +267,9 @@ this.bogdle.init = () => {
   // console.log('!bogdle inited!')
 }
 
-/***********
- * private *
- ***********/
+/*******************
+ * private methods *
+ *******************/
 
 function _resetProgress() {
   // console.log('resetting progress...')
