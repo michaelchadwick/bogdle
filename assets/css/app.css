@@ -85,6 +85,9 @@ button.icon {
   padding: 0 4px;
 }
 
+.row {
+  touch-action: manipulation;
+}
 .tile {
   align-items: center;
   box-sizing: border-box;
