@@ -1,4 +1,5 @@
-let LS_BOGDLE_KEY = 'bogdle-state'
+let LS_STATE_KEY = 'bogdle-state'
+let LS_STATS_KEY = 'bogdle-statistics'
 
 this.bogdle = this.bogdle || {}
 
@@ -163,7 +164,7 @@ function submitWord(word) {
           this.bogdle.config.guessedWords.push(word)
           this.bogdle.config.lastPlayedTime = new Date().getTime()
 
-          saveProgress()
+          saveState()
 
           _increaseScore()
           _resetInput()
@@ -197,25 +198,25 @@ function getGuessedWords() {
 }
 
 // save settings from code model -> LS
-function saveProgress() {
+function saveState() {
   // console.log('saving to localStorage...')
 
   try {
-    localStorage.setItem(LS_BOGDLE_KEY, JSON.stringify(this.bogdle.config))
+    localStorage.setItem(LS_STATE_KEY, JSON.stringify(this.bogdle.config))
 
-    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_BOGDLE_KEY)))
+    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATE_KEY)))
   } catch(error) {
     console.error('localStorage could not be set', error)
   }
 }
 // load settings from LS -> code model
-function loadProgress() {
+function loadState() {
   // console.log('loading progress...')
 
-  if (localStorage.getItem(LS_BOGDLE_KEY)) {
+  if (localStorage.getItem(LS_STATE_KEY)) {
     // console.log('localStorage key found and loading...')
 
-    var lsConfig = JSON.parse(localStorage.getItem(LS_BOGDLE_KEY))
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
 
     // set game state
     this.bogdle.config.gameState = lsConfig.gameState
@@ -237,12 +238,12 @@ function loadProgress() {
       modalOpen('help')
     }
 
-    // console.log('!localStoragekey loaded!', JSON.parse(localStorage.getItem(LS_BOGDLE_KEY)))
+    // console.log('!localStoragekey loaded!', JSON.parse(localStorage.getItem(LS_STATE_KEY)))
   } else {
     // console.log('no localStorage key found; defaults being set')
     modalOpen('help')
 
-    saveProgress()
+    saveState()
   }
 
   _setScore(this.bogdle.config.guessedWords.length.toString())
@@ -284,7 +285,7 @@ function _resetProgress() {
   }
 
   // save those defaults to local storage
-  saveProgress()
+  saveState()
 
   // set score to 0
   _setScore('0')
@@ -353,7 +354,7 @@ function _checkWinState() {
       this.bogdle.config.lastCompletedTime = new Date().getTime()
     }
 
-    saveProgress()
+    saveState()
 
     // disable inputs (until future daily re-enabling)
     _disableTiles()
@@ -411,7 +412,7 @@ function _loadSolutionSet() {
 
       // console.log('!solution set loaded!', this.bogdle.solutionSet)
 
-      loadProgress()
+      loadState()
     }).catch((err) => {
       console.error('solution set could not be loaded', err)
     })
