@@ -15,6 +15,12 @@ this.bogdle.config = {
   "lastCompletedTime": null,
   "lastPlayedTime": null
 }
+this.bogdle.statistics = {
+  "gamesPlayed": 0,
+  "winPercentage": 0,
+  "currentStreak": 0,
+  "maxStreak": 0
+}
 
 // status DOM elements
 this.bogdle.scoreGuessed = document.getElementById('score-guessed')
@@ -91,7 +97,7 @@ function modalOpen(type, noOverlay) {
       break
     case 'help':
       this.bogdle.modalBody.innerHTML = `
-        <h4>How to play Bogdle</h4>
+        <h2>How to play Bogdle</h2>
 
         <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
 
@@ -103,10 +109,35 @@ function modalOpen(type, noOverlay) {
       `
       break
     case 'stats':
-      this.bogdle.modalBody.innerHTML = 'stats'
+      this.bogdle.modalBody.innerHTML = `
+        <h2>Statistics</h2>
+        <div class="container">
+          <div id="statistics">
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
+              <div class="statistic-label">Played</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.winPercentage}</div>
+              <div class="statistic-label">Win %</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.currentStreak}</div>
+              <div class="statistic-label">Current Streak</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.maxStreak}</div>
+              <div class="statistic-label">Max Streak</div>
+            </div>
+          </div>
+        </div>
+      `
       break
     case 'settings':
-      this.bogdle.modalBody.innerHTML = 'settings'
+      this.bogdle.modalBody.innerHTML = `
+        <h2>Settings</h2>
+        <p>None yet!</p>
+      `
       break
     case 'win':
       this.bogdle.modalBody.innerHTML = `
