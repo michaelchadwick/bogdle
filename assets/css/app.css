@@ -15,6 +15,12 @@ body {
   padding: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 auto;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 /*
  * HEADER
  */
@@ -238,6 +244,38 @@ section#game #board-container {
         color: #fff;
       }
 
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
+}
+#statistics {
+  display: flex;
+  padding-bottom: 10px;
+}
+#statistics .statistic-container {
+  flex: 1;
+}
+#statistics .statistic-container .statistic {
+  align-items: center;
+  display: flex;
+  font-size: 36px;
+  font-variant-numeric: proportional-nums;
+  font-weight: 400;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+#statistics .statistic-container .statistic-label {
+  align-items: center;
+  display: flex;
+  font-size: 1em;
+  justify-content: center;
+  text-align: center;
+}
+
 .modal {
   display: none;
   position: absolute;
@@ -248,7 +286,7 @@ section#game #board-container {
   height: 100%;
   overflow: auto;
   background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.1);
 }
 .modal.temp {
   background-color: transparent;
