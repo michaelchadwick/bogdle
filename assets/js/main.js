@@ -1,10 +1,4 @@
 let LS_BOGDLE_KEY = 'bogdle-state'
-let LS_DEFAULTS = {
-  "gameState": "IN_PROGRESS",
-  "guessedWords": [],
-  "lastCompletedTime": null,
-  "lastPlayedTime": null
-}
 
 this.bogdle = this.bogdle || {}
 
@@ -14,7 +8,12 @@ this.bogdle.solutionSize = 0
 this.bogdle.tileset = []
 
 // default settings
-this.bogdle.config = LS_DEFAULTS
+this.bogdle.config = {
+  "gameState": "IN_PROGRESS",
+  "guessedWords": [],
+  "lastCompletedTime": null,
+  "lastPlayedTime": null
+}
 
 // status DOM elements
 this.bogdle.scoreGuessed = document.getElementById('score-guessed')
@@ -238,18 +237,16 @@ function loadProgress() {
     }
 
     // console.log('!localStoragekey loaded!', JSON.parse(localStorage.getItem(LS_BOGDLE_KEY)))
-
-    if (this.bogdle.config.gameState != "GAME_OVER") {
-      _setScore(this.bogdle.config.guessedWords.length.toString())
-
-      _checkWinState()
-    }
   } else {
     // console.log('no localStorage key found; defaults being set')
     modalOpen('help')
 
     saveProgress()
   }
+
+  _setScore(this.bogdle.config.guessedWords.length.toString())
+
+  _checkWinState()
 
   // console.log('!progress loaded!', this.bogdle.solutionSet)
 }
@@ -337,29 +334,27 @@ function _checkGuess() {
   }
 }
 function _checkWinState() {
-  // console.log('checking for win state...')
+  // console.log('checking for win state...', this.bogdle.solutionSet)
 
-  if (this.bogdle.config.gameState !== 'GAME_OVER') {
-    if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
-      // console.log('_checkWinState(): game won!', this.bogdle.solutionSet)
+  if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
+    // console.log('_checkWinState(): game won!', this.bogdle.solutionSet)
 
-      // display modal win thingy
-      modalOpen('win')
+    // display modal win thingy
+    modalOpen('win')
 
-      // set config stuff
-      this.bogdle.config.gameState = 'GAME_OVER'
+    // set config stuff
+    this.bogdle.config.gameState = 'GAME_OVER'
 
-      if (this.bogdle.config.lastCompletedTime == null) {
-        this.bogdle.config.lastCompletedTime = new Date().getTime()
-      }
-
-      saveProgress()
-
-      // disable inputs (until future daily re-enabling)
-      _disableGame()
-    } else {
-      // console.log('_checkWinState(): game still in progress')
+    if (this.bogdle.config.lastCompletedTime == null) {
+      this.bogdle.config.lastCompletedTime = new Date().getTime()
     }
+
+    saveProgress()
+
+    // disable inputs (until future daily re-enabling)
+    _disableGame()
+  } else {
+    // console.log('_checkWinState(): game still in progress')
   }
 }
 
