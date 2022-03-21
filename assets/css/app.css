@@ -4,6 +4,7 @@ body {
   font-size: 16px;
   font-weight: 300;
   height: 100%;
+  line-height: 0.5;
   margin: 0;
   overflow-y: hidden;
   padding: 0;
@@ -164,7 +165,7 @@ section#game {
         transition: all 100ms ease;
       }
       section#game #guess-container #guess.valid.not-first-guess {
-        color: #2f722f;
+        color: #173817;
         font-size: 1.15em;
         line-height: 0.8;
         transition: all 200ms ease;
