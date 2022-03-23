@@ -109,6 +109,7 @@ function modalOpen(type, noOverlay) {
       `
       break
     case 'stats':
+    case 'win':
       this.bogdle.modalBody.innerHTML = `
         <h2>Statistics</h2>
         <div class="container">
@@ -137,19 +138,6 @@ function modalOpen(type, noOverlay) {
       this.bogdle.modalBody.innerHTML = `
         <h2>Settings</h2>
         <p>None yet!</p>
-      `
-      break
-    case 'win':
-      this.bogdle.modalBody.innerHTML = `
-        You Win! (${this.bogdle.config.gameState})<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
-        ***********************************<br />
       `
       break
   }
@@ -228,22 +216,36 @@ function getGuessedWords() {
   return solutionKeys.filter(k => this.bogdle.solutionSet[k])
 }
 
-// save settings from code model -> LS
+// save state from code model -> LS
 function saveState() {
   // console.log('saving to localStorage...')
 
+  // save game state
   try {
     localStorage.setItem(LS_STATE_KEY, JSON.stringify(this.bogdle.config))
 
     // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATE_KEY)))
   } catch(error) {
-    console.error('localStorage could not be set', error)
+    console.error(`localStorage could not be set for ${LS_STATE_KEY}`, error)
   }
 }
-// load settings from LS -> code model
+
+// save statistics from code model -> LS
+function saveStats() {
+  try {
+    localStorage.setItem(LS_STATS_KEY, JSON.stringify(this.bogdle.statistics))
+
+    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_KEY)))
+  } catch(error) {
+    console.error(`localStorage could not be set for ${LS_STATS_KEY}`, error)
+  }
+}
+
+// load state/statistics from LS -> code model
 function loadState() {
   // console.log('loading progress...')
 
+  // load game state
   if (localStorage.getItem(LS_STATE_KEY)) {
     // console.log('localStorage key found and loading...')
 
@@ -275,6 +277,18 @@ function loadState() {
     modalOpen('help')
 
     saveState()
+  }
+
+  // load user statistics
+  if (localStorage.getItem(LS_STATS_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATS_KEY))
+
+    this.bogdle.statistics = {
+      "gamesPlayed": lsConfig.gamesPlayed,
+      "winPercentage": lsConfig.winPercentage,
+      "currentStreak": lsConfig.currentStreak,
+      "maxStreak": lsConfig.maxStreak
+    }
   }
 
   _setScore(this.bogdle.config.guessedWords.length.toString())
@@ -374,6 +388,18 @@ function _checkWinState() {
 
   if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
     // console.log('_checkWinState(): game won!', this.bogdle.solutionSet)
+
+    if (this.bogdle.config.gameState == 'IN_PROGRESS') {
+      this.bogdle.statistics.gamesPlayed += 1
+      this.bogdle.statistics = {
+        "gamesPlayed": this.bogdle.statistics.gamesPlayed,
+        "winPercentage": 100,
+        "currentStreak": this.bogdle.statistics.gamesPlayed,
+        "maxStreak": this.bogdle.statistics.gamesPlayed
+      }
+
+      saveStats()
+    }
 
     // display modal win thingy
     modalOpen('win')
