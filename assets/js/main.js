@@ -3,10 +3,9 @@ let LS_STATS_KEY = 'bogdle-statistics'
 
 this.bogdle = this.bogdle || {}
 
-this.bogdle.selected = []
-this.bogdle.solutionSet = {}
+this.bogdle.tilesSelected = []
+this.bogdle.solutionSet = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
 this.bogdle.solutionSize = 0
-this.bogdle.tileset = []
 
 // default settings
 this.bogdle.config = {
@@ -37,11 +36,12 @@ this.bogdle.buttons = {
   "btnShuffle": document.getElementById('buttonShuffle'),
   "btnShowList": document.getElementById('buttonShowList'),
   "btnResetProgress": document.getElementById('buttonResetProgress'),
+  "btnCreateNew": document.getElementById('buttonCreateNew'),
   "btnModalClose": document.getElementById('bogdle-modal-close')
 }
 
 // board tiles
-this.bogdle.letters = ['w', 'h', 'e', 'a', 't', 'm', 'e', 'a', 'l']
+this.bogdle.letters = ['c', 'a', 't', 'a', 'm', 'a', 'r', 'a', 'n']
 this.bogdle.tiles = document.getElementsByClassName('tile')
 
 /******************
@@ -93,7 +93,7 @@ function modalOpen(type, noOverlay) {
       }, 1500)
       break
     case 'show-list':
-      this.bogdle.modalBody.innerHTML = Object.keys(this.bogdle.solutionSet).join(', ')
+      this.bogdle.modalBody.innerHTML = getSolutionSetDisplay()
       break
     case 'help':
       this.bogdle.modalBody.innerHTML = `
@@ -146,12 +146,28 @@ function modalClose() {
   this.bogdle.modal.style.display = 'none';
 }
 
+function getSolutionSetDisplay() {
+  var html = '<ul>'
+
+  Object.keys(this.bogdle.solutionSet).forEach(key => {
+    html += `<li><strong>${key}</strong><ul>`
+    Object.keys(this.bogdle.solutionSet[key]).forEach(word => {
+      html += `  <li>${word}</li>`
+    })
+    html += `</ul></li>`
+  })
+
+  html += '</ul>'
+
+  return html
+}
+
 // remove last letter in DOM guess div
 function removeLastGuessLetter() {
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     // remove last position from selected array
-    if (this.bogdle.selected.length) {
-      var last = this.bogdle.selected.pop()
+    if (this.bogdle.tilesSelected.length) {
+      var last = this.bogdle.tilesSelected.pop()
 
       Array.from(this.bogdle.tiles).forEach(tile => {
         if (tile.dataset.pos == last) {
@@ -175,12 +191,13 @@ function submitWord(word) {
 
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     if (word.length > 2) {
-      if (typeof this.bogdle.solutionSet[word] != 'undefined') {
+      if (typeof this.bogdle.solutionSet[word.length][word] != 'undefined') {
         if (this.bogdle.solutionSet[word] !== 1) {
           // console.log('!new word submitted successfully!')
 
           this.bogdle.solutionSet[word] = 1
           this.bogdle.config.guessedWords.push(word)
+          this.bogdle.config.guessedWords.sort()
           this.bogdle.config.lastPlayedTime = new Date().getTime()
 
           saveState()
@@ -258,8 +275,9 @@ function loadState() {
     this.bogdle.guessedWords = []
     lsConfig.guessedWords.forEach(word => {
       this.bogdle.config.guessedWords.push(word)
-      this.bogdle.solutionSet[word] = 1
+      this.bogdle.solutionSet[word.length][word] = 1
     })
+    this.bogdle.guessedWords.sort()
 
     // set last completed
     this.bogdle.config.lastCompletedTime = lsConfig.lastCompletedTime
@@ -352,6 +370,14 @@ function _setScore(guessed) {
   // console.log('setting score...')
 
   this.bogdle.scoreGuessed.innerHTML = guessed
+
+  this.bogdle.solutionSize = 0
+
+  Object.keys(this.bogdle.solutionSet).forEach(key => {
+    var letterLength = Object.keys(this.bogdle.solutionSet[key]).length
+    this.bogdle.solutionSize += letterLength
+  })
+
   this.bogdle.scoreTotal.innerHTML = this.bogdle.solutionSize
 
   // console.log('!score set!', `${this.bogdle.scoreGuessed.innerHTML} of ${this.bogdle.scoreTotal.innerHTML}`)
@@ -364,21 +390,23 @@ function _checkGuess() {
 
   // player entered valid word length
   if (this.bogdle.guess.innerHTML.length > 2) {
-    var key = this.bogdle.guess.innerHTML
+    var word = this.bogdle.guess.innerHTML.trim()
 
     // player guessed a valid word
-    if (key in this.bogdle.solutionSet) {
-      this.bogdle.guess.classList.toggle('valid')
+    Object.keys(this.bogdle.solutionSet).forEach(key => {
+      if (Object.keys(this.bogdle.solutionSet[key]).includes(word)) {
+        this.bogdle.guess.classList.toggle('valid')
 
-      // and it's the first time
-      if (!this.bogdle.solutionSet[key]) {
-        this.bogdle.guess.classList.add('first-guess')
+        // and it's the first time
+        if (!this.bogdle.solutionSet[key][word]) {
+          this.bogdle.guess.classList.add('first-guess')
+        } else {
+          this.bogdle.guess.classList.add('not-first-guess')
+        }
       } else {
-        this.bogdle.guess.classList.add('not-first-guess')
+        // player guessed an invalid word (not on list)
       }
-    } else {
-      // player guessed an invalid word (not on list)
-    }
+    })
   } else {
     // player guessed an invalid word (not long enough)
   }
@@ -459,15 +487,32 @@ function _disableTiles() {
 function _loadSolutionSet() {
   // console.log('loading solution set...')
 
-  fetch('./assets/json/test-solution-set.json')
+  fetch('./assets/json/words_3-3_some.json')
     .then((response) => {
-      // console.log('loadSolutionSet() got json')
+      // console.log('_loadSolutionSet() got json')
+
       return response.json()
     }).then((solutionSet) => {
-      this.bogdle.solutionSet = solutionSet
-      this.bogdle.solutionSize = Object.keys(this.bogdle.solutionSet).length
+      // load an object of arrays (e.g. { "3": ['aaa'], "4": ['aaaa'] })
+      // and turn it into an object of objects (e.g. { "3": { 'aaa': 0 }, "4": { 'aaaa': 0 } })
+      Object.keys(solutionSet).forEach(key => {
+        solutionSet[key].forEach(word => {
+          if (!this.bogdle.solutionSet[key.toString()][word]) {
+            this.bogdle.solutionSet[key.toString()][word] = {}
+          }
 
-      // console.log('!solution set loaded!', this.bogdle.solutionSet)
+          this.bogdle.solutionSet[key.toString()][word] = 0
+        })
+      })
+
+      this.bogdle.solutionSize = 0
+
+      Object.keys(this.bogdle.solutionSet).forEach(key => {
+        var letterLength = Object.keys(this.bogdle.solutionSet[key]).length
+        this.bogdle.solutionSize += letterLength
+      })
+
+      //console.log('!solution set loaded!', this.bogdle.solutionSet, this.bogdle.solutionSize)
 
       loadState()
     }).catch((err) => {
@@ -498,7 +543,7 @@ function _addEventListeners() {
         t.target.dataset.state = 'selected'
 
         // push another selected tile onto selected array
-        this.bogdle.selected.push(t.target.dataset.pos)
+        this.bogdle.tilesSelected.push(t.target.dataset.pos)
 
         // add selected tile to guess
         this.bogdle.guess.innerHTML += t.target.innerHTML
@@ -531,6 +576,26 @@ function _addEventListeners() {
   // 🔀 shuffle
   this.bogdle.buttons.btnShuffle.addEventListener('click', () => {
     _shuffleTiles()
+  })
+
+  // + create new solution
+  this.bogdle.buttons.btnCreateNew.addEventListener('click', () => {
+    // createBogdle()
+    createFindle()
+      .then((findle) => {
+        if (findle) {
+          this.bogdle.solutionSet = findle
+          this.bogdle.solutionSize = 0
+
+          Object.keys(findle).forEach(key => {
+            this.bogdle.solutionSize += findle[key].length
+          })
+
+          _setScore(this.bogdle.config.guessedWords.length.toString())
+        }
+      }).catch(err => {
+        console.error('could not create new solution set', err)
+      })
   })
 
   // := show list of words
