@@ -473,6 +473,8 @@ function _shuffleTiles() {
   Array.from(this.bogdle.tiles).forEach((tile, i) => {
     tile.innerHTML = letters[i]
   })
+
+  _resetInput()
 }
 
 // disable all tiles
