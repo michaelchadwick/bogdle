@@ -16,7 +16,7 @@ this.bogdle.config = {
 }
 this.bogdle.statistics = {
   "gamesPlayed": 0,
-  "winPercentage": 0,
+  "wordsFound": 0,
   "currentStreak": 0,
   "maxStreak": 0
 }
@@ -199,6 +199,7 @@ function submitWord(word) {
           this.bogdle.config.guessedWords.push(word)
           this.bogdle.config.guessedWords.sort()
           this.bogdle.config.lastPlayedTime = new Date().getTime()
+          this.bogdle.statistics.wordsFound += 1
 
           saveState()
 
@@ -421,7 +422,7 @@ function _checkWinState() {
       this.bogdle.statistics.gamesPlayed += 1
       this.bogdle.statistics = {
         "gamesPlayed": this.bogdle.statistics.gamesPlayed,
-        "winPercentage": 100,
+        "wordsFound": this.bogdle.statistics.wordsFound,
         "currentStreak": this.bogdle.statistics.gamesPlayed,
         "maxStreak": this.bogdle.statistics.gamesPlayed
       }
