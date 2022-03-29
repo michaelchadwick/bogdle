@@ -228,6 +228,13 @@ section#game #board-container {
     section#game #keyboard #admin {
       display: none;
     }
+    section#game #keyboard #admin button {
+      background-color: #715ec7;
+      color: #fff;
+    }
+    section#game #keyboard #admin button:hover {
+      background-color: #5747a0;
+    }
     section#game #keyboard .row {
       display: flex;
       margin: 0 auto 8px;
