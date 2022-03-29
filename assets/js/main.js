@@ -1,11 +1,14 @@
-let LS_STATE_KEY = 'bogdle-state'
-let LS_STATS_KEY = 'bogdle-statistics'
+const LS_STATE_KEY = 'bogdle-state'
+const LS_STATS_KEY = 'bogdle-statistics'
+const START_WORDS = './assets/json/words_9-9_all.json'
+const START_MAX = '9'
+const EMPTY_OBJ_SET = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
 
 this.bogdle = this.bogdle || {}
 
+this.bogdle.startWord = 'catamaran'
 this.bogdle.tilesSelected = []
-this.bogdle.solutionSet = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
-this.bogdle.solutionSize = 0
+this.bogdle.solutionSet = EMPTY_OBJ_SET
 
 // default settings
 this.bogdle.config = {
@@ -16,12 +19,11 @@ this.bogdle.config = {
 }
 this.bogdle.statistics = {
   "gamesPlayed": 0,
-  "wordsFound": 0,
-  "currentStreak": 0,
-  "maxStreak": 0
+  "wordsFound": 0
 }
 
 // status DOM elements
+this.bogdle.score = document.getElementById('score')
 this.bogdle.scoreGuessed = document.getElementById('score-guessed')
 this.bogdle.scoreTotal = document.getElementById('score-total')
 this.bogdle.guess = document.getElementById('guess')
@@ -41,20 +43,32 @@ this.bogdle.buttons = {
 }
 
 // board tiles
-this.bogdle.letters = ['c', 'a', 't', 'a', 'm', 'a', 'r', 'a', 'n']
+this.bogdle.letters = []
 this.bogdle.tiles = document.getElementsByClassName('tile')
+
+// modals
+/// includes overlay and modal itself
+this.bogdle.modal = document.getElementById('bogdle-modal')
+/// content inside modal itself
+this.bogdle.modalContent = document.getElementById('bogdle-modal-content')
+/// body inside of modal content
+this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
+
+// confirm
+/// includes overlay and confirm itself
+this.bogdle.confirm = document.getElementById('bogdle-confirm')
+/// content inside confirm itself
+this.bogdle.confirmContent = document.getElementById('bogdle-confirm-content')
+/// body inside of confirm content
+this.bogdle.confirmBody = document.getElementById('bogdle-confirm-body')
 
 /******************
  * public methods *
  ******************/
 
-// modals
-this.bogdle.modal = document.getElementById('bogdle-modal')
-this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
-
-// modals
+// modal methods
 function modalOpen(type, noOverlay) {
-  this.bogdle.modal.style.display = 'flex';
+  this.bogdle.modal.style.display = 'flex'
 
   if (noOverlay) {
     if (!this.bogdle.modal.classList.contains('temp')) {
@@ -65,6 +79,55 @@ function modalOpen(type, noOverlay) {
   }
 
   switch(type) {
+    case 'start':
+    case 'help':
+      this.bogdle.modalBody.innerHTML = `
+        <h2>How to play Bogdle</h2>
+
+        <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
+
+        <p>After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
+
+        <hr />
+
+        <p>A new BOGDLE will be available each day!</p>
+      `
+      break
+
+    case 'stats':
+    case 'win':
+      this.bogdle.modalBody.innerHTML = `
+        <h2>Statistics</h2>
+        <div class="container">
+          <div id="statistics">
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
+              <div class="statistic-label">Played</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${this.bogdle.statistics.wordsFound}</div>
+              <div class="statistic-label">Words Found</div>
+            </div>
+          </div>
+        </div>
+      `
+      break
+    case 'settings':
+      this.bogdle.modalBody.innerHTML = `
+        <h2>Settings</h2>
+        <p>None yet!</p>
+      `
+      break
+
+    case 'show-list':
+      if (!this.bogdle.modalContent.classList.contains('padded')) {
+        this.bogdle.modalContent.classList.add('padded')
+      } else {
+        this.bogdle.modalContent.classList.remove('padded')
+      }
+      this.bogdle.modalBody.innerHTML = getSolutionSetDisplay()
+      break
+
     case 'invalid-length':
       this.bogdle.modalBody.innerHTML = `
         Error: Needs to be 3 or more characters.
@@ -92,69 +155,39 @@ function modalOpen(type, noOverlay) {
         this.bogdle.modal.classList.remove('temp')
       }, 1500)
       break
-    case 'show-list':
-      this.bogdle.modalBody.innerHTML = getSolutionSetDisplay()
-      break
-    case 'help':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>How to play Bogdle</h2>
-
-        <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
-
-        <p>After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
-
-        <hr />
-
-        <p>A new BOGDLE will be available each day!</p>
-      `
-      break
-    case 'stats':
-    case 'win':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>Statistics</h2>
-        <div class="container">
-          <div id="statistics">
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
-              <div class="statistic-label">Played</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.winPercentage}</div>
-              <div class="statistic-label">Win %</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.currentStreak}</div>
-              <div class="statistic-label">Current Streak</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.maxStreak}</div>
-              <div class="statistic-label">Max Streak</div>
-            </div>
-          </div>
-        </div>
-      `
-      break
-    case 'settings':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>Settings</h2>
-        <p>None yet!</p>
-      `
-      break
   }
 }
 function modalClose() {
-  this.bogdle.modal.style.display = 'none';
+  this.bogdle.modal.style.display = 'none'
+  if (this.bogdle.modalContent.classList.contains('padded')) {
+    this.bogdle.modalContent.classList.remove('padded')
+  }
+}
+function confirmClose(response) {
+  this.bogdle.confirm.style.display = 'none'
+  this.bogdle.confirm.dataset.confirm = response;
 }
 
 function getSolutionSetDisplay() {
   var html = '<ul>'
 
+  // check each length category ('3', '4', '5', etc.)
   Object.keys(this.bogdle.solutionSet).forEach(key => {
-    html += `<li><strong>${key}</strong><ul>`
-    Object.keys(this.bogdle.solutionSet[key]).forEach(word => {
-      html += `  <li>${word}</li>`
+    var words = []
+
+    html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
+
+    // create sorted array of each length category's words
+    var sortedArr = Array.from(Object.keys(this.bogdle.solutionSet[key])).sort()
+
+    // go through each word in each category
+    sortedArr.forEach(word => {
+      words.push(word.toUpperCase())
     })
-    html += `</ul></li>`
+
+    // add all the words to the markup
+    html += words.join(', ')
+    html += `</li></ul></li>`
   })
 
   html += '</ul>'
@@ -193,8 +226,6 @@ function submitWord(word) {
     if (word.length > 2) {
       if (typeof this.bogdle.solutionSet[word.length][word] != 'undefined') {
         if (this.bogdle.solutionSet[word] !== 1) {
-          // console.log('!new word submitted successfully!')
-
           this.bogdle.solutionSet[word] = 1
           this.bogdle.config.guessedWords.push(word)
           this.bogdle.config.guessedWords.sort()
@@ -304,13 +335,11 @@ function loadState() {
 
     this.bogdle.statistics = {
       "gamesPlayed": lsConfig.gamesPlayed,
-      "winPercentage": lsConfig.winPercentage,
-      "currentStreak": lsConfig.currentStreak,
-      "maxStreak": lsConfig.maxStreak
+      "wordsFound": lsConfig.wordsFound
     }
   }
 
-  _setScore(this.bogdle.config.guessedWords.length.toString())
+  _setScore(this.bogdle.config.guessedWords.length)
 
   _checkWinState()
 
@@ -318,45 +347,146 @@ function loadState() {
 }
 
 // start the engine
-this.bogdle.init = () => {
+this.bogdle.init = async () => {
   // console.log('init started')
+
+  // console.log('this.bogdle.solutionSet', this.bogdle.solutionSet)
 
   _addEventListeners()
 
-  // gets solution set via fetch()
-  // if success, load any LS progress and set score display
-  _loadSolutionSet()
+  await _loadSolutionSet(this.bogdle.startWord)
 
-  // choose letters randomly from set
+  // choose letters randomly from solution set
   _shuffleTiles()
 
-  // console.log('!bogdle inited!')
+  // console.log('!bogdle has been initialized!')
 }
 
 /*******************
  * private methods *
  *******************/
 
-function _resetProgress() {
-  // console.log('resetting progress...')
+// load random start word for solution set
+async function _getNewStartWord() {
+  // gets MAX-letter start words via fetch()
+  // if success, grabs a random one
+  const response = await fetch(START_WORDS)
+  const responseJson = await response.json()
+  // random START_MAX word
+  let possibles = responseJson[START_MAX]
+  let possibleIdx = Math.floor(Math.random() * possibles.length)
 
-  // set config to defaults
-  this.bogdle.config = {
-    "gameState": "IN_PROGRESS",
-    "guessedWords": [],
-    "lastCompletedTime": null,
-    "lastPlayedTime": null
+  this.startWord = possibles[possibleIdx]
+
+  return this.startWord
+}
+
+// load (today's) solution set from json
+async function _loadSolutionSet() {
+  // console.log('new solution requested...')
+
+  // createBogdle()
+
+  try {
+    const newWord = await _getNewStartWord()
+
+    // console.log('newWord', newWord)
+
+    try {
+      // console.log('findle.js->createFindle()')
+      const findle = await createFindle(newWord)
+
+      if (findle) {
+        /****************************************************************
+         * set Bogdle solution
+         * -------------------
+         * desc: load an object of arrays (e.g. { "3": ['aaa'], "4": ['aaaa'] })
+         * and turn it into an object of objects (e.g. { "3": { 'aaa': 0 }, "4": { 'aaaa': 0 } })
+         ****************************************************************/
+
+        // get a range of object keys from 3..MAX_WORD_LENGTH
+        var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+
+        // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
+        categories.forEach(category => {
+          this.bogdle.solutionSet[category] = {}
+        })
+
+        Object.keys(findle).forEach(key => {
+          findle[key].forEach(word => {
+            if (!this.bogdle.solutionSet[key.toString()][word]) {
+              this.bogdle.solutionSet[key.toString()][word] = {}
+            }
+
+            this.bogdle.solutionSet[key.toString()][word] = 0
+          })
+        })
+
+        // set Bogdle letters
+        this.bogdle.letters = newWord.split('')
+
+        // console.log('!solution set loaded!', this.bogdle.solutionSet, _solutionSize())
+
+        _shuffleTiles()
+
+        loadState()
+      }
+    } catch (err) {
+      console.error('could not create new Findle', err)
+    }
+  } catch (err) {
+    console.error('could not get new start word', err)
   }
+}
 
-  // save those defaults to local storage
-  saveState()
+// reload all config and LS
+async function _resetProgress() {
+  this.myConfirm = new Modal('Reset progress?', 'Are you <strong>sure</strong> you want to reset your progress?', 'Yes, please', 'No, never mind', false)
 
-  // set score to 0
-  _setScore('0')
-  // re-enable DOM inputs
-  _resetInput()
+  try {
+    var confirmed = await myConfirm.question()
 
-  // console.log('!progress reset!')
+    if (confirmed) {
+      console.log('resetting progress...')
+
+      // set config to defaults
+      this.bogdle.config = {
+        "gameState": "IN_PROGRESS",
+        "guessedWords": [],
+        "lastCompletedTime": null,
+        "lastPlayedTime": null
+      }
+
+      // save those defaults to local storage
+      saveState()
+
+      // set score to 0
+      _setScore(0)
+      // re-enable DOM inputs
+      _resetInput()
+
+      modalOpen('start')
+
+      console.log('!progress reset!')
+    }
+  } catch (err) {
+    console.error('progress reset failed', err)
+  }
+}
+
+// return solutionSet size
+function _solutionSize() {
+  let categorySize = 0
+  let solutionSize = 0
+
+  Object.keys(this.bogdle.solutionSet).forEach(category => {
+    categorySize = Object.keys(this.bogdle.solutionSet[category]).length
+    solutionSize += categorySize
+  })
+
+  // console.log('_solutionSize()', solutionSize)
+
+  return solutionSize
 }
 
 // increase score
@@ -367,21 +497,14 @@ function _increaseScore() {
   this.bogdle.scoreGuessed.innerHTML = (curGuessed + 1).toString()
 }
 // set score
-function _setScore(guessed) {
+function _setScore(guessed = 0) {
   // console.log('setting score...')
 
-  this.bogdle.scoreGuessed.innerHTML = guessed
+  // set UI elements
+  this.bogdle.scoreGuessed.innerHTML = guessed.toString()
+  this.bogdle.scoreTotal.innerHTML = _solutionSize().toString()
 
-  this.bogdle.solutionSize = 0
-
-  Object.keys(this.bogdle.solutionSet).forEach(key => {
-    var letterLength = Object.keys(this.bogdle.solutionSet[key]).length
-    this.bogdle.solutionSize += letterLength
-  })
-
-  this.bogdle.scoreTotal.innerHTML = this.bogdle.solutionSize
-
-  // console.log('!score set!', `${this.bogdle.scoreGuessed.innerHTML} of ${this.bogdle.scoreTotal.innerHTML}`)
+  // console.log('!score set!', `${this.bogdle.score.innerHTML}`)
 }
 
 // game state checking
@@ -422,9 +545,7 @@ function _checkWinState() {
       this.bogdle.statistics.gamesPlayed += 1
       this.bogdle.statistics = {
         "gamesPlayed": this.bogdle.statistics.gamesPlayed,
-        "wordsFound": this.bogdle.statistics.wordsFound,
-        "currentStreak": this.bogdle.statistics.gamesPlayed,
-        "maxStreak": this.bogdle.statistics.gamesPlayed
+        "wordsFound": this.bogdle.statistics.wordsFound
       }
 
       saveStats()
@@ -449,7 +570,7 @@ function _checkWinState() {
   }
 }
 
-// internal DOM reset methods
+// reset UI tiles to default state
 function _resetInput() {
   // reset tiles
   Array.from(this.bogdle.tiles).forEach(tile => {
@@ -459,7 +580,7 @@ function _resetInput() {
   this.bogdle.guess.innerHTML = ''
   this.bogdle.guess.classList.remove('valid')
 }
-// shuffle all tiles
+// shuffle all UI tiles
 function _shuffleTiles() {
   let letters = this.bogdle.letters
 
@@ -478,49 +599,12 @@ function _shuffleTiles() {
   _resetInput()
 }
 
-// disable all tiles
+// disable all UI tiles
 function _disableTiles() {
   Array.from(this.bogdle.tiles).forEach(tile => {
     tile.setAttribute('disabled', '')
     tile.dataset.state = 'disabled'
   })
-}
-
-// load (today's) solution set from json
-function _loadSolutionSet() {
-  // console.log('loading solution set...')
-
-  fetch('./assets/json/words_3-3_some.json')
-    .then((response) => {
-      // console.log('_loadSolutionSet() got json')
-
-      return response.json()
-    }).then((solutionSet) => {
-      // load an object of arrays (e.g. { "3": ['aaa'], "4": ['aaaa'] })
-      // and turn it into an object of objects (e.g. { "3": { 'aaa': 0 }, "4": { 'aaaa': 0 } })
-      Object.keys(solutionSet).forEach(key => {
-        solutionSet[key].forEach(word => {
-          if (!this.bogdle.solutionSet[key.toString()][word]) {
-            this.bogdle.solutionSet[key.toString()][word] = {}
-          }
-
-          this.bogdle.solutionSet[key.toString()][word] = 0
-        })
-      })
-
-      this.bogdle.solutionSize = 0
-
-      Object.keys(this.bogdle.solutionSet).forEach(key => {
-        var letterLength = Object.keys(this.bogdle.solutionSet[key]).length
-        this.bogdle.solutionSize += letterLength
-      })
-
-      //console.log('!solution set loaded!', this.bogdle.solutionSet, this.bogdle.solutionSize)
-
-      loadState()
-    }).catch((err) => {
-      console.error('solution set could not be loaded', err)
-    })
 }
 
 function _resizeBoard() {
@@ -532,6 +616,13 @@ function _resizeBoard() {
   var board = document.querySelector('#board')
   board.style.width = `${containerHeight}px`
   board.style.height = `${tileHeight}px`
+}
+
+function _resetModal() {
+  this.bogdle.modal.style.display = 'none';
+  if (this.bogdle.modalContent.classList.contains('padded')) {
+    this.bogdle.modalContent.remove('padded')
+  }
 }
 
 // add event listeners to DOM
@@ -583,22 +674,7 @@ function _addEventListeners() {
 
   // + create new solution
   this.bogdle.buttons.btnCreateNew.addEventListener('click', () => {
-    // createBogdle()
-    createFindle()
-      .then((findle) => {
-        if (findle) {
-          this.bogdle.solutionSet = findle
-          this.bogdle.solutionSize = 0
-
-          Object.keys(findle).forEach(key => {
-            this.bogdle.solutionSize += findle[key].length
-          })
-
-          _setScore(this.bogdle.config.guessedWords.length.toString())
-        }
-      }).catch(err => {
-        console.error('could not create new solution set', err)
-      })
+    _loadSolutionSet()
   })
 
   // := show list of words
@@ -624,7 +700,7 @@ function _addEventListeners() {
   // When the user clicks anywhere outside of the modal, close it
   window.addEventListener('click', (event) => {
     if (event.target == this.bogdle.modal) {
-      this.bogdle.modal.style.display = 'none';
+      modalClose()
     }
   })
 
