@@ -3,8 +3,11 @@ const LS_STATS_KEY = 'bogdle-statistics'
 const START_WORDS = './assets/json/words_9-9_all.json'
 const START_MAX = '9'
 const EMPTY_OBJ_SET = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
+const ENV_PROD_URL = 'bogdle.fun'
 
 this.bogdle = this.bogdle || {}
+
+this.bogdle.env = 'local'
 
 this.bogdle.startWord = 'catamaran'
 this.bogdle.tilesSelected = []
@@ -36,9 +39,10 @@ this.bogdle.buttons = {
   "btnSubmit": document.getElementById('buttonSubmit'),
   "btnBackspace": document.getElementById('buttonBackspace'),
   "btnShuffle": document.getElementById('buttonShuffle'),
+  "btnShowProgress": document.getElementById('buttonShowProgress'),
+  "btnCreateNew": document.getElementById('buttonCreateNew'),
   "btnShowList": document.getElementById('buttonShowList'),
   "btnResetProgress": document.getElementById('buttonResetProgress'),
-  "btnCreateNew": document.getElementById('buttonCreateNew'),
   "btnModalClose": document.getElementById('bogdle-modal-close')
 }
 
@@ -68,6 +72,8 @@ this.bogdle.confirmBody = document.getElementById('bogdle-confirm-body')
 
 // modal methods
 function modalOpen(type, noOverlay) {
+  _resetModalStyle()
+
   this.bogdle.modal.style.display = 'flex'
 
   if (noOverlay) {
@@ -119,6 +125,14 @@ function modalOpen(type, noOverlay) {
       `
       break
 
+    case 'show-progress':
+      if (!this.bogdle.modalContent.classList.contains('padded')) {
+        this.bogdle.modalContent.classList.add('padded')
+      } else {
+        this.bogdle.modalContent.classList.remove('padded')
+      }
+      this.bogdle.modalBody.innerHTML = getGameProgress()
+      break
     case 'show-list':
       if (!this.bogdle.modalContent.classList.contains('padded')) {
         this.bogdle.modalContent.classList.add('padded')
@@ -158,14 +172,39 @@ function modalOpen(type, noOverlay) {
   }
 }
 function modalClose() {
-  this.bogdle.modal.style.display = 'none'
-  if (this.bogdle.modalContent.classList.contains('padded')) {
-    this.bogdle.modalContent.classList.remove('padded')
-  }
+  this.bogdle.modal.style.display = 'none';
 }
 function confirmClose(response) {
   this.bogdle.confirm.style.display = 'none'
   this.bogdle.confirm.dataset.confirm = response;
+}
+
+function getGameProgress() {
+  var html = '<ul>'
+
+  // check each length category ('9', '8', '7', etc.)
+  // total up words guessed in each
+  Object.keys(this.bogdle.solutionSet).reverse().forEach(category => {
+    html += `<li><span class="solution-category">${category}-LETTER</span>`
+
+    var categoryEntries = Object.entries(this.bogdle.solutionSet[category])
+    var categoryGuessed = categoryEntries
+      .filter(entry => entry[1])
+
+    categoryLength = Object.keys(this.bogdle.solutionSet[category])
+      .length
+
+    console.log('categoryGuessed', categoryGuessed)
+
+    html += ` ${categoryGuessed.length} of ${categoryLength}`
+    html += `<ul><li>`
+    html += categoryGuessed.map(x => x[0].toUpperCase()).join(', ')
+    html += `</li></ul></li>`
+  })
+
+  html += '</ul>'
+
+  return html
 }
 
 function getSolutionSetDisplay() {
@@ -225,8 +264,8 @@ function submitWord(word) {
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     if (word.length > 2) {
       if (typeof this.bogdle.solutionSet[word.length][word] != 'undefined') {
-        if (this.bogdle.solutionSet[word] !== 1) {
-          this.bogdle.solutionSet[word] = 1
+        if (this.bogdle.solutionSet[word.length][word] !== 1) {
+          this.bogdle.solutionSet[word.length][word] = 1
           this.bogdle.config.guessedWords.push(word)
           this.bogdle.config.guessedWords.sort()
           this.bogdle.config.lastPlayedTime = new Date().getTime()
@@ -350,10 +389,14 @@ function loadState() {
 this.bogdle.init = async () => {
   // console.log('init started')
 
-  // console.log('this.bogdle.solutionSet', this.bogdle.solutionSet)
+  if (document.location.hostname == ENV_PROD_URL) {
+    this.bogdle.env = 'prod'
+  } else {
+    this.bogdle.env = 'local'
+  }
 
-  // if ?admin=1, then show admin buttons
-  if ((new URL(document.location)).searchParams.get('admin')) {
+  // if local dev, then show admin buttons
+  if (this.bogdle.env == 'local') {
     document.getElementById('admin').style.display = 'flex';
   }
 
@@ -363,6 +406,8 @@ this.bogdle.init = async () => {
 
   // choose letters randomly from solution set
   _shuffleTiles()
+
+  _resetModalStyle()
 
   // console.log('!bogdle has been initialized!')
 }
@@ -623,8 +668,7 @@ function _resizeBoard() {
   board.style.height = `${tileHeight}px`
 }
 
-function _resetModal() {
-  this.bogdle.modal.style.display = 'none';
+function _resetModalStyle() {
   if (this.bogdle.modalContent.classList.contains('padded')) {
     this.bogdle.modalContent.remove('padded')
   }
@@ -677,20 +721,27 @@ function _addEventListeners() {
     _shuffleTiles()
   })
 
-  // + create new solution
-  this.bogdle.buttons.btnCreateNew.addEventListener('click', () => {
-    _loadSolutionSet()
+  // := show current game word list progress
+  this.bogdle.buttons.btnShowProgress.addEventListener('click', () => {
+    modalOpen('show-progress')
   })
 
-  // := show list of words
-  this.bogdle.buttons.btnShowList.addEventListener('click', () => {
-    modalOpen('show-list')
-  })
+  if (this.bogdle.env == 'local') {
+    // + create new solution
+    this.bogdle.buttons.btnCreateNew.addEventListener('click', () => {
+      _loadSolutionSet()
+    })
 
-  // 🗑️ reset progress (i.e. set LS to defaults)
-  this.bogdle.buttons.btnResetProgress.addEventListener('click', () => {
-    _resetProgress()
-  })
+    // := show list of words
+    this.bogdle.buttons.btnShowList.addEventListener('click', () => {
+      modalOpen('show-list')
+    })
+
+    // 🗑️ reset progress (i.e. set LS to defaults)
+    this.bogdle.buttons.btnResetProgress.addEventListener('click', () => {
+      _resetProgress()
+    })
+  }
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
