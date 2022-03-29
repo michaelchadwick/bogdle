@@ -352,6 +352,11 @@ this.bogdle.init = async () => {
 
   // console.log('this.bogdle.solutionSet', this.bogdle.solutionSet)
 
+  // if ?admin=1, then show admin buttons
+  if ((new URL(document.location)).searchParams.get('admin')) {
+    document.getElementById('admin').style.display = 'flex';
+  }
+
   _addEventListeners()
 
   await _loadSolutionSet(this.bogdle.startWord)

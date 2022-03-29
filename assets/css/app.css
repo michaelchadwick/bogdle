@@ -225,6 +225,9 @@ section#game #board-container {
     margin: 0 8px;
     user-select: none; /* no selecting text */
   }
+    section#game #keyboard #admin {
+      display: none;
+    }
     section#game #keyboard .row {
       display: flex;
       margin: 0 auto 8px;
