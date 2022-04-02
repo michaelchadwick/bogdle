@@ -288,7 +288,6 @@ function submitWord(word) {
 
           _checkWinState()
         } else {
-          console.error('word already guessed!')
           modalOpen('repeated-word', true, true)
         }
       } else {
@@ -796,6 +795,7 @@ function _addEventListeners() {
         // add selected tile to guess
         this.bogdle.guess.innerHTML += t.target.innerHTML
 
+        // check guess for validity
         _checkGuess()
       }
     })
@@ -857,6 +857,38 @@ function _addEventListeners() {
     }
     if (event.code == 'Backspace' || event.code == 'Delete') {
       removeLastGuessLetter()
+    }
+
+    var validLetters = this.bogdle.letters.map(l => l.toUpperCase())
+    var pressedLetter = event.code.charAt(event.code.length - 1)
+
+    if (validLetters.includes(pressedLetter)) {
+      // console.log('letter in bogdle pressed', pressedLetter)
+
+      // find any available tiles to select
+      var boardTiles = Array.from(this.bogdle.tiles)
+
+      var availableTiles = boardTiles.filter(tile =>
+        tile.innerHTML.toUpperCase() == pressedLetter &&
+        tile.dataset.state == 'tbd'
+      )
+
+      // if we found one, select first found
+      // this only works in Findle, not Bogdle
+      if (availableTiles.length) {
+        var tileToPush = availableTiles[0]
+
+        tileToPush.dataset.state = 'selected'
+
+        // push another selected tile onto selected array
+        this.bogdle.tilesSelected.push(tileToPush.dataset.pos)
+
+      // add selected tile to guess
+      this.bogdle.guess.innerHTML += tileToPush.innerHTML
+
+      // check guess for validity
+      _checkGuess()
+      }
     }
   })
 

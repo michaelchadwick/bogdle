@@ -228,7 +228,7 @@ section#game {
   }
     section#game #guess-container #guess {
       /* background-color: #fff; */
-      font-size: 0.9em;
+      font-size: 0.85em;
       line-height: 1;
       letter-spacing: 0.05em;
       margin: 0 auto;
@@ -240,13 +240,13 @@ section#game {
     }
     section#game #guess-container #guess.valid {
       color: #1d7c1d;
-      font-size: 0.95em;
+      font-size: 0.87em;
       letter-spacing: 0.07em;
       top: 0;
     }
       section#game #guess-container #guess.valid.first-guess {
         color: #58e417;
-        font-size: 1em;
+        font-size: 0.89em;
         text-shadow: 1px 1px 1px #000;
         top: -1px;
       }
