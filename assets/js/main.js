@@ -26,9 +26,11 @@ this.bogdle.statistics = {
 }
 
 // status DOM elements
-this.bogdle.score = document.getElementById('score')
+this.bogdle.score = document.getElementById('score-container')
 this.bogdle.scoreGuessed = document.getElementById('score-guessed')
+this.bogdle.scoreGuessedOf = document.getElementById('score-guessed-of')
 this.bogdle.scoreTotal = document.getElementById('score-total')
+this.bogdle.scoreTotalWords = document.getElementById('score-total-words')
 this.bogdle.guess = document.getElementById('guess')
 
 // clickable DOM buttons
@@ -40,10 +42,14 @@ this.bogdle.buttons = {
   "btnBackspace": document.getElementById('buttonBackspace'),
   "btnShuffle": document.getElementById('buttonShuffle'),
   "btnShowProgress": document.getElementById('buttonShowProgress'),
+  "btnModalClose": document.getElementById('bogdle-modal-close')
+}
+
+this.bogdle.buttons.debug = {
+  "all": document.getElementById('debug-buttons'),
   "btnCreateNew": document.getElementById('buttonCreateNew'),
   "btnShowList": document.getElementById('buttonShowList'),
-  "btnResetProgress": document.getElementById('buttonResetProgress'),
-  "btnModalClose": document.getElementById('bogdle-modal-close')
+  "btnResetProgress": document.getElementById('buttonResetProgress')
 }
 
 // board tiles
@@ -80,8 +86,6 @@ function modalOpen(type, noOverlay) {
     if (!this.bogdle.modal.classList.contains('temp')) {
       this.bogdle.modal.classList.add('temp')
     }
-  } else {
-    this.bogdle.modal.classList.remove('temp')
   }
 
   switch(type) {
@@ -90,9 +94,7 @@ function modalOpen(type, noOverlay) {
       this.bogdle.modalBody.innerHTML = `
         <h2>How to play Bogdle</h2>
 
-        <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
-
-        <p>After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
+        <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long. After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
 
         <hr />
 
@@ -173,6 +175,8 @@ function modalOpen(type, noOverlay) {
 }
 function modalClose() {
   this.bogdle.modal.style.display = 'none';
+
+  _resetModalStyle()
 }
 function confirmClose(response) {
   this.bogdle.confirm.style.display = 'none'
@@ -182,7 +186,7 @@ function confirmClose(response) {
 function getGameProgress() {
   var html = '<ul>'
 
-  // check each length category ('9', '8', '7', etc.)
+  // check each length category (START_MAX...3, etc.)
   // total up words guessed in each
   Object.keys(this.bogdle.solutionSet).reverse().forEach(category => {
     html += `<li><span class="solution-category">${category}-LETTER</span>`
@@ -198,7 +202,7 @@ function getGameProgress() {
 
     html += ` ${categoryGuessed.length} of ${categoryLength}`
     html += `<ul><li>`
-    html += categoryGuessed.map(x => x[0].toUpperCase()).join(', ')
+    html += categoryGuessed.map(x => x[0].toUpperCase()).sort().join(', ')
     html += `</li></ul></li>`
   })
 
@@ -210,8 +214,8 @@ function getGameProgress() {
 function getSolutionSetDisplay() {
   var html = '<ul>'
 
-  // check each length category ('3', '4', '5', etc.)
-  Object.keys(this.bogdle.solutionSet).forEach(key => {
+  // check each length category (START_MAX...3, etc.)
+  Object.keys(this.bogdle.solutionSet).reverse().forEach(key => {
     var words = []
 
     html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
@@ -389,25 +393,30 @@ function loadState() {
 this.bogdle.init = async () => {
   // console.log('init started')
 
-  if (document.location.hostname == ENV_PROD_URL) {
-    this.bogdle.env = 'prod'
-  } else {
-    this.bogdle.env = 'local'
-  }
+  // set env
+  this.bogdle.env = document.location.hostname == ENV_PROD_URL ? 'prod' : 'local'
 
-  // if local dev, then show admin buttons
+  // if local dev
   if (this.bogdle.env == 'local') {
-    document.getElementById('admin').style.display = 'flex';
+    // if debug buttons are in template
+    if (this.bogdle.buttons.debug.all) {
+      // show debug buttons
+      this.bogdle.buttons.debug.all.style.display = 'flex'
+      // make header buttons smaller to fit in debug buttons
+      document.querySelectorAll('button.icon').forEach((btn) => {
+        btn.style.fontSize = '16px'
+      })
+    }
   }
 
+  // attach event listeners to UI elements
   _addEventListeners()
 
-  await _loadSolutionSet(this.bogdle.startWord)
-
-  // choose letters randomly from solution set
-  _shuffleTiles()
-
-  _resetModalStyle()
+  if (this.bogdle.env == 'prod') {
+    await _loadAsyncSolutionSet(this.bogdle.startWord)
+  } else {
+    await _loadTestSolutionSet('catamaran')
+  }
 
   // console.log('!bogdle has been initialized!')
 }
@@ -415,6 +424,55 @@ this.bogdle.init = async () => {
 /*******************
  * private methods *
  *******************/
+
+async function _loadTestSolutionSet(newWord) {
+  // createBogdle()
+
+  try {
+    // console.log('findle.js->createFindle()')
+    const findle = await createFindle(newWord)
+
+    if (findle) {
+      /*********************************************************************
+       * set Bogdle solution                                               *
+       * -------------------                                               *
+       * load object of arrays (e.g. {"3":['aaa'],"4":['aaaa']})           *
+       * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
+       *********************************************************************/
+
+      // get a range of object keys from 3..MAX_WORD_LENGTH
+      var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+
+      // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
+      categories.forEach(category => {
+        this.bogdle.solutionSet[category] = {}
+      })
+
+      Object.keys(findle).forEach(key => {
+        findle[key].forEach(word => {
+          if (!this.bogdle.solutionSet[key.toString()][word]) {
+            this.bogdle.solutionSet[key.toString()][word] = {}
+          }
+
+          this.bogdle.solutionSet[key.toString()][word] = 0
+        })
+      })
+
+      // set Bogdle letters
+      this.bogdle.letters = newWord.split('')
+
+      // choose letters randomly from solution set
+      _shuffleTiles()
+
+      _resetModalStyle()
+
+      loadState()
+    }
+  } catch (err) {
+    console.error('could not create new Findle', err)
+  }
+
+}
 
 // load random start word for solution set
 async function _getNewStartWord() {
@@ -431,9 +489,9 @@ async function _getNewStartWord() {
   return this.startWord
 }
 
-// load (today's) solution set from json
-async function _loadSolutionSet() {
-  // console.log('new solution requested...')
+// load (today's) solution set from json asynchronously
+async function _loadAsyncSolutionSet() {
+  // console.log('new solution requested asynchronously...')
 
   // createBogdle()
 
@@ -447,12 +505,12 @@ async function _loadSolutionSet() {
       const findle = await createFindle(newWord)
 
       if (findle) {
-        /****************************************************************
-         * set Bogdle solution
-         * -------------------
-         * desc: load an object of arrays (e.g. { "3": ['aaa'], "4": ['aaaa'] })
-         * and turn it into an object of objects (e.g. { "3": { 'aaa': 0 }, "4": { 'aaaa': 0 } })
-         ****************************************************************/
+        /*********************************************************************
+         * set Bogdle solution                                               *
+         * -------------------                                               *
+         * load object of arrays (e.g. {"3":['aaa'],"4":['aaaa']})           *
+         * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
+         *********************************************************************/
 
         // get a range of object keys from 3..MAX_WORD_LENGTH
         var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
@@ -475,9 +533,9 @@ async function _loadSolutionSet() {
         // set Bogdle letters
         this.bogdle.letters = newWord.split('')
 
-        // console.log('!solution set loaded!', this.bogdle.solutionSet, _solutionSize())
-
         _shuffleTiles()
+
+        _resetModalStyle()
 
         loadState()
       }
@@ -552,7 +610,25 @@ function _setScore(guessed = 0) {
 
   // set UI elements
   this.bogdle.scoreGuessed.innerHTML = guessed.toString()
+  this.bogdle.scoreGuessedOf.innerHTML = ' of '
   this.bogdle.scoreTotal.innerHTML = _solutionSize().toString()
+  this.bogdle.scoreTotalWords.innerHTML = ' words'
+
+  // if we're local and it doesn't exist
+  // add the starter words for debugging
+  if (this.bogdle.env == 'local') {
+    var startDiv = document.getElementById('local-debug-start')
+
+    if (!startDiv) {
+      startDiv = document.createElement('div')
+      startDiv.id = 'local-debug-start'
+      startDiv.classList.add('debug')
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[START_MAX]).join(', ')
+      this.bogdle.score.append(startDiv)
+    } else {
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[START_MAX]).join(', ')
+    }
+  }
 
   // console.log('!score set!', `${this.bogdle.score.innerHTML}`)
 }
@@ -560,7 +636,7 @@ function _setScore(guessed = 0) {
 // game state checking
 function _checkGuess() {
   // reset classes
-  this.bogdle.guess.classList.remove('valid', 'first-guess', 'not-first-guess')
+  this.bogdle.guess.classList.remove('valid', 'first-guess')
 
   // player entered valid word length
   if (this.bogdle.guess.innerHTML.length > 2) {
@@ -574,8 +650,6 @@ function _checkGuess() {
         // and it's the first time
         if (!this.bogdle.solutionSet[key][word]) {
           this.bogdle.guess.classList.add('first-guess')
-        } else {
-          this.bogdle.guess.classList.add('not-first-guess')
         }
       } else {
         // player guessed an invalid word (not on list)
@@ -634,6 +708,7 @@ function _resetInput() {
 function _shuffleTiles() {
   let letters = this.bogdle.letters
 
+  // shuffle order of letters
   var j, x, index;
   for (index = letters.length - 1; index > 0; index--) {
     j = Math.floor(Math.random() * (index + 1));
@@ -642,10 +717,12 @@ function _shuffleTiles() {
     letters[j] = x;
   }
 
+  // fill UI tiles with letters
   Array.from(this.bogdle.tiles).forEach((tile, i) => {
     tile.innerHTML = letters[i]
   })
 
+  // make sure game is playable again
   _resetInput()
 }
 
@@ -659,8 +736,9 @@ function _disableTiles() {
 
 function _resizeBoard() {
   var boardContainer = document.querySelector('#board-container')
+  var boardHeight = boardContainer.clientHeight
 
-  var containerHeight = Math.min(Math.floor(boardContainer.clientHeight), 350)
+  var containerHeight = Math.min(Math.floor(boardHeight), 350)
   var tileHeight = 2.5 * Math.floor(containerHeight / 3)
 
   var board = document.querySelector('#board')
@@ -670,7 +748,10 @@ function _resizeBoard() {
 
 function _resetModalStyle() {
   if (this.bogdle.modalContent.classList.contains('padded')) {
-    this.bogdle.modalContent.remove('padded')
+    this.bogdle.modalContent.classList.remove('padded')
+  }
+  if (this.bogdle.modalContent.classList.contains('temp')) {
+    this.bogdle.modalContent.classList.remove('temp')
   }
 }
 
@@ -727,20 +808,22 @@ function _addEventListeners() {
   })
 
   if (this.bogdle.env == 'local') {
-    // + create new solution
-    this.bogdle.buttons.btnCreateNew.addEventListener('click', () => {
-      _loadSolutionSet()
-    })
+    if (this.bogdle.buttons.debug.all) {
+      // + create new solution
+      this.bogdle.buttons.debug.btnCreateNew.addEventListener('click', () => {
+        _loadAsyncSolutionSet()
+      })
 
-    // := show list of words
-    this.bogdle.buttons.btnShowList.addEventListener('click', () => {
-      modalOpen('show-list')
-    })
+      // := show list of words
+      this.bogdle.buttons.debug.btnShowList.addEventListener('click', () => {
+        modalOpen('show-list')
+      })
 
-    // 🗑️ reset progress (i.e. set LS to defaults)
-    this.bogdle.buttons.btnResetProgress.addEventListener('click', () => {
-      _resetProgress()
-    })
+      // 🗑️ reset progress (i.e. set LS to defaults)
+      this.bogdle.buttons.debug.btnResetProgress.addEventListener('click', () => {
+        _resetProgress()
+      })
+    }
   }
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized

@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   /* whole viewport minus neb.host footer */
   height: calc(100% - 40px);
@@ -7,9 +12,10 @@ body {
   color: #111;
   font-family: 'Changa', sans-serif;
   font-size: 16px;
+  font-size-adjust: 0.5;
   font-weight: 300;
   height: 100%;
-  line-height: 1;
+  line-height: 1.3;
   margin: 0;
   overflow-y: hidden;
   padding: 0;
@@ -21,46 +27,8 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
 }
 
-/*
- * HEADER
- */
-header {
-  align-items: center;
-  border-bottom: 1px solid #529952;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  height: 50px;
-  padding: 0 16px;
-}
-header .menu-left {
-  align-items: center;
-  display: flex;
-  justify-content: flex-start;
-  margin: 0;
-  padding: 0;
-  width: 70px;
-}
-header .title {
-  font-family: 'Changa', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 100%;
-  letter-spacing: 0.1em;
-  text-align: center;
-  text-transform: uppercase;
-}
-@media (min-width: 768px) {
-  header .title {
-    font-size: 20px;
-    letter-spacing: 0.01em;
-  }
-}
-header .menu-right {
-  display: flex;
-  width: 70px;
-  justify-content: flex-end;
+hr {
+  margin: 1em 0;
 }
 
 button {
@@ -95,10 +63,25 @@ button.icon {
   font-size: 24px;
   padding: 0 4px;
 }
+button.icon:hover {
+  color: #529952;
+}
 
+.debug {
+  color: #715ec7;
+}
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
+}
 .row {
   touch-action: manipulation;
 }
+
 .tile {
   align-items: center;
   border: 2px solid transparent;
@@ -142,128 +125,176 @@ button.icon {
 }
 
 /*
+ * HEADER
+ */
+header {
+  align-items: center;
+  border-bottom: 1px solid #529952;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: 50px;
+  padding: 0 16px;
+}
+  header .menu-left {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    width: 70px;
+  }
+    header .menu-left #debug-buttons {
+      display: none;
+    }
+    header .menu-left #debug-buttons button {
+      color: #715ec7;
+    }
+  header .title {
+    font-family: 'Changa', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) {
+    header .title {
+      font-size: 20px;
+      letter-spacing: 0.01em;
+    }
+  }
+  header .menu-right {
+    display: flex;
+    width: 70px;
+    justify-content: flex-end;
+  }
+
+/*
  * GAME
  */
 section#game {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 50px);
+  height: calc(100% - 50px); /* whole screen except for header */
   margin: 0.5em auto 0;
   max-width: 500px;
   width: 100%;
 }
-  section#game #score {
+  section#game #score-container {
     font-size: 1em;
+    height: 50px;
     text-align: center;
   }
-  section#game #score #score-total {
+  section#game #score-container #score-total {
     font-weight: 700;
   }
   section#game #guess-container {
     align-content: center;
     align-items: center;
     /* background-color: #f9ffaa; */
-    color: #111;
+    /* border: 1px solid #000; */
+    color: #333;
     display: flex;
     flex-wrap: wrap;
     font-family: 'Changa', sans-serif;
-    font-size: 2.5em;
+    font-size: 3.1em;
     font-weight: 700;
-    height: 60px;
-    line-height: 0.8;
-    margin: 0 auto;
+    height: 50px;
+    margin: 0 10px;
     text-align: center;
     text-transform: uppercase;
-    transition: all 100ms ease;
+    top: 1px;
     vertical-align: middle;
-    width: 100%;
     word-break: break-word;
     word-wrap: break-word;
   }
-    section#game #guess-container #guess {
-      margin: 0 auto;
-    }
-    section#game #guess-container #guess.valid {
-      font-size: 1.15em;
-      line-height: 0.8;
-      transition: all 200ms ease;
-    }
-      section#game #guess-container #guess.valid.first-guess {
-        color: #28a828;
-        font-size: 1.2em;
-        line-height: 0.8;
-        transition: all 100ms ease;
-      }
-      section#game #guess-container #guess.valid.not-first-guess {
-        color: #173817;
-        font-size: 1.15em;
-        line-height: 0.8;
-        transition: all 200ms ease;
-      }
 
-section#game #board-container {
-  align-items: center;
-  /* background-color: #ffc6c6; */
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-  overflow: hidden;
-}
-  section#game #board-container #board {
-    /* background-color: #c6c7ff; */
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    grid-gap: 5px;
-    padding: 10px;
+  @media (min-width: 350px) {
+    section#game #guess-container {
+      font-size: 4em;
+    }
   }
-    section#game #board-container #board .row {
-      display: grid;
-      grid-gap: 5px;
-      grid-template-columns: repeat(3, 1fr);
+
+  @media (min-width: 768px) {
+    section#game #guess-container {
+      font-size: 5em;
     }
-  section#game #keyboard {
-    margin: 0 8px;
-    user-select: none; /* no selecting text */
   }
-    section#game #keyboard #admin {
-      display: none;
-    }
-    section#game #keyboard #admin button {
-      background-color: #715ec7;
-      color: #fff;
-    }
-    section#game #keyboard #admin button:hover {
-      background-color: #5747a0;
-    }
-    section#game #keyboard .row {
-      display: flex;
-      margin: 0 auto 8px;
-      /* Enable panning, pinch zoom, but not double-tap zoom */
-      touch-action: manipulation;
+    section#game #guess-container #guess {
+      /* background-color: #fff; */
+      font-size: 0.9em;
+      line-height: 1;
+      letter-spacing: 0.05em;
+      margin: 0 auto;
+      position: relative;
+      transition: all 250ms;
+      text-shadow: 1px 1px 1px transparent;
+      top: 1px;
       width: 100%;
     }
-    section#game #keyboard button {
-      border: 1px solid transparent;
-      font-size: 20px;
-      width: 100px;
+    section#game #guess-container #guess.valid {
+      color: #1d7c1d;
+      font-size: 0.95em;
+      letter-spacing: 0.07em;
+      top: 0;
     }
-      section#game #keyboard button:last-of-type {
-        /* last button in row shouldn't have right-margin */
-        margin: 0;
-      }
-      section#game #keyboard button:hover:not([disabled]) {
-        background-color: #888;
-        border: 1px solid #111;
-        color: #fff;
+      section#game #guess-container #guess.valid.first-guess {
+        color: #58e417;
+        font-size: 1em;
+        text-shadow: 1px 1px 1px #000;
+        top: -1px;
       }
 
-.container {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 16px 0;
-}
+  section#game #board-container {
+    align-items: center;
+    /* background-color: #ffc6c6; */
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    overflow: hidden;
+  }
+    section#game #board-container #board {
+      /* background-color: #c6c7ff; */
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      grid-gap: 5px;
+      padding: 10px;
+    }
+      section#game #board-container #board .row {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+    section#game #keyboard {
+      margin: 0 8px;
+      user-select: none; /* no selecting text */
+    }
+      section#game #keyboard .row {
+        display: flex;
+        margin: 0 auto 8px;
+        /* Enable panning, pinch zoom, but not double-tap zoom */
+        touch-action: manipulation;
+        width: 100%;
+      }
+      section#game #keyboard button {
+        border: 1px solid transparent;
+        font-size: 20px;
+        width: 100px;
+      }
+        section#game #keyboard button:last-of-type {
+          /* last button in row shouldn't have right-margin */
+          margin: 0;
+        }
+        section#game #keyboard button:hover:not([disabled]) {
+          background-color: #888;
+          border: 1px solid #111;
+          color: #fff;
+        }
+
 #statistics {
   display: flex;
   padding-bottom: 10px;

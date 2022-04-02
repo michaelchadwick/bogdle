@@ -45,6 +45,17 @@
       <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
         <i class="fa-solid fa-question"></i>
       </button>
+      <div id="debug-buttons" class="debug">
+        <button id="buttonCreateNew" class="icon">
+          <i class="fa-solid fa-circle-plus"></i>
+        </button>
+        <button id="buttonShowList" class="icon">
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button id="buttonResetProgress" class="icon">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
     </div>
 
     <div class="title">
@@ -64,7 +75,10 @@
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <section id="game">
-    <div id="score"><span id="score-guessed"></span> of <span id="score-total"></span> words</div>
+    <div id="score-container">
+      <span id="score-guessed"></span><span id="score-guessed-of"></span>
+      <span id="score-total"></span><span id="score-total-words"></span>
+    </div>
 
     <div id="guess-container">
       <div id="guess"></div>
@@ -105,17 +119,6 @@
       <div class="row">
         <button id="buttonShowProgress">
           <i class="fa-solid fa-list-check"></i>
-        </button>
-      </div>
-      <div class="row" id="admin">
-        <button id="buttonCreateNew">
-          <i class="fa-solid fa-circle-plus"></i>
-        </button>
-        <button id="buttonShowList">
-          <i class="fa-solid fa-list"></i>
-        </button>
-        <button id="buttonResetProgress">
-          <i class="fa-solid fa-trash-can"></i>
         </button>
       </div>
     </div>
