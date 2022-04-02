@@ -9,6 +9,7 @@
   overflow-y: auto;
   position: absolute;
   top: 0;
+  transition: all 1000ms;
   width: 100%;
   z-index: 1;
 }
@@ -20,17 +21,20 @@
   transform: translate(-50%, -18%);
 }
 .modal.temp .modal-content {
+  background-color: #529952;
+  border: 1px solid #000;
+  color: #fff;
   top: 10%;
 }
 
 .modal-close {
   color: #aaa;
   float: right;
-  font-size: 48px;
+  font-size: 36px;
   font-weight: bold;
   height: 24px;
   position: absolute;
-  right: 16px;
+  right: 12px;
   top: 0;
   width: 24px;
 }
@@ -320,7 +324,7 @@
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   outline-color: var(--thin-ui-secondary);
-  transition: 100ms all ease-in-out;
+  transition: 500ms all ease-in-out;
 }
 
 .thin-ui-form input[type="submit"],
@@ -444,7 +448,7 @@
   border-radius: 2px;
   color: #000000;
   cursor: pointer;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.5s ease-in-out;
   user-select: none;
 }
 .thin-ui-checkblock + label:hover,
@@ -495,7 +499,7 @@
   bottom: 2px;
   left: 2px;
   border-radius: 100%;
-  transition: left 0.1s ease-in-out, right 0.1s ease-in-out;
+  transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
 }
 .thin-ui-switch input[type="checkbox"]:checked ~ .thin-ui-switch-track {
   background-color: var(--thin-ui-primary);
@@ -668,7 +672,7 @@ label.thin-ui-popover button:focus + .thin-ui-popover-body {
   font-size: 13px;
   border-radius: 2px 2px 0 0;
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-  transition: background-color 0.05s ease-out;
+  transition: background-color 0.5s ease-out;
 }
 .thin-ui-tabstrip label:hover {
   background-color: var(--thin-ui-secondary);
@@ -733,7 +737,7 @@ label.thin-ui-popover button:focus + .thin-ui-popover-body {
 
 .thin-ui-modal-window {
   background-color: #fff;
-  min-width: 480px;
+  min-width: 300px;
   border: 4px solid #458145;
   border-top-width: 0;
   box-shadow: 0 0 0 4px rgb(0 0 0 / 15%), 0 0 16px rgb(0 0 0 / 25%);

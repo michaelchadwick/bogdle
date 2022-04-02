@@ -72,12 +72,12 @@ this.bogdle.confirmContent = document.getElementById('bogdle-confirm-content')
 /// body inside of confirm content
 this.bogdle.confirmBody = document.getElementById('bogdle-confirm-body')
 
-/******************
+/*************************************************************************
  * public methods *
- ******************/
+ *************************************************************************/
 
 // modal methods
-function modalOpen(type, noOverlay) {
+function modalOpen(type, noOverlay, noClose) {
   _resetModalStyle()
 
   this.bogdle.modal.style.display = 'flex'
@@ -86,6 +86,10 @@ function modalOpen(type, noOverlay) {
     if (!this.bogdle.modal.classList.contains('temp')) {
       this.bogdle.modal.classList.add('temp')
     }
+  }
+
+  if (noClose) {
+    this.bogdle.buttons.btnModalClose.style.display = 'none';
   }
 
   switch(type) {
@@ -144,6 +148,10 @@ function modalOpen(type, noOverlay) {
       this.bogdle.modalBody.innerHTML = getSolutionSetDisplay()
       break
 
+    case 'load-new':
+      this.bogdle.modalBody.innerHTML = 'loading...'
+      break
+
     case 'invalid-length':
       this.bogdle.modalBody.innerHTML = `
         Error: Needs to be 3 or more characters.
@@ -197,8 +205,6 @@ function getGameProgress() {
 
     categoryLength = Object.keys(this.bogdle.solutionSet[category])
       .length
-
-    console.log('categoryGuessed', categoryGuessed)
 
     html += ` ${categoryGuessed.length} of ${categoryLength}`
     html += `<ul><li>`
@@ -283,15 +289,15 @@ function submitWord(word) {
           _checkWinState()
         } else {
           console.error('word already guessed!')
-          modalOpen('repeated-word', true)
+          modalOpen('repeated-word', true, true)
         }
       } else {
         // console.error('word not in list!')
-        modalOpen('invalid-word', true)
+        modalOpen('invalid-word', true, true)
       }
     } else {
       // console.error('guess too short!')
-      modalOpen('invalid-length', true)
+      modalOpen('invalid-length', true, true)
     }
   } else {
     // game is over, so no more guessed allowed
@@ -421,15 +427,16 @@ this.bogdle.init = async () => {
   // console.log('!bogdle has been initialized!')
 }
 
-/*******************
+/*************************************************************************
  * private methods *
- *******************/
+ *************************************************************************/
 
 async function _loadTestSolutionSet(newWord) {
   // createBogdle()
 
   try {
-    // console.log('findle.js->createFindle()')
+    modalOpen('load-new', false, true)
+
     const findle = await createFindle(newWord)
 
     if (findle) {
@@ -467,9 +474,13 @@ async function _loadTestSolutionSet(newWord) {
       _resetModalStyle()
 
       loadState()
+
+      modalClose()
     }
   } catch (err) {
     console.error('could not create new Findle', err)
+
+    modalClose()
   }
 
 }
@@ -498,9 +509,9 @@ async function _loadAsyncSolutionSet() {
   try {
     const newWord = await _getNewStartWord()
 
-    // console.log('newWord', newWord)
-
     try {
+      modalOpen('load-new', false, true)
+
       // console.log('findle.js->createFindle()')
       const findle = await createFindle(newWord)
 
@@ -539,19 +550,32 @@ async function _loadAsyncSolutionSet() {
 
         loadState()
       }
+
+      modalClose()
     } catch (err) {
       console.error('could not create new Findle', err)
+
+      modalClose()
     }
   } catch (err) {
     console.error('could not get new start word', err)
+
+    modalClose()
   }
 }
 
 // reload all config and LS
 async function _resetProgress() {
-  this.myConfirm = new Modal('Reset progress?', 'Are you <strong>sure</strong> you want to reset your progress?', 'Yes, please', 'No, never mind', false)
+  this.myConfirm = new Modal(
+    'Reset progress?',
+    'Are you <strong>sure</strong> you want to reset your progress?',
+    'Yes, please',
+    'No, never mind',
+    false
+  )
 
   try {
+    // wait for modal confirmation
     var confirmed = await myConfirm.question()
 
     if (confirmed) {
@@ -570,9 +594,11 @@ async function _resetProgress() {
 
       // set score to 0
       _setScore(0)
+
       // re-enable DOM inputs
       _resetInput()
 
+      // open the help modal
       modalOpen('start')
 
       console.log('!progress reset!')
@@ -734,6 +760,7 @@ function _disableTiles() {
   })
 }
 
+// dynamically resize board depending on viewport
 function _resizeBoard() {
   var boardContainer = document.querySelector('#board-container')
   var boardHeight = boardContainer.clientHeight
@@ -746,13 +773,10 @@ function _resizeBoard() {
   board.style.height = `${tileHeight}px`
 }
 
+// remove any added classes to modal
 function _resetModalStyle() {
-  if (this.bogdle.modalContent.classList.contains('padded')) {
-    this.bogdle.modalContent.classList.remove('padded')
-  }
-  if (this.bogdle.modalContent.classList.contains('temp')) {
-    this.bogdle.modalContent.classList.remove('temp')
-  }
+  this.bogdle.modalContent.setAttribute('class', 'modal-content')
+  this.bogdle.buttons.btnModalClose.style.display = 'block';
 }
 
 // add event listeners to DOM
