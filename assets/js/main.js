@@ -597,7 +597,7 @@ async function _askToResetProgress() {
 }
 
 function _resetProgress() {
-  console.log('resetting progress...')
+  // console.log('resetting progress...')
 
   // set config to defaults
   this.bogdle.config = {
@@ -619,7 +619,7 @@ function _resetProgress() {
   // open the help modal
   modalOpen('start')
 
-  console.log('!progress reset!')
+  // console.log('!progress reset!')
 }
 
 // return solutionSet size
