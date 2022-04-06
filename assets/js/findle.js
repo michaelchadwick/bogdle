@@ -1,17 +1,13 @@
-const MAX_WORD_LENGTH = 9
-const ALL_OR_SOME = 'all'
-const EMPTY_ARR_SET = { "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [] }
-const DICTIONARY_FILE = `./assets/json/words_3-${MAX_WORD_LENGTH}_${ALL_OR_SOME}.json`
-// const DICTIONARY_FILE = "./assets/text/words_3_a-c.txt"
-
 class Findle {
+  trie = {}
   solution = EMPTY_ARR_SET
   word = ''
-  trie = {}
+  dictionary = {}
 
-  constructor(w) {
+  constructor(w, d) {
     this.word = w
     this.solution = EMPTY_ARR_SET
+    this.dictionary = d
   }
 
   findWords = (word, trie = this.trie, cur = '', words = []) => {
@@ -43,9 +39,10 @@ class Findle {
 
   createSolution = async () => {
     try {
-      const response = await fetch(DICTIONARY_FILE)
+      const response = await fetch(this.dictionary)
       const jsonWords = await response.json()
       var words = []
+
       this.solution = EMPTY_ARR_SET
 
       //console.log('words', words)
@@ -77,7 +74,7 @@ class Findle {
       var validWords = this.findWords(this.word)
         .filter((value, index, self) => self.indexOf(value) === index)
 
-      //console.log('validWords', validWords)
+      // console.log('validWords', validWords)
 
       // create solution set from valid words
       this.setSolution(validWords)
@@ -89,8 +86,10 @@ class Findle {
   }
 
   setSolution = (set) => {
-    // get a range of object keys from 3..MAX_WORD_LENGTH
+    // get a range of object keys from 3...MAX_WORD_LENGTH
     var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+
+    // console.log('categories', categories)
 
     // zero them all out because setting it to the EMPTY_ARR_SET does not work :'(
     categories.forEach(category => {
@@ -100,16 +99,18 @@ class Findle {
     set.forEach(word => {
       this.solution[word.length].push(word)
     })
+    // make sure startWord is in there
+    this.solution[MAX_WORD_LENGTH.toString()].push(this.word)
   }
 }
 
-async function createFindle(word) {
+async function createFindle(word, dictionary) {
   // console.log(`creating new Findle for '${word.toUpperCase()}'`)
 
   // create new empty Findle instance
-  var findleInstance = new Findle(word)
+  var findleInstance = new Findle(word, dictionary)
 
-  // console.log('findleInstance.solution', findleInstance.solution)
+  // console.log('findleInstance', findleInstance)
 
   // create a new solution to return
   try {

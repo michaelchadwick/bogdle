@@ -1,15 +1,18 @@
-const LS_STATE_KEY = 'bogdle-state'
-const LS_STATS_KEY = 'bogdle-statistics'
-const START_WORDS = './assets/json/words_9-9_all.json'
-const START_MAX = '9'
-const EMPTY_OBJ_SET = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
-const ENV_PROD_URL = 'bogdle.fun'
-
 this.bogdle = this.bogdle || {}
 
 this.bogdle.env = 'local'
+this.bogdle.difficulty = 'normal'
 
-this.bogdle.startWord = 'catamaran'
+// dictionary to pull from
+// this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.difficulty]]}/words_3-${MAX_WORD_LENGTH}.json`
+this.bogdle.dictionary = `./assets/json/01_sm/words_3-9.json`
+
+this.bogdle.startWordsFile = './assets/json/'
+this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.difficulty]]
+this.bogdle.startWordsFile += `/words_${MAX_WORD_LENGTH}-${MAX_WORD_LENGTH}.json`
+
+this.bogdle.startWord = 'patterned'
+this.bogdle.startWord = 'education'
 this.bogdle.tilesSelected = []
 this.bogdle.solutionSet = EMPTY_OBJ_SET
 
@@ -194,7 +197,7 @@ function confirmClose(response) {
 function getGameProgress() {
   var html = '<ul>'
 
-  // check each length category (START_MAX...3, etc.)
+  // check each length category (MAX_WORD_LENGTH...3, etc.)
   // total up words guessed in each
   Object.keys(this.bogdle.solutionSet).reverse().forEach(category => {
     html += `<li><span class="solution-category">${category}-LETTER</span>`
@@ -220,7 +223,7 @@ function getGameProgress() {
 function getSolutionSetDisplay() {
   var html = '<ul>'
 
-  // check each length category (START_MAX...3, etc.)
+  // check each length category (MAX_WORD_LENGTH...3, etc.)
   Object.keys(this.bogdle.solutionSet).reverse().forEach(key => {
     var words = []
 
@@ -418,9 +421,9 @@ this.bogdle.init = async () => {
   _addEventListeners()
 
   if (this.bogdle.env == 'prod') {
-    await _loadAsyncSolutionSet(this.bogdle.startWord)
+    await _loadRealSolutionSet(this.bogdle.startWord)
   } else {
-    await _loadTestSolutionSet('catamaran')
+    await _loadTestSolutionSet(this.bogdle.startWord)
   }
 
   // console.log('!bogdle has been initialized!')
@@ -430,13 +433,14 @@ this.bogdle.init = async () => {
  * private methods *
  *************************************************************************/
 
+// load test solution set using static word
 async function _loadTestSolutionSet(newWord) {
   // createBogdle()
 
   try {
     modalOpen('load-new', false, true)
 
-    const findle = await createFindle(newWord)
+    const findle = await createFindle(newWord, this.bogdle.dictionary)
 
     if (findle) {
       /*********************************************************************
@@ -454,6 +458,7 @@ async function _loadTestSolutionSet(newWord) {
         this.bogdle.solutionSet[category] = {}
       })
 
+      // create bogdle's solution set
       Object.keys(findle).forEach(key => {
         findle[key].forEach(word => {
           if (!this.bogdle.solutionSet[key.toString()][word]) {
@@ -463,6 +468,8 @@ async function _loadTestSolutionSet(newWord) {
           this.bogdle.solutionSet[key.toString()][word] = 0
         })
       })
+
+      console.log('test: this.bogdle.solutionSet', this.bogdle.solutionSet)
 
       // set Bogdle letters
       this.bogdle.letters = newWord.split('')
@@ -488,10 +495,10 @@ async function _loadTestSolutionSet(newWord) {
 async function _getNewStartWord() {
   // gets MAX-letter start words via fetch()
   // if success, grabs a random one
-  const response = await fetch(START_WORDS)
+  const response = await fetch(this.bogdle.startWordsFile)
   const responseJson = await response.json()
-  // random START_MAX word
-  let possibles = responseJson[START_MAX]
+  // random MAX_WORD_LENGTH word
+  let possibles = responseJson[MAX_WORD_LENGTH.toString()]
   let possibleIdx = Math.floor(Math.random() * possibles.length)
 
   this.startWord = possibles[possibleIdx]
@@ -500,7 +507,7 @@ async function _getNewStartWord() {
 }
 
 // load (today's) solution set from json asynchronously
-async function _loadAsyncSolutionSet() {
+async function _loadRealSolutionSet() {
   // console.log('new solution requested asynchronously...')
 
   // createBogdle()
@@ -511,8 +518,7 @@ async function _loadAsyncSolutionSet() {
     try {
       modalOpen('load-new', false, true)
 
-      // console.log('findle.js->createFindle()')
-      const findle = await createFindle(newWord)
+      const findle = await createFindle(newWord, this.bogdle.dictionary)
 
       if (findle) {
         /*********************************************************************
@@ -522,7 +528,7 @@ async function _loadAsyncSolutionSet() {
          * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
          *********************************************************************/
 
-        // get a range of object keys from 3..MAX_WORD_LENGTH
+        // get a range of object keys from 3...MAX_WORD_LENGTH
         var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
 
         // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
@@ -530,6 +536,7 @@ async function _loadAsyncSolutionSet() {
           this.bogdle.solutionSet[category] = {}
         })
 
+        // create bogdle's solution set
         Object.keys(findle).forEach(key => {
           findle[key].forEach(word => {
             if (!this.bogdle.solutionSet[key.toString()][word]) {
@@ -540,6 +547,8 @@ async function _loadAsyncSolutionSet() {
           })
         })
 
+        console.log('real: this.bogdle.solutionSet', this.bogdle.solutionSet)
+
         // set Bogdle letters
         this.bogdle.letters = newWord.split('')
 
@@ -547,7 +556,9 @@ async function _loadAsyncSolutionSet() {
 
         _resetModalStyle()
 
-        loadState()
+        _resetProgress()
+
+        // loadState()
       }
 
       modalClose()
@@ -563,8 +574,8 @@ async function _loadAsyncSolutionSet() {
   }
 }
 
-// reload all config and LS
-async function _resetProgress() {
+// ask to reset config and LS
+async function _askToResetProgress() {
   this.myConfirm = new Modal(
     'Reset progress?',
     'Are you <strong>sure</strong> you want to reset your progress?',
@@ -578,33 +589,37 @@ async function _resetProgress() {
     var confirmed = await myConfirm.question()
 
     if (confirmed) {
-      console.log('resetting progress...')
-
-      // set config to defaults
-      this.bogdle.config = {
-        "gameState": "IN_PROGRESS",
-        "guessedWords": [],
-        "lastCompletedTime": null,
-        "lastPlayedTime": null
-      }
-
-      // save those defaults to local storage
-      saveState()
-
-      // set score to 0
-      _setScore(0)
-
-      // re-enable DOM inputs
-      _resetInput()
-
-      // open the help modal
-      modalOpen('start')
-
-      console.log('!progress reset!')
+      _resetProgress()
     }
   } catch (err) {
     console.error('progress reset failed', err)
   }
+}
+
+function _resetProgress() {
+  console.log('resetting progress...')
+
+  // set config to defaults
+  this.bogdle.config = {
+    "gameState": "IN_PROGRESS",
+    "guessedWords": [],
+    "lastCompletedTime": null,
+    "lastPlayedTime": null
+  }
+
+  // save those defaults to local storage
+  saveState()
+
+  // set score to 0
+  _setScore(0)
+
+  // re-enable DOM inputs
+  _resetInput()
+
+  // open the help modal
+  modalOpen('start')
+
+  console.log('!progress reset!')
 }
 
 // return solutionSet size
@@ -648,10 +663,13 @@ function _setScore(guessed = 0) {
       startDiv = document.createElement('div')
       startDiv.id = 'local-debug-start'
       startDiv.classList.add('debug')
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[START_MAX]).join(', ')
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[MAX_WORD_LENGTH.toString()]).join(', ')
+      // startDiv.innerHTML = this.bogdle.startWord
+
       this.bogdle.score.append(startDiv)
     } else {
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[START_MAX]).join(', ')
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[MAX_WORD_LENGTH.toString()]).join(', ')
+      // startDiv.innerHTML = this.bogdle.startWord
     }
   }
 
@@ -831,11 +849,12 @@ function _addEventListeners() {
     modalOpen('show-progress')
   })
 
+  // local debug buttons
   if (this.bogdle.env == 'local') {
     if (this.bogdle.buttons.debug.all) {
       // + create new solution
       this.bogdle.buttons.debug.btnCreateNew.addEventListener('click', () => {
-        _loadAsyncSolutionSet()
+        _loadRealSolutionSet()
       })
 
       // := show list of words
@@ -845,7 +864,7 @@ function _addEventListeners() {
 
       // 🗑️ reset progress (i.e. set LS to defaults)
       this.bogdle.buttons.debug.btnResetProgress.addEventListener('click', () => {
-        _resetProgress()
+        _askToResetProgress()
       })
     }
   }
