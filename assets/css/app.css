@@ -1,4 +1,5 @@
 /* green: #529952 */
+/* debug: #715ec7 */
 
 * {
   margin: 0;
@@ -67,6 +68,15 @@ button.icon {
 }
 button.icon:hover {
   color: #529952;
+}
+
+select {
+  height: 20px;
+  margin-top: 1.5em;
+  position: relative;
+}
+select option {
+  font-size: 36px;
 }
 
 .debug {

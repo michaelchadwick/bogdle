@@ -44,154 +44,123 @@ this.bogdle.buttons = {
   "btnSubmit": document.getElementById('buttonSubmit'),
   "btnBackspace": document.getElementById('buttonBackspace'),
   "btnShuffle": document.getElementById('buttonShuffle'),
-  "btnShowProgress": document.getElementById('buttonShowProgress'),
-  "btnModalClose": document.getElementById('bogdle-modal-close')
+  "btnShowProgress": document.getElementById('buttonShowProgress')
 }
 
 this.bogdle.buttons.debug = {
   "all": document.getElementById('debug-buttons'),
   "btnCreateNew": document.getElementById('buttonCreateNew'),
   "btnShowList": document.getElementById('buttonShowList'),
-  "btnResetProgress": document.getElementById('buttonResetProgress')
+  "btnResetProgress": document.getElementById('buttonResetProgress'),
+  "btnModalOpen": document.getElementById('selectModalOpen')
 }
 
 // board tiles
 this.bogdle.letters = []
 this.bogdle.tiles = document.getElementsByClassName('tile')
 
-// modals
-/// includes overlay and modal itself
-this.bogdle.modal = document.getElementById('bogdle-modal')
-/// content inside modal itself
-this.bogdle.modalContent = document.getElementById('bogdle-modal-content')
-/// body inside of modal content
-this.bogdle.modalBody = document.getElementById('bogdle-modal-body')
-
-// confirm
-/// includes overlay and confirm itself
-this.bogdle.confirm = document.getElementById('bogdle-confirm')
-/// content inside confirm itself
-this.bogdle.confirmContent = document.getElementById('bogdle-confirm-content')
-/// body inside of confirm content
-this.bogdle.confirmBody = document.getElementById('bogdle-confirm-body')
-
 /*************************************************************************
  * public methods *
  *************************************************************************/
 
 // modal methods
-function modalOpen(type, noOverlay, noClose) {
-  _resetModalStyle()
-
-  this.bogdle.modal.style.display = 'flex'
-
-  if (noOverlay) {
-    if (!this.bogdle.modal.classList.contains('temp')) {
-      this.bogdle.modal.classList.add('temp')
-    }
-  }
-
-  if (noClose) {
-    this.bogdle.buttons.btnModalClose.style.display = 'none';
-  }
-
+function modalOpen(type) {
   switch(type) {
     case 'start':
     case 'help':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>How to play Bogdle</h2>
+      this.myConfirm = new Modal('perm', 'How to Play Bogdle',
+        `
+          <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long. After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
 
-        <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long. After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
+          <hr />
 
-        <hr />
-
-        <p>A new BOGDLE will be available each day!</p>
-      `
+          <p>A new BOGDLE will be available each day!</p>
+        `,
+        null,
+        null
+      )
       break
 
     case 'stats':
     case 'win':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>Statistics</h2>
-        <div class="container">
-          <div id="statistics">
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
-              <div class="statistic-label">Played</div>
-            </div>
-            <div class="statistic-container">
-              <div class="statistic">${this.bogdle.statistics.wordsFound}</div>
-              <div class="statistic-label">Words Found</div>
+      this.myConfirm = new Modal('perm', 'Statistics',
+        `
+          <div class="container">
+            <div id="statistics">
+              <div class="statistic-container">
+                <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
+                <div class="statistic-label">Played</div>
+              </div>
+              <div class="statistic-container">
+                <div class="statistic">${this.bogdle.statistics.wordsFound}</div>
+                <div class="statistic-label">Words Found</div>
+              </div>
             </div>
           </div>
-        </div>
-      `
+        `,
+        null,
+        null,
+        false
+      )
       break
+
     case 'settings':
-      this.bogdle.modalBody.innerHTML = `
-        <h2>Settings</h2>
-        <p>None yet!</p>
-      `
+      this.myConfirm = new Modal('perm', 'Settings',
+        `
+          <p>None yet!</p>
+        `,
+        null,
+        null
+      )
+
       break
 
     case 'show-progress':
-      if (!this.bogdle.modalContent.classList.contains('padded')) {
-        this.bogdle.modalContent.classList.add('padded')
-      } else {
-        this.bogdle.modalContent.classList.remove('padded')
-      }
-      this.bogdle.modalBody.innerHTML = getGameProgress()
+      this.myConfirm = new Modal('perm', 'Game Progress',
+        getGameProgress(),
+        null,
+        null
+      )
       break
     case 'show-list':
-      if (!this.bogdle.modalContent.classList.contains('padded')) {
-        this.bogdle.modalContent.classList.add('padded')
-      } else {
-        this.bogdle.modalContent.classList.remove('padded')
-      }
-      this.bogdle.modalBody.innerHTML = getSolutionSetDisplay()
+      this.myConfirm = new Modal('perm-debug', 'Master Word List',
+        getSolutionSetDisplay(),
+        null,
+        null
+      )
       break
 
-    case 'load-new':
-      this.bogdle.modalBody.innerHTML = 'loading...'
+    case 'loading':
+      this.myConfirm = new Modal('throbber', 'Loading',
+        'loading...',
+        null,
+        null,
+        false
+      )
       break
 
     case 'invalid-length':
-      this.bogdle.modalBody.innerHTML = `
-        Error: Needs to be 3 or more characters.
-      `
-      setTimeout(function() {
-        this.bogdle.modal.style.display = 'none'
-        this.bogdle.modal.classList.remove('temp')
-      }, 1500)
+      this.myConfirm = new Modal('temp', null,
+        'Error: Needs to be 3 or more characters.',
+        null,
+        null
+      )
       break
     case 'invalid-word':
-      this.bogdle.modalBody.innerHTML = `
-        Error: Not in word list.
-      `
-      setTimeout(function() {
-        this.bogdle.modal.style.display = 'none'
-        this.bogdle.modal.classList.remove('temp')
-      }, 1500)
+      this.myConfirm = new Modal('temp', null,
+        'Error: Not in word list.',
+        null,
+        null
+      )
       break
     case 'repeated-word':
-      this.bogdle.modalBody.innerHTML = `
-        Word already found!
-      `
-      setTimeout(function() {
-        this.bogdle.modal.style.display = 'none'
-        this.bogdle.modal.classList.remove('temp')
-      }, 1500)
+      this.myConfirm = new Modal('temp', null,
+        'Word already found!',
+        null,
+        null
+      )
       break
   }
-}
-function modalClose() {
-  this.bogdle.modal.style.display = 'none';
-
-  _resetModalStyle()
-}
-function confirmClose(response) {
-  this.bogdle.confirm.style.display = 'none'
-  this.bogdle.confirm.dataset.confirm = response;
 }
 
 function getGameProgress() {
@@ -438,7 +407,8 @@ async function _loadTestSolutionSet(newWord) {
   // createBogdle()
 
   try {
-    modalOpen('load-new', false, true)
+    // TODO add a throbber type to modal.js
+    // modalOpen('loading', false, true)
 
     const findle = await createFindle(newWord, this.bogdle.dictionary)
 
@@ -477,16 +447,10 @@ async function _loadTestSolutionSet(newWord) {
       // choose letters randomly from solution set
       _shuffleTiles()
 
-      _resetModalStyle()
-
       loadState()
-
-      modalClose()
     }
   } catch (err) {
     console.error('could not create new Findle', err)
-
-    modalClose()
   }
 
 }
@@ -516,7 +480,8 @@ async function _loadRealSolutionSet() {
     const newWord = await _getNewStartWord()
 
     try {
-      modalOpen('load-new', false, true)
+      // TODO add a throbber type to modal.js
+      // modalOpen('loading', false, true)
 
       const findle = await createFindle(newWord, this.bogdle.dictionary)
 
@@ -554,34 +519,43 @@ async function _loadRealSolutionSet() {
 
         _shuffleTiles()
 
-        _resetModalStyle()
-
         _resetProgress()
 
         // loadState()
       }
-
-      modalClose()
     } catch (err) {
       console.error('could not create new Findle', err)
-
-      modalClose()
     }
   } catch (err) {
     console.error('could not get new start word', err)
+  }
+}
 
-    modalClose()
+async function _confirmCreateNew() {
+  this.myConfirm = new Modal('confirm-debug', 'Create New Bogdle?',
+    'Are you <strong>sure</strong> you want to create a new Bogdle?',
+    'Yes, please',
+    'No, never mind'
+  )
+
+  try {
+    // wait for modal confirmation
+    var confirmed = await myConfirm.question()
+
+    if (confirmed) {
+      _loadRealSolutionSet()
+    }
+  } catch (err) {
+    console.error('progress reset failed', err)
   }
 }
 
 // ask to reset config and LS
-async function _askToResetProgress() {
-  this.myConfirm = new Modal(
-    'Reset progress?',
+async function _confirmResetProgress() {
+  this.myConfirm = new Modal('confirm-debug', 'Reset progress?',
     'Are you <strong>sure</strong> you want to reset your progress?',
     'Yes, please',
-    'No, never mind',
-    false
+    'No, never mind'
   )
 
   try {
@@ -790,12 +764,6 @@ function _resizeBoard() {
   board.style.height = `${tileHeight}px`
 }
 
-// remove any added classes to modal
-function _resetModalStyle() {
-  this.bogdle.modalContent.setAttribute('class', 'modal-content')
-  this.bogdle.buttons.btnModalClose.style.display = 'block';
-}
-
 // add event listeners to DOM
 function _addEventListeners() {
   // tile interaction
@@ -824,11 +792,6 @@ function _addEventListeners() {
   this.bogdle.buttons.btnStats.addEventListener('click', () => modalOpen('stats'))
   this.bogdle.buttons.btnSettings.addEventListener('click', () => modalOpen('settings'))
 
-  // ❌ modal close button
-  this.bogdle.buttons.btnModalClose.addEventListener('click', () => {
-    modalClose()
-  })
-
   // ✅ submit word
   this.bogdle.buttons.btnSubmit.addEventListener('click', () => {
     submitWord(this.bogdle.guess.innerHTML)
@@ -854,7 +817,7 @@ function _addEventListeners() {
     if (this.bogdle.buttons.debug.all) {
       // + create new solution
       this.bogdle.buttons.debug.btnCreateNew.addEventListener('click', () => {
-        _loadRealSolutionSet()
+        _confirmCreateNew()
       })
 
       // := show list of words
@@ -864,7 +827,12 @@ function _addEventListeners() {
 
       // 🗑️ reset progress (i.e. set LS to defaults)
       this.bogdle.buttons.debug.btnResetProgress.addEventListener('click', () => {
-        _askToResetProgress()
+        _confirmResetProgress()
+      })
+
+      // [-] modal select
+      this.bogdle.buttons.debug.btnModalOpen.addEventListener('change', (event) => {
+        modalOpen(event.target.value)
       })
     }
   }
@@ -913,8 +881,9 @@ function _addEventListeners() {
 
   // When the user clicks anywhere outside of the modal, close it
   window.addEventListener('click', (event) => {
-    if (event.target == this.bogdle.modal) {
-      modalClose()
+    var dialog = document.getElementsByClassName('thin-ui-modal-dialog')[0]
+    if (event.target == dialog) {
+      dialog.remove()
     }
   })
 
