@@ -43,6 +43,7 @@ this.bogdle.buttons = {
   "btnSettings": document.getElementById('button-settings'),
   "btnSubmit": document.getElementById('buttonSubmit'),
   "btnBackspace": document.getElementById('buttonBackspace'),
+  "btnClearGuess": document.getElementById('buttonClearGuess'),
   "btnShuffle": document.getElementById('buttonShuffle'),
   "btnShowProgress": document.getElementById('buttonShowProgress')
 }
@@ -217,7 +218,7 @@ function getSolutionSetDisplay() {
 }
 
 // remove last letter in DOM guess div
-function removeLastGuessLetter() {
+function removeLastLetter() {
   if (this.bogdle.config.gameState == 'IN_PROGRESS') {
     // remove last position from selected array
     if (this.bogdle.tilesSelected.length) {
@@ -261,14 +262,15 @@ function submitWord(word) {
           _checkWinState()
         } else {
           modalOpen('repeated-word', true, true)
+          animateCSS('#guess', 'headShake')
         }
       } else {
-        // console.error('word not in list!')
         modalOpen('invalid-word', true, true)
+        animateCSS('#guess', 'headShake')
       }
     } else {
-      // console.error('guess too short!')
       modalOpen('invalid-length', true, true)
+      animateCSS('#guess', 'headShake')
     }
   } else {
     // game is over, so no more guessed allowed
@@ -439,7 +441,7 @@ async function _loadTestSolutionSet(newWord) {
         })
       })
 
-      console.log('test: this.bogdle.solutionSet', this.bogdle.solutionSet)
+      // console.log('test: this.bogdle.solutionSet', this.bogdle.solutionSet)
 
       // set Bogdle letters
       this.bogdle.letters = newWord.split('')
@@ -670,6 +672,7 @@ function _checkGuess() {
         }
       } else {
         // player guessed an invalid word (not on list)
+
       }
     })
   } else {
@@ -805,7 +808,12 @@ function _addEventListeners() {
 
   // ⌫ backspace
   this.bogdle.buttons.btnBackspace.addEventListener('click', () => {
-    removeLastGuessLetter()
+    removeLastLetter()
+  })
+
+  // X clear
+  this.bogdle.buttons.btnClearGuess.addEventListener('click', () => {
+    _resetInput()
   })
 
   // 🔀 shuffle
@@ -849,7 +857,7 @@ function _addEventListeners() {
       submitWord(this.bogdle.guess.innerHTML)
     }
     if (event.code == 'Backspace' || event.code == 'Delete') {
-      removeLastGuessLetter()
+      removeLastLetter()
     }
 
     var validLetters = this.bogdle.letters.map(l => l.toUpperCase())

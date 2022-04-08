@@ -68,13 +68,14 @@ class Modal {
     // Message window
     const window = document.createElement('div');
     window.classList.add('thin-ui-modal-window');
-    window.classList.add('animate__animated', 'animate__faster', 'animate__fadeInUp');
+    window.classList.add('animate__animated', 'animate__fadeInUp');
 
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
       window.classList.add('debug');
     }
     this.modal.appendChild(window);
 
+    // if not a temporary modal, add a title and close button
     if (modalType != 'temp') {
       // Title
       const title = document.createElement('div');
@@ -108,6 +109,7 @@ class Modal {
     text.innerHTML = this.modalText;
     window.appendChild(text);
 
+    // if a confirm modal, add buttons
     if (modalType == 'confirm' || modalType == 'confirm-debug') {
       // Accept and cancel button group
       const buttonGroup = document.createElement('div');

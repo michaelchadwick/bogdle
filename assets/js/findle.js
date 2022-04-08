@@ -74,7 +74,7 @@ class Findle {
       var validWords = this.findWords(this.word)
         .filter((value, index, self) => self.indexOf(value) === index)
 
-      console.log('validWords 9', validWords.filter(w => w.length == MAX_WORD_LENGTH))
+      // console.log('validWords 9', validWords.filter(w => w.length == MAX_WORD_LENGTH))
 
       // create solution set from valid words
       this.setSolution(validWords)
