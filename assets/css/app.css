@@ -241,7 +241,7 @@ section#game {
       /* background-color: #fff; */
       font-size: 0.85em;
       line-height: 1;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
       margin: 0 auto;
       position: relative;
       transition: all 250ms;
@@ -250,7 +250,7 @@ section#game {
     }
     section#game #guess-container #guess.valid {
       color: #1d7c1d;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
     }
       section#game #guess-container #guess.valid.first-guess {
         color: #58e417;
