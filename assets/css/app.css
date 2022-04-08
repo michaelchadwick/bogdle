@@ -95,6 +95,7 @@ select option {
 }
 
 .tile {
+  --animate-duration: 100ms;
   align-items: center;
   border: 2px solid transparent;
   box-sizing: border-box;
@@ -330,16 +331,4 @@ section#game {
   font-size: 1em;
   justify-content: center;
   text-align: center;
-}
-
-/* Add Animation */
-@keyframes SlideIn {
-  0% {
-    transform: translateY(100px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1
-  }
 }

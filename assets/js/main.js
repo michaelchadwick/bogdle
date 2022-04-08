@@ -68,7 +68,7 @@ function modalOpen(type) {
   switch(type) {
     case 'start':
     case 'help':
-      this.myConfirm = new Modal('perm', 'How to Play Bogdle',
+      this.myModal = new Modal('perm', 'How to Play Bogdle',
         `
           <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long. After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
 
@@ -83,7 +83,7 @@ function modalOpen(type) {
 
     case 'stats':
     case 'win':
-      this.myConfirm = new Modal('perm', 'Statistics',
+      this.myModal = new Modal('perm', 'Statistics',
         `
           <div class="container">
             <div id="statistics">
@@ -105,7 +105,7 @@ function modalOpen(type) {
       break
 
     case 'settings':
-      this.myConfirm = new Modal('perm', 'Settings',
+      this.myModal = new Modal('perm', 'Settings',
         `
           <p>None yet!</p>
         `,
@@ -116,14 +116,14 @@ function modalOpen(type) {
       break
 
     case 'show-progress':
-      this.myConfirm = new Modal('perm', 'Game Progress',
+      this.myModal = new Modal('perm', 'Game Progress',
         getGameProgress(),
         null,
         null
       )
       break
     case 'show-list':
-      this.myConfirm = new Modal('perm-debug', 'Master Word List',
+      this.myModal = new Modal('perm-debug', 'Master Word List',
         getSolutionSetDisplay(),
         null,
         null
@@ -131,7 +131,7 @@ function modalOpen(type) {
       break
 
     case 'loading':
-      this.myConfirm = new Modal('throbber', 'Loading',
+      this.myModal = new Modal('throbber', 'Loading',
         'loading...',
         null,
         null,
@@ -140,22 +140,22 @@ function modalOpen(type) {
       break
 
     case 'invalid-length':
-      this.myConfirm = new Modal('temp', null,
-        'Error: Needs to be 3 or more characters.',
+      this.myModal = new Modal('temp', null,
+        'Needs to be 3 or more characters',
         null,
         null
       )
       break
     case 'invalid-word':
-      this.myConfirm = new Modal('temp', null,
-        'Error: Not in word list.',
+      this.myModal = new Modal('temp', null,
+        'Not in word list',
         null,
         null
       )
       break
     case 'repeated-word':
-      this.myConfirm = new Modal('temp', null,
-        'Word already found!',
+      this.myModal = new Modal('temp', null,
+        'Word already found',
         null,
         null
       )
@@ -764,26 +764,32 @@ function _resizeBoard() {
   board.style.height = `${tileHeight}px`
 }
 
+function _clickTile(tile) {
+  var tileStatus = tile.target.dataset.state
+
+  if (tileStatus == 'tbd') {
+    animateCSS(`#${tile.target.id}`, 'pulse')
+
+    // change tile status
+    tile.target.dataset.state = 'selected'
+
+    // push another selected tile onto selected array
+    this.bogdle.tilesSelected.push(tile.target.dataset.pos)
+
+    // add selected tile to guess
+    this.bogdle.guess.innerHTML += tile.target.innerHTML
+
+    // check guess for validity
+    _checkGuess()
+  }
+}
+
 // add event listeners to DOM
 function _addEventListeners() {
-  // tile interaction
+  // [A] tile interaction
   Array.from(this.bogdle.tiles).forEach(tile => {
     tile.addEventListener('click', (t) => {
-      var tileStatus = t.target.dataset.state
-
-      if (tileStatus == 'tbd') {
-        // change tile status
-        t.target.dataset.state = 'selected'
-
-        // push another selected tile onto selected array
-        this.bogdle.tilesSelected.push(t.target.dataset.pos)
-
-        // add selected tile to guess
-        this.bogdle.guess.innerHTML += t.target.innerHTML
-
-        // check guess for validity
-        _checkGuess()
-      }
+      _clickTile(t)
     })
   })
 

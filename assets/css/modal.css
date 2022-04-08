@@ -1,86 +1,20 @@
-.thin-ui-button {
-  font-family: inherit;
-  font-weight: 400;
-  display: inline-block;
-  width: fit-content;
-  position: relative;
-  white-space: nowrap;
-  text-decoration: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  border: 0 none;
-  border-radius: 2px;
-}
-.thin-ui-button:hover {
-  box-shadow: inset 0 99px 0 rgba(0, 0, 0, 0.05);
-  text-decoration: none;
-}
-.thin-ui-button-primary {
-  color: #ffffff;
-  background-color: #529952;
-}
-.thin-ui-button-secondary {
-  color: #000000;
-  background-color: #bce2bc;
-}
-.thin-ui-button-neutral {
-  color: #000000;
-  background-color: #888;
-}
-.thin-ui-button-action {
-  color: #ffffff;
-  background-color: var(--thin-ui-action);
-}
-.thin-ui-button-mini {
-  padding: 4px 12px;
-  font-size: 12px;
-}
-.thin-ui-button-small {
-  padding: 6px 18px;
-  font-size: 13px;
-}
-.thin-ui-button-regular {
-  padding: 8px 24px;
-  font-size: 14px;
-}
-.thin-ui-button-large {
-  padding: 12px 32px;
-  font-size: 16px;
-}
-.thin-ui-button-giant {
-  padding: 16px 36px;
-  font-size: 20px;
-}
-.thin-ui-button-hero {
-  padding: 16px 48px;
-  font-size: 18px;
-  border-radius: 38px;
-}
-
-.thin-ui-button-rounded {
-  border-radius: 64px;
-}
-
-/**
-* Thin UI Modal Dialog
-*/
-.thin-ui-modal-dialog * {
-  box-sizing: border-box;
-}
-
 .thin-ui-modal-dialog {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  align-items: center;
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.1);
   border: none;
   display: flex;
-  align-items: center;
+  height: 100%;
   justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.thin-ui-modal-dialog * {
+  box-sizing: border-box;
 }
 
 .thin-ui-modal-window {
@@ -107,8 +41,10 @@
   border-radius: 8px;
   box-shadow: none;
   color: #fff;
+  pointer-events: none;
   position: absolute;
-  top: 120px;
+  top: 15%;
+  width: fit-content;
 }
 
 .thin-ui-modal-title {
@@ -179,11 +115,73 @@
   font-family: inherit;
 }
 
+.thin-ui-button {
+  font-family: inherit;
+  font-weight: 400;
+  display: inline-block;
+  width: fit-content;
+  position: relative;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 0 none;
+  border-radius: 2px;
+}
+.thin-ui-button:hover {
+  box-shadow: inset 0 99px 0 rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+}
+.thin-ui-button-primary {
+  color: #ffffff;
+  background-color: #529952;
+}
+.thin-ui-button-secondary {
+  color: #000000;
+  background-color: #bce2bc;
+}
+.thin-ui-button-neutral {
+  color: #000000;
+  background-color: #888;
+}
+.thin-ui-button-action {
+  color: #ffffff;
+  background-color: var(--thin-ui-action);
+}
+.thin-ui-button-mini {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+.thin-ui-button-small {
+  padding: 6px 18px;
+  font-size: 13px;
+}
+.thin-ui-button-regular {
+  padding: 8px 24px;
+  font-size: 14px;
+}
+.thin-ui-button-large {
+  padding: 12px 32px;
+  font-size: 16px;
+}
+.thin-ui-button-giant {
+  padding: 16px 36px;
+  font-size: 20px;
+}
+.thin-ui-button-hero {
+  padding: 16px 48px;
+  font-size: 18px;
+  border-radius: 38px;
+}
+.thin-ui-button-rounded {
+  border-radius: 64px;
+}
+
 .thin-ui-modal-button-group.debug button.thin-ui-button-primary {
-    color: #ffffff;
-    background-color: #715ec7;
-  }
+  background-color: #715ec7;
+  color: #ffffff;
+}
 .thin-ui-modal-button-group.debug button.thin-ui-button-secondary {
-    color: #000000;
-    background-color: #dbbce2;
-  }
+  background-color: #dbbce2;
+  color: #000000;
+}

@@ -1,6 +1,7 @@
 class Modal {
 
   constructor(modalType, modalTitle, modalText, acceptText, cancelText) {
+    this.modalDelay = 1500
     this.modalType = modalType || 'perm';
     this.modalTitle = modalTitle || 'Confirmation';
     this.modalText = modalText || 'Are you sure you want to do this?';
@@ -26,10 +27,11 @@ class Modal {
     this._createModal(modalType);
 
     if (modalType == 'temp') {
+      // close temp modals after delay
       var modal = this
       setTimeout(function(modal) {
         modal._destroyModal()
-      }.bind(this, modal), 1500)
+      }.bind(this, modal), this.modalDelay)
     }
   }
 
@@ -57,6 +59,7 @@ class Modal {
     // Background dialog
     this.modal = document.createElement('dialog');
     this.modal.classList.add('thin-ui-modal-dialog');
+
     if (modalType == 'temp') {
       this.modal.classList.add('temp');
     }
@@ -65,6 +68,8 @@ class Modal {
     // Message window
     const window = document.createElement('div');
     window.classList.add('thin-ui-modal-window');
+    window.classList.add('animate__animated', 'animate__faster', 'animate__fadeInUp');
+
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
       window.classList.add('debug');
     }

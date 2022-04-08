@@ -2,6 +2,10 @@
 
 A Boggle clone, inspired by Wordle.
 
+## Animation
+
+Animation is provided by [Animate.css](https://animate.style), a very cool drop-in CSS file that allows you to add simple animations to things easily.
+
 ## License
 
 All parts of this app are free to use and abuse under the [open-source MIT license](LICENSE.md), although the list of English words was taken and modified from the below word lists.
