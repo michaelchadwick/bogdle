@@ -245,21 +245,15 @@ section#game {
       margin: 0 auto;
       position: relative;
       transition: all 250ms;
-      text-shadow: 1px 1px 1px transparent;
       top: 1px;
       width: 100%;
     }
     section#game #guess-container #guess.valid {
       color: #1d7c1d;
-      font-size: 0.87em;
-      letter-spacing: 0.07em;
-      top: 0;
+      letter-spacing: 0.06em;
     }
       section#game #guess-container #guess.valid.first-guess {
         color: #58e417;
-        font-size: 0.89em;
-        text-shadow: 1px 1px 1px #000;
-        top: -1px;
       }
 
   section#game #board-container {
