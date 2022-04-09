@@ -586,6 +586,15 @@ function _resetProgress() {
   // save those defaults to local storage
   saveState()
 
+  // set solution set statuses back to 0
+  Object.keys(this.bogdle.solutionSet).forEach(key => {
+    Object.keys(this.bogdle.solutionSet[key]).forEach(status => {
+      this.bogdle.solutionSet[key][status] = 0
+    })
+  })
+
+  console.log(this.bogdle.solutionSet)
+
   // set score to 0
   _setScore(0)
 

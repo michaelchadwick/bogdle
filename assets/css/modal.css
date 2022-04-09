@@ -27,7 +27,6 @@
   flex-flow: column wrap;
   margin: 0 1em;
   max-width: 500px;
-  min-width: 300px;
 }
 .thin-ui-modal-window.debug {
   border-color: #715ec7;
