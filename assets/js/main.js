@@ -41,19 +41,19 @@ this.bogdle.buttons = {
   "btnHelp": document.getElementById('button-help'),
   "btnStats": document.getElementById('button-stats'),
   "btnSettings": document.getElementById('button-settings'),
-  "btnSubmit": document.getElementById('buttonSubmit'),
-  "btnBackspace": document.getElementById('buttonBackspace'),
-  "btnClearGuess": document.getElementById('buttonClearGuess'),
-  "btnShuffle": document.getElementById('buttonShuffle'),
-  "btnShowProgress": document.getElementById('buttonShowProgress')
+  "btnSubmit": document.getElementById('button-submit'),
+  "btnBackspace": document.getElementById('button-backspace'),
+  "btnClearGuess": document.getElementById('button-clear-guess'),
+  "btnShuffle": document.getElementById('button-shuffle'),
+  "btnShowProgress": document.getElementById('button-show-progress')
 }
 
 this.bogdle.buttons.debug = {
   "all": document.getElementById('debug-buttons'),
-  "btnCreateNew": document.getElementById('buttonCreateNew'),
-  "btnShowList": document.getElementById('buttonShowList'),
-  "btnResetProgress": document.getElementById('buttonResetProgress'),
-  "btnModalOpen": document.getElementById('selectModalOpen')
+  "btnCreateNew": document.getElementById('button-create-new'),
+  "btnShowList": document.getElementById('button-show-list'),
+  "btnResetProgress": document.getElementById('button-reset-progress'),
+  "btnModalOpen": document.getElementById('select-modal-open')
 }
 
 // board tiles
@@ -108,7 +108,20 @@ function modalOpen(type) {
     case 'settings':
       this.myModal = new Modal('perm', 'Settings',
         `
-          <p>None yet!</p>
+          <div id="settings">
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Dark Mode</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_toggleSetting('dark-mode')">
+                    <span class="knob"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         `,
         null,
         null
@@ -793,6 +806,21 @@ function _clickTile(tile) {
 
     // check guess for validity
     _checkGuess()
+  }
+}
+
+function _toggleSetting(setting) {
+  switch (setting) {
+    case 'dark-mode':
+      var st = document.getElementById('button-setting-dark-mode').dataset.status
+      if (st == '') {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'enabled'
+        // TODO: Save dark mode setting to new LS key
+      } else {
+        document.getElementById('button-setting-dark-mode').dataset.status = ''
+        // TODO: Save dark mode setting to new LS key
+      }
+      break
   }
 }
 
