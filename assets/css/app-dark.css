@@ -2,14 +2,23 @@ body.dark-mode {
   background-color: #000;
   color: #fff;
 }
-body.dark-mode header,
-body.dark-mode button {
-  color: #fff;
-}
-body.dark-mode .tile[data-state='tbd'] {
-  border: 2px solid #fff;
-  color: #fff
-}
-body.dark-mode #keyboard button {
-  background-color: #888;
-}
+  body.dark-mode header,
+  body.dark-mode button {
+    color: #fff;
+  }
+  body.dark-mode .tile[data-state='tbd'] {
+    border: 2px solid #fff;
+    color: #fff
+  }
+  body.dark-mode #keyboard button {
+    background-color: #888;
+  }
+  body.dark-mode section#game #guess-container #guess {
+    color: #fff;
+  }
+  body.dark-mode section#game #guess-container #guess.valid {
+    color: #46852b;
+  }
+    body.dark-mode section#game #guess-container #guess.valid.first-guess {
+      color: #3f9f1f;
+    }
