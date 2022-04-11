@@ -1,0 +1,15 @@
+body.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+body.dark-mode header,
+body.dark-mode button {
+  color: #fff;
+}
+body.dark-mode .tile[data-state='tbd'] {
+  border: 2px solid #fff;
+  color: #fff
+}
+body.dark-mode #keyboard button {
+  background-color: #888;
+}

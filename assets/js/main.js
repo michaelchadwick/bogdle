@@ -126,6 +126,7 @@ function modalOpen(type) {
         null,
         null
       )
+      _loadSettings()
 
       break
 
@@ -374,6 +375,9 @@ function loadState() {
     }
   }
 
+  // load game settings
+  _loadSettings()
+
   _setScore(this.bogdle.config.guessedWords.length)
 
   _checkWinState()
@@ -416,6 +420,22 @@ this.bogdle.init = async () => {
 /*************************************************************************
  * private methods *
  *************************************************************************/
+
+function _loadSettings() {
+  if (localStorage.getItem(LS_DARK_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_DARK_KEY))
+
+    if (lsConfig) {
+      document.body.classList.add('dark-mode')
+
+      var sw = document.getElementById('button-setting-dark-mode')
+
+      if (sw) {
+        sw.dataset.status = 'true'
+      }
+    }
+  }
+}
 
 // load test solution set using static word
 async function _loadTestSolutionSet(newWord) {
@@ -813,15 +833,21 @@ function _toggleSetting(setting) {
   switch (setting) {
     case 'dark-mode':
       var st = document.getElementById('button-setting-dark-mode').dataset.status
-      if (st == '') {
-        document.getElementById('button-setting-dark-mode').dataset.status = 'enabled'
-        // TODO: Save dark mode setting to new LS key
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'true'
+        document.body.classList.add('dark-mode')
+        _saveSetting(LS_DARK_KEY, true)
       } else {
-        document.getElementById('button-setting-dark-mode').dataset.status = ''
-        // TODO: Save dark mode setting to new LS key
+        document.getElementById('button-setting-dark-mode').dataset.status = 'false'
+        document.body.classList.remove('dark-mode')
+        _saveSetting(LS_DARK_KEY, false)
       }
+
       break
   }
+}
+function _saveSetting(setting, value) {
+  localStorage.setItem(setting, value)
 }
 
 // add event listeners to DOM

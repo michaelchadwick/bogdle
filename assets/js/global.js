@@ -1,5 +1,6 @@
 const LS_STATE_KEY = 'bogdle-state'
 const LS_STATS_KEY = 'bogdle-statistics'
+const LS_DARK_KEY = 'bogdle-dark-mode'
 const ENV_PROD_URL = 'bogdle.fun'
 
 const DIFFICULTY = {

@@ -12,6 +12,7 @@ html {
 }
 
 body {
+  background-color: #fff;
   color: #111;
   font-family: 'Changa', sans-serif;
   font-size: 16px;
@@ -375,9 +376,9 @@ section#game {
   width: 50%;
 }
 
-.switch[data-status='enabled'] {
+.switch[data-status='true'] {
   background-color: #529952;
 }
-.switch[data-status='enabled'] .knob {
+.switch[data-status='true'] .knob {
   transform: translateX(calc(100% - 4px));
 }
