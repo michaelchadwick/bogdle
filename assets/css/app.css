@@ -207,7 +207,6 @@ section#game {
     font-weight: 700;
   }
   section#game #guess-container {
-    --animate-duration: 250ms;
     align-content: center;
     align-items: center;
     /* background-color: #f9ffaa; */
@@ -225,6 +224,12 @@ section#game {
     vertical-align: middle;
     word-break: break-word;
     word-wrap: break-word;
+  }
+  section#game #guess-container.animate__animated.animate__shakesHead {
+    --animate-duration: 250ms;
+  }
+  section#game #guess-container.animate__animated.animate__swing {
+    --animate-duration: 250ms;
   }
 
   @media (min-width: 350px) {

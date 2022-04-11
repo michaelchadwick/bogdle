@@ -245,9 +245,13 @@ function submitWord(word) {
           this.bogdle.config.lastPlayedTime = new Date().getTime()
           this.bogdle.statistics.wordsFound += 1
 
+          animateCSS('#guess', 'swing')
+
           _saveState()
 
           _increaseScore()
+
+          this.bogdle.guess.classList.remove('first-guess')
 
           _checkWinState()
         } else {
