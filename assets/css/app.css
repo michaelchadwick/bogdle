@@ -225,12 +225,6 @@ section#game {
     word-break: break-word;
     word-wrap: break-word;
   }
-  section#game #guess-container.animate__animated.animate__shakesHead {
-    --animate-duration: 250ms;
-  }
-  section#game #guess-container.animate__animated.animate__swing {
-    --animate-duration: 250ms;
-  }
 
   @media (min-width: 350px) {
     section#game #guess-container {
@@ -244,6 +238,7 @@ section#game {
     }
   }
     section#game #guess-container #guess {
+      animation-duration: 700ms;
       /* background-color: #fff; */
       color: #364333;
       font-size: 1em;

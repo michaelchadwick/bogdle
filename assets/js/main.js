@@ -245,7 +245,7 @@ function submitWord(word) {
           this.bogdle.config.lastPlayedTime = new Date().getTime()
           this.bogdle.statistics.wordsFound += 1
 
-          animateCSS('#guess', 'swing')
+          animateCSS('#guess', 'tada')
 
           _saveState()
 
