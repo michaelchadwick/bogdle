@@ -4,10 +4,10 @@ const LS_DARK_KEY = 'bogdle-dark-mode'
 const ENV_PROD_URL = 'bogdle.fun'
 
 const DIFFICULTY = {
-  'normal': 'small',
-  'tricky': 'small',
-  'expert': 'small',
-  'extreme': 'small'
+  'kid': 'small',
+  'easy': 'small',
+  'medium': 'small',
+  'normal': 'small'
 }
 const WORD_SOURCES = {
   'small': '01_sm',

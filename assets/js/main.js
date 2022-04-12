@@ -121,6 +121,35 @@ function modalOpen(type) {
                 </div>
               </div>
             </div>
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Difficulty</div>
+                <div class="description">The max length of a word</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div class="radio">
+                    <input id="diff-1" name="diff-radio" type="radio">
+                    <label for="diff-1" class="radio-label">Kid (3)</label>
+                  </div>
+
+                  <div class="radio">
+                    <input id="diff-2" name="diff-radio" type="radio">
+                    <label for="diff-2" class="radio-label">Easy (5)</label>
+                  </div>
+
+                  <div class="radio">
+                    <input id="diff-3" name="diff-radio" type="radio">
+                    <label for="diff-3" class="radio-label">Med (7)</label>
+                  </div>
+
+                  <div class="radio">
+                    <input id="diff-4" name="diff-radio" type="radio" checked>
+                    <label for="diff-4" class="radio-label">Normal (9)</label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         `,
         null,
@@ -247,7 +276,7 @@ function submitWord(word) {
 
           animateCSS('#guess', 'tada')
 
-          _saveState()
+          _saveGameState()
 
           _increaseScore()
 
@@ -279,17 +308,6 @@ function getGuessedWords() {
 
   // only return words equal to 1 (i.e. guessed correctly)
   return solutionKeys.filter(k => this.bogdle.solutionSet[k])
-}
-
-// save statistics from code model -> LS
-function saveStats() {
-  try {
-    localStorage.setItem(LS_STATS_KEY, JSON.stringify(this.bogdle.statistics))
-
-    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_KEY)))
-  } catch(error) {
-    console.error(`localStorage could not be set for ${LS_STATS_KEY}`, error)
-  }
 }
 
 // start the engine
@@ -331,6 +349,20 @@ this.bogdle.init = async () => {
 function _loadSettings() {
   if (localStorage.getItem(LS_DARK_KEY)) {
     var lsConfig = JSON.parse(localStorage.getItem(LS_DARK_KEY))
+
+    if (lsConfig) {
+      document.body.classList.add('dark-mode')
+
+      var sw = document.getElementById('button-setting-dark-mode')
+
+      if (sw) {
+        sw.dataset.status = 'true'
+      }
+    }
+  }
+
+  if (localStorage.getItem(LS_STATE_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
 
     if (lsConfig) {
       document.body.classList.add('dark-mode')
@@ -389,7 +421,7 @@ async function _loadTestSolutionSet(newWord) {
       // choose letters randomly from solution set
       _shuffleTiles()
 
-      _loadState()
+      _loadGameState()
     }
   } catch (err) {
     console.error('could not create new Findle', err)
@@ -463,7 +495,7 @@ async function _loadRealSolutionSet() {
 
         _resetProgress()
 
-        // _loadState()
+        // _loadGameState()
       }
     } catch (err) {
       console.error('could not create new Findle', err)
@@ -524,7 +556,7 @@ function _resetProgress() {
   }
 
   // save those defaults to local storage
-  _saveState()
+  _saveGameState()
 
   // set solution set statuses back to 0
   Object.keys(this.bogdle.solutionSet).forEach(key => {
@@ -641,7 +673,7 @@ function _checkWinState() {
         "wordsFound": this.bogdle.statistics.wordsFound
       }
 
-      saveStats()
+      _saveStats()
     }
 
     // display modal win thingy
@@ -654,7 +686,7 @@ function _checkWinState() {
       this.bogdle.config.lastCompletedTime = new Date().getTime()
     }
 
-    _saveState()
+    _saveGameState()
 
     // disable inputs (until future daily re-enabling)
     _disableTiles()
@@ -782,8 +814,9 @@ function _toggleSetting(setting) {
 function _saveSetting(setting, value) {
   localStorage.setItem(setting, value)
 }
-// save state from code model -> LS
-function _saveState() {
+
+// save gamestate from code model -> LS
+function _saveGameState() {
   // console.log('saving to localStorage...')
 
   // save game state
@@ -796,7 +829,7 @@ function _saveState() {
   }
 }
 // load state/statistics from LS -> code model
-function _loadState() {
+function _loadGameState() {
   // console.log('loading progress...')
 
   // load game state
@@ -831,7 +864,7 @@ function _loadState() {
     // console.log('no localStorage key found; defaults being set')
     modalOpen('help')
 
-    _saveState()
+    _saveGameState()
   }
 
   // load user statistics
@@ -852,6 +885,17 @@ function _loadState() {
   _checkWinState()
 
   // console.log('!progress loaded!', this.bogdle.solutionSet)
+}
+
+// save statistics from code model -> LS
+function _saveStats() {
+  try {
+    localStorage.setItem(LS_STATS_KEY, JSON.stringify(this.bogdle.statistics))
+
+    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_KEY)))
+  } catch(error) {
+    console.error(`localStorage could not be set for ${LS_STATS_KEY}`, error)
+  }
 }
 
 // add event listeners to DOM
