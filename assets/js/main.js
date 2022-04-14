@@ -775,6 +775,19 @@ function _saveSetting(setting, value) {
   }
 }
 
+function _getFormattedDate(date) {
+  var formatted_date = ''
+
+  formatted_date += `${date.getFullYear()}/`
+  formatted_date += `${(date.getMonth() + 1).toString().padStart(2, '0')}/` // months are 0-indexed!
+  formatted_date += `${date.getDate().toString().padStart(2, '0')} `
+  formatted_date += `${date.getHours().toString().padStart(2, '0')}:`
+  formatted_date += `${date.getMinutes().toString().padStart(2, '0')}:`
+  formatted_date += `${date.getSeconds().toString().padStart(2, '0')}`
+
+  return formatted_date
+}
+
 function _getGameConfig() {
   var config = this.bogdle.config
   var html = '<ul>'
@@ -784,15 +797,30 @@ function _getGameConfig() {
       && !Array.isArray(config[key])
       && config[key] != null
     ) {
-      console.log(`${key}`, typeof config[key])
       html += `<li><code>${key}: {</code>`
       html += '<ul>'
       Object.keys(config[key]).forEach(k => {
-        html += `<li><code>${k}:</code> ${config[key][k]}</li>`
+        var label = k
+        var value = config[key][k]
+
+        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+          value = _getFormattedDate(new Date(value))
+        }
+
+        html += `<li><code>${label}:</code> ${value}</li>`
       })
       html += '</ul>}</li>'
     } else {
-      html += `<li><code>${key}:</code> ${config[key]}</li>`
+      var label = key
+      var value = config[key]
+
+      if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+        if (value) {
+          value = _getFormattedDate(new Date(value))
+        }
+      }
+
+      html += `<li><code>${label}:</code> ${value}</li>`
     }
   })
 
@@ -873,7 +901,7 @@ function _loadGameState() {
 
   // load game state
   if (lsConfig) {
-    console.log('localStorage key found and loading...', lsConfig)
+    // console.log('localStorage key found and loading...', lsConfig)
 
     // set game difficulty
     this.bogdle.config.difficulty = lsConfig.difficulty
@@ -882,12 +910,10 @@ function _loadGameState() {
     this.bogdle.config.gameState = lsConfig.gameState
 
     // check off any pre-guessed words
-    this.bogdle.guessedWords = []
     lsConfig.guessedWords.forEach(word => {
       this.bogdle.config.guessedWords.push(word)
       this.bogdle.solutionSet[word.length][word] = 1
     })
-    this.bogdle.guessedWords.sort()
 
     // set last completed
     this.bogdle.config.lastCompletedTime = lsConfig.lastCompletedTime
