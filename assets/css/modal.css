@@ -86,6 +86,9 @@
   margin: 0;
   padding: 10px;
 }
+.thin-ui-modal-text ul ul {
+  padding: 2px 10px;
+}
 .thin-ui-modal-text ul li {
   padding: 0;
 }
@@ -93,12 +96,12 @@
   font-size: 20px;
   font-weight: 700;
 }
-.thin-ui-modal-text ul ul {
+.thin-ui-modal-text ul li span.solution-category + ul {
   background-color: #f8f8f8;
   border: 1px solid #222;
   margin-bottom: 10px;
 }
-.thin-ui-modal-text ul ul li {
+.thin-ui-modal-text ul li span.solution-category + ul li {
   margin-left: 0;
 }
 
