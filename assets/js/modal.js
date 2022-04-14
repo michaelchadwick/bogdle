@@ -59,6 +59,9 @@ class Modal {
     // Background dialog
     this.modal = document.createElement('dialog');
     this.modal.classList.add('thin-ui-modal-dialog');
+    if (modalType == 'confirm' || modalType == 'confirm-debug') {
+      this.modal.classList.add('modal-confirm');
+    }
 
     if (modalType == 'temp') {
       this.modal.classList.add('temp');
