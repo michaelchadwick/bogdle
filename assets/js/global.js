@@ -14,6 +14,12 @@ const WORD_SOURCES = {
   'medium': '02_md',
   'large': '03_lg'
 }
+const DIFF_TO_LENGTH = {
+  'kid': 3,
+  'easy': 5,
+  'medium': 7,
+  'normal': 9
+}
 
 const MAX_WORD_LENGTH = 9
 
