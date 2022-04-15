@@ -2,7 +2,7 @@ this.bogdle = this.bogdle || {}
 
 // default config and stats
 this.bogdle.config = {
-  "difficulty": Object.keys(DIFFICULTY)[3],
+  "difficulty": 'normal',
   "env": 'local',
   "gameState": 'IN_PROGRESS',
   "guessedWords": [],
@@ -47,7 +47,12 @@ this.bogdle.dom.status.scoreTotal = document.getElementById('score-total')
 this.bogdle.dom.status.scoreTotalWords = document.getElementById('score-total-words')
 
 // dictionary to pull from
-this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${MAX_WORD_LENGTH}.json`
+// console.log('_getMaxWordLength 1')
+
+this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+
+console.log('this.bogdle.dictionary', this.bogdle.dictionary)
+
 // this.bogdle.dictionary = `./assets/json/01_sm/words_3-9.json`
 
 this.bogdle.letters = []
@@ -57,7 +62,10 @@ this.bogdle.solutionSet = EMPTY_OBJ_SET
 this.bogdle.startWord = 'education'
 this.bogdle.startWordsFile = './assets/json/'
 this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]
-this.bogdle.startWordsFile += `/words_${MAX_WORD_LENGTH}-${MAX_WORD_LENGTH}.json`
+
+// console.log('_getMaxWordLength 2, 3')
+
+this.bogdle.startWordsFile += `/words_${_getMaxWordLength()}-${_getMaxWordLength()}.json`
 
 // keep track of which tiles have been selected
 this.bogdle.tilesSelected = []
@@ -117,7 +125,7 @@ function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_toggleSetting('dark-mode')">
+                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_changeSetting('dark-mode')">
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -131,22 +139,22 @@ function modalOpen(type) {
               <div class="control">
                 <div class="container" id="container-difficulty">
                   <div class="radio">
-                    <input id="diff-0" name="diff-radio" type="radio" data-diffid="0" onclick="_toggleSetting('difficulty')">
+                    <input id="diff-0" name="diff-radio" type="radio" data-diffid="0" onclick="_changeSetting('difficulty')">
                     <label for="diff-0" class="radio-label">Kid (3)</label>
                   </div>
 
                   <div class="radio">
-                    <input id="diff-1" name="diff-radio" type="radio" data-diffid="1" onclick="_toggleSetting('difficulty')">
+                    <input id="diff-1" name="diff-radio" type="radio" data-diffid="1" onclick="_changeSetting('difficulty')">
                     <label for="diff-1" class="radio-label">Easy (5)</label>
                   </div>
 
                   <div class="radio">
-                    <input id="diff-2" name="diff-radio" type="radio" data-diffid="2" onclick="_toggleSetting('difficulty')">
+                    <input id="diff-2" name="diff-radio" type="radio" data-diffid="2" onclick="_changeSetting('difficulty')">
                     <label for="diff-2" class="radio-label">Med (7)</label>
                   </div>
 
                   <div class="radio">
-                    <input id="diff-3" name="diff-radio" type="radio" data-diffid="3" onclick="_toggleSetting('difficulty')" checked>
+                    <input id="diff-3" name="diff-radio" type="radio" data-diffid="3" onclick="_changeSetting('difficulty')" checked>
                     <label for="diff-3" class="radio-label">Normal (9)</label>
                   </div>
                 </div>
@@ -334,7 +342,7 @@ async function _loadTestSolutionSet(newWord) {
     // TODO add a throbber type to modal.js
     // modalOpen('loading', false, true)
 
-    const findle = await createFindle(newWord, this.bogdle.dictionary)
+    const findle = await createFindle(newWord, this.bogdle.dictionary, this.bogdle.config)
 
     if (findle) {
       /*********************************************************************
@@ -344,8 +352,11 @@ async function _loadTestSolutionSet(newWord) {
        * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
        *********************************************************************/
 
-      // get a range of object keys from 3..MAX_WORD_LENGTH
-      var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+      // get a range of object keys from 3.._getMaxWordLength()
+
+      // console.log('_getMaxWordLength 4 test')
+
+      var categories = Array.from({length: _getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
 
       // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
       categories.forEach(category => {
@@ -392,7 +403,7 @@ async function _loadRealSolutionSet() {
       // TODO add a throbber type to modal.js
       // modalOpen('loading', false, true)
 
-      const findle = await createFindle(newWord, this.bogdle.dictionary)
+      const findle = await createFindle(newWord, this.bogdle.dictionary, this.bogdle.config)
 
       if (findle) {
         /*********************************************************************
@@ -402,8 +413,9 @@ async function _loadRealSolutionSet() {
          * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
          *********************************************************************/
 
-        // get a range of object keys from 3...MAX_WORD_LENGTH
-        var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+        // get a range of object keys from 3..._getMaxWordLength()
+        // console.log('_getMaxWordLength 4 real')
+        var categories = Array.from({length: _getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
 
         // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
         categories.forEach(category => {
@@ -446,8 +458,11 @@ async function _getNewStartWord() {
   // if success, grabs a random one
   const response = await fetch(this.bogdle.startWordsFile)
   const responseJson = await response.json()
-  // random MAX_WORD_LENGTH word
-  let possibles = responseJson[MAX_WORD_LENGTH.toString()]
+  // random _getMaxWordLength() word
+
+  // console.log('_getMaxWordLength ?')
+
+  let possibles = responseJson[_getMaxWordLength().toString()]
   let possibleIdx = Math.floor(Math.random() * possibles.length)
 
   this.startWord = possibles[possibleIdx]
@@ -570,12 +585,17 @@ function _setScore(guessed = 0) {
       startDiv = document.createElement('div')
       startDiv.id = 'local-debug-start'
       startDiv.classList.add('debug')
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[MAX_WORD_LENGTH.toString()]).join(', ')
+
+      console.log('_getMaxWordLength 5a', this.bogdle.solutionSet, _getMaxWordLength())
+
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
       // startDiv.innerHTML = this.bogdle.startWord
 
       this.bogdle.dom.status.score.append(startDiv)
     } else {
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[MAX_WORD_LENGTH.toString()]).join(', ')
+      // console.log('_getMaxWordLength 5b', this.bogdle.solutionSet)
+
+      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
       // startDiv.innerHTML = this.bogdle.startWord
     }
   }
@@ -744,7 +764,7 @@ function _clickTile(tile) {
   }
 }
 
-function _toggleSetting(setting) {
+async function _changeSetting(setting) {
   switch (setting) {
     case 'dark-mode':
       var st = document.getElementById('button-setting-dark-mode').dataset.status
@@ -763,8 +783,24 @@ function _toggleSetting(setting) {
       var st = document.querySelectorAll('#container-difficulty input[type="radio"]:checked')
       var diff = st[0].dataset.diffid
 
-      this.bogdle.config.difficulty = Object.keys(DIFFICULTY)[diff]
-      _saveGameState()
+      var mySubConfirm = new Modal('confirm', 'Change Difficulty?',
+        'Changing the difficulty will start a new game, and the current game will be lost. Are you sure you want to do this?',
+        'Yes, change the difficulty',
+        'No, never mind'
+      )
+
+      try {
+        // wait for modal confirmation
+        var confirmed = await mySubConfirm.question()
+
+        if (confirmed) {
+          this.bogdle.config.difficulty = Object.keys(DIFFICULTY)[diff]
+          _saveGameState()
+          _resetProgress()
+        }
+      } catch (err) {
+        console.error('difficulty change failed', err)
+      }
 
       break
   }
@@ -790,15 +826,17 @@ function _getFormattedDate(date) {
 
 function _getGameConfig() {
   var config = this.bogdle.config
-  var html = '<ul>'
+  var dict = this.bogdle.dictionary
+  var html = '<dl>'
+  html += `<dd><code>dictionary:</code></dd><dt>${dict}</dt>`
 
   Object.keys(config).forEach(key => {
     if (typeof config[key] == 'object'
       && !Array.isArray(config[key])
       && config[key] != null
     ) {
-      html += `<li><code>${key}: {</code>`
-      html += '<ul>'
+      html += `<dd><code>${key}: {</code><dl>`
+
       Object.keys(config[key]).forEach(k => {
         var label = k
         var value = config[key][k]
@@ -807,9 +845,10 @@ function _getGameConfig() {
           value = _getFormattedDate(new Date(value))
         }
 
-        html += `<li><code>${label}:</code> ${value}</li>`
+        html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
       })
-      html += '</ul>}</li>'
+
+      html += '</dl><code>}</code></dd>'
     } else {
       var label = key
       var value = config[key]
@@ -820,18 +859,18 @@ function _getGameConfig() {
         }
       }
 
-      html += `<li><code>${label}:</code> ${value}</li>`
+      html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
     }
   })
 
-  html += '</ul>'
+  html += '</dl>'
 
   return html
 }
 function _getGameProgress() {
   var html = '<ul>'
 
-  // check each length category (MAX_WORD_LENGTH...3, etc.)
+  // check each length category (_getMaxWordLength()...3, etc.)
   // total up words guessed in each
   Object.keys(this.bogdle.solutionSet).reverse().forEach(category => {
     html += `<li><span class="solution-category">${category}-LETTER</span>`
@@ -856,7 +895,7 @@ function _getGameProgress() {
 function _getGameSolution() {
   var html = '<ul>'
 
-  // check each length category (MAX_WORD_LENGTH...3, etc.)
+  // check each length category (_getMaxWordLength()...3, etc.)
   Object.keys(this.bogdle.solutionSet).reverse().forEach(key => {
     var words = []
 
@@ -878,6 +917,17 @@ function _getGameSolution() {
   html += '</ul>'
 
   return html
+}
+function _getMaxWordLength() {
+  var diff = this.bogdle.config.difficulty
+
+  // console.log('diff', diff)
+
+  var max = DIFF_TO_LENGTH[diff]
+
+  // console.log('max', max)
+
+  return max
 }
 
 // save gamestate from code model -> LS

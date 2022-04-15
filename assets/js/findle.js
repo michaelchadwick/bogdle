@@ -3,11 +3,13 @@ class Findle {
   solution = EMPTY_ARR_SET
   word = ''
   dictionary = {}
+  config = {}
 
-  constructor(w, d) {
+  constructor(w, d, c) {
     this.word = w
     this.solution = EMPTY_ARR_SET
     this.dictionary = d
+    this.config = c
   }
 
   findWords = (word, trie = this.trie, cur = '', words = []) => {
@@ -74,20 +76,16 @@ class Findle {
       var validWords = this.findWords(this.word)
         .filter((value, index, self) => self.indexOf(value) === index)
 
-      // console.log('validWords 9', validWords.filter(w => w.length == MAX_WORD_LENGTH))
-
       // create solution set from valid words
       this.setSolution(validWords)
-
-      // console.log(`The following 3- to ${MAX_WORD_LENGTH}-letter words exist in '${this.word.toUpperCase()}':`, validWords.length, this.solution)
     } catch (err) {
       console.error('New Findle could not be created', err)
     }
   }
 
   setSolution = (set) => {
-    // get a range of object keys from 3...MAX_WORD_LENGTH
-    var categories = Array.from({length: MAX_WORD_LENGTH - 2}, (x, i) => (i + 3).toString());
+    // get a range of object keys from 3...DIFF_TO_LENGTH[this.config.difficulty]
+    var categories = Array.from({length: DIFF_TO_LENGTH[this.config.difficulty] - 2}, (x, i) => (i + 3).toString());
 
     // console.log('categories', categories)
 
@@ -100,15 +98,15 @@ class Findle {
       this.solution[word.length].push(word)
     })
     // make sure startWord is in there
-    this.solution[MAX_WORD_LENGTH.toString()].push(this.word)
+    this.solution[DIFF_TO_LENGTH[this.config.difficulty].toString()].push(this.word)
   }
 }
 
-async function createFindle(word, dictionary) {
+async function createFindle(word, dictionary, config) {
   // console.log(`creating new Findle for '${word.toUpperCase()}'`)
 
   // create new empty Findle instance
-  var findleInstance = new Findle(word, dictionary)
+  var findleInstance = new Findle(word, dictionary, config)
 
   // console.log('findleInstance', findleInstance)
 

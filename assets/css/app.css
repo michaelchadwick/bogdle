@@ -25,6 +25,14 @@ body {
   padding: 0;
 }
 
+code {
+  background-color: #f1f1f1;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 0 3px;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0 auto;
   text-align: center;

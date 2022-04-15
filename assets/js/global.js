@@ -21,7 +21,5 @@ const DIFF_TO_LENGTH = {
   'normal': 9
 }
 
-const MAX_WORD_LENGTH = 9
-
 const EMPTY_OBJ_SET = { "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {} }
 const EMPTY_ARR_SET = { "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [] }
