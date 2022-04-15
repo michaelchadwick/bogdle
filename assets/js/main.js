@@ -34,8 +34,7 @@ this.bogdle.dom.interactive.debug = {
   "btnCreateNew": document.getElementById('button-create-new'),
   "btnShowList": document.getElementById('button-show-list'),
   "btnResetProgress": document.getElementById('button-reset-progress'),
-  "btnShowConfig": document.getElementById('button-show-config'),
-  "btnModalOpen": document.getElementById('select-modal-open')
+  "btnShowConfig": document.getElementById('button-show-config')
 }
 // DOM > status elements
 this.bogdle.dom.status = {}
@@ -1074,11 +1073,6 @@ function _addEventListeners() {
       // 🗑️ reset progress (i.e. set LS to defaults)
       this.bogdle.dom.interactive.debug.btnResetProgress.addEventListener('click', () => {
         _confirmResetProgress()
-      })
-
-      // [-] modal select
-      this.bogdle.dom.interactive.debug.btnModalOpen.addEventListener('change', (event) => {
-        modalOpen(event.target.value)
       })
     }
   }

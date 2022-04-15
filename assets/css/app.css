@@ -79,19 +79,6 @@ button {
       color: #529952;
     }
 
-select {
-  height: 20px;
-  margin-top: 1.5em;
-  position: relative;
-}
-  select option {
-    font-size: 36px;
-  }
-  /* don't show debug modal open menu */
-  select#select-modal-open {
-    display: none;
-  }
-
 .debug {
   color: #715ec7;
 }
