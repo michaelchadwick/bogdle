@@ -98,7 +98,7 @@ class Findle {
       this.solution[word.length].push(word)
     })
     // make sure startWord is in there
-    this.solution[DIFF_TO_LENGTH[this.config.difficulty].toString()].push(this.word)
+    // this.solution[DIFF_TO_LENGTH[this.config.difficulty].toString()].push(this.word)
   }
 }
 

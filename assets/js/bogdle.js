@@ -227,6 +227,4 @@ function createBogdle() {
   console.log(solution)
 }
 
-
-
 // This code was contributed by rag2127, modified by mjchadwick
