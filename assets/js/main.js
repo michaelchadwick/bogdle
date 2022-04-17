@@ -1,36 +1,10 @@
 this.bogdle = this.bogdle || {}
 
-// default config and stats (both save to, and are loaded from, localStorage)
-this.bogdle.config = {
-  "difficulty": 'normal',
-  "env": 'local',
-  "gameState": 'IN_PROGRESS',
-  "guessedWords": [],
-  "lastCompletedTime": null,
-  "lastPlayedTime": null
-}
-this.bogdle.statistics = {
-  "gamesPlayed": 0,
-  "wordsFound": 0
-}
-
-// dictionary to pull from
-this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
-
-// console.log('this.bogdle.dictionary', this.bogdle.dictionary)
-
-this.bogdle.letters = []
-
-this.bogdle.solutionSet = EMPTY_OBJ_SET
-
+this.bogdle.config = {}
+this.bogdle.config.difficulty = 'normal'
+this.bogdle.config.env = 'local'
 // this.bogdle.startWord = 'education'
 this.bogdle.startWord = 'scenarios'
-this.bogdle.startWordsFile = './assets/json/'
-this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]
-this.bogdle.startWordsFile += `/words_${_getMaxWordLength()}-${_getMaxWordLength()}.json`
-
-// keep track of which tiles have been selected
-this.bogdle.tilesSelected = []
 
 /*************************************************************************
  * public methods *
@@ -267,9 +241,42 @@ this.bogdle.init = async () => {
 
 // load new solution set
 async function _loadSolutionSet(newWord = null) {
+  // default config and stats (both save to, and are loaded from, localStorage)
+  this.bogdle.config.gameState = 'IN_PROGRESS'
+  this.bogdle.config.guessedWords = []
+  this.bogdle.config.lastCompletedTime = null
+  this.bogdle.config.lastPlayedTime = null
+
+  this.bogdle.statistics = {
+    "gamesPlayed": 0,
+    "wordsFound": 0
+  }
+
+  // dictionary to pull from
+  this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+
+  console.log('this.bogdle.dictionary', this.bogdle.dictionary)
+
+  this.bogdle.letters = []
+
+  this.bogdle.solutionSet = EMPTY_OBJ_SET
+
+  this.bogdle.startWordsFile = './assets/json/'
+  // currently, this loads the same word source every time,
+  // but future iterations may actually switch
+  this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]
+  this.bogdle.startWordsFile += `/words_9-9.json`
+
+  console.log('this.bogdle.startWordsFiles', this.bogdle.startWordsFile)
+
+  // keep track of which tiles have been selected
+  this.bogdle.tilesSelected = []
+
+  // new game with static start word
   if (newWord) {
     console.log(`new solution requested with static word '${newWord}'...`)
-  } else {
+  } // new game with random start word
+  else {
     try {
       newWord = await __getNewStartWord()
 
@@ -279,8 +286,14 @@ async function _loadSolutionSet(newWord = null) {
     }
   }
 
+  this.bogdle.startWord = newWord
+
   try {
-    const findle = await createFindle(newWord, this.bogdle.dictionary, this.bogdle.config)
+    const findle = await createFindle(
+      this.bogdle.startWord,
+      this.bogdle.dictionary,
+      this.bogdle.config
+    )
 
     if (findle) {
       /********************************************************************
@@ -338,6 +351,7 @@ async function _confirmCreateNew() {
     var confirmed = await myConfirm.question()
 
     if (confirmed) {
+      _resetProgress()
       _loadSolutionSet()
     }
   } catch (err) {
@@ -439,7 +453,8 @@ async function _changeSetting(setting) {
           if (confirmed) {
             this.bogdle.config.difficulty = newDiff
 
-            _resetProgress()
+            // start a new game with newDiff (but using current startWord)
+            _loadSolutionSet(this.bogdle.startWord)
           } // if not confirmed, reset DOM radio back to original setting
           else {
             document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
@@ -518,12 +533,10 @@ function _setScore(guessed = 0) {
       startDiv.classList.add('debug')
 
       startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
-      // startDiv.innerHTML = this.bogdle.startWord
 
       this.bogdle.dom.status.score.append(startDiv)
     } else {
       startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
-      // startDiv.innerHTML = this.bogdle.startWord
     }
   }
 
@@ -1026,11 +1039,16 @@ function _addEventListeners() {
 async function __getNewStartWord() {
   // gets max-length start words via fetch()
   // if success, grabs a random one
+
+  console.log('this.bogdle.startWordsFiles', this.bogdle.startWordsFile)
   const response = await fetch(this.bogdle.startWordsFile)
+  console.log('__getNewStartWord response', response)
   const responseJson = await response.json()
+  console.log('__getNewStartWord responseJson', responseJson)
 
   // random max-length word
-  let possibles = responseJson[_getMaxWordLength().toString()]
+  let possibles = responseJson['9']
+  console.log('possibles', possibles)
   let possibleIdx = Math.floor(Math.random() * possibles.length)
 
   this.startWord = possibles[possibleIdx]
@@ -1068,8 +1086,6 @@ function __getSolutionSize() {
 
   return solutionSize
 }
-
-
 
 // set up game
 this.bogdle.init()
