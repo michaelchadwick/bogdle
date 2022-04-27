@@ -252,7 +252,7 @@ section#game {
 }
   section#game #score-container {
     font-size: 1em;
-    height: 50px;
+    height: 25px;
     text-align: center;
   }
   section#game #score-container #score-total {
@@ -264,12 +264,13 @@ section#game {
     /* background-color: #f9ffaa; */
     /* border: 1px solid #000; */
     display: flex;
-    flex-wrap: wrap;
     font-family: 'Changa', sans-serif;
     font-size: 3.1em;
     font-weight: 700;
-    height: 40px;
-    margin: 0 10px;
+    height: 45px;
+    margin: 0 auto;
+    max-width: 100%;
+    position: relative;
     text-align: center;
     text-transform: uppercase;
     top: 1px;
@@ -291,24 +292,38 @@ section#game {
   }
     section#game #guess-container #guess {
       animation-duration: 700ms;
-      /* background-color: #fff; */
+      /* background-color: rgb(255, 189, 189); */
       color: #364333;
       font-size: 1em;
-      line-height: 1;
+      line-height: 0.7em;
       letter-spacing: 0.03em;
       margin: 0 auto;
+      overflow: hidden;
       position: relative;
       transition: all 50ms;
       top: 0;
       width: 100%;
     }
-    section#game #guess-container #guess.valid {
-      color: #46852b;
-      letter-spacing: 0e.04em;
-    }
-      section#game #guess-container #guess.valid.first-guess {
-        color: #23b62d;
+      section#game #guess-container #guess.valid {
+        color: #46852b;
+        letter-spacing: 0e.04em;
       }
+        section#game #guess-container #guess.valid.first-guess {
+          color: #23b62d;
+        }
+
+  section#game #lookup-container {
+    /* background-color: rgb(176, 255, 186); */
+    height: 30px;
+    margin: 10px auto 0;
+  }
+    section#game #lookup-container #button-guess-lookup {
+      display: none;
+      height: 20px;
+    }
+    section#game #lookup-container #button-guess-lookup.show {
+      display: block;
+    }
 
   section#game #board-container {
     align-items: center;

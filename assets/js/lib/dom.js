@@ -7,6 +7,7 @@ this.bogdle.dom.interactive = {
   "btnHelp": document.getElementById('button-help'),
   "btnStats": document.getElementById('button-stats'),
   "btnSettings": document.getElementById('button-settings'),
+  "btnGuessLookup": document.getElementById('button-guess-lookup'),
   "btnSubmit": document.getElementById('button-submit'),
   "btnBackspace": document.getElementById('button-backspace'),
   "btnClearGuess": document.getElementById('button-clear-guess'),

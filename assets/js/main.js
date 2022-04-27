@@ -4,6 +4,7 @@ this.bogdle.config = {}
 this.bogdle.config.difficulty = 'normal'
 this.bogdle.env = 'local'
 this.bogdle.hintWord = null
+this.bogdle.lookupUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 // this.bogdle.startWord = 'education'
 this.bogdle.startWord = 'scenarios'
 this.bogdle.tempWord = []
@@ -14,7 +15,7 @@ this.bogdle.tempWordCounter = 0
  *************************************************************************/
 
 // modal methods
-function modalOpen(type) {
+async function modalOpen(type) {
   switch(type) {
     case 'start':
     case 'help':
@@ -29,6 +30,36 @@ function modalOpen(type) {
         null,
         null
       )
+      break
+
+    case 'dictionary':
+      var word = this.bogdle.dom.status.guess.innerHTML
+
+      try {
+        const response = await fetch(`${this.bogdle.lookupUrl}/${word}`)
+        const responseJson = await response.json()
+
+        if (responseJson) {
+          const entry = responseJson[0]
+
+          console.log('entry', entry)
+
+          this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
+            `
+              <div class="dictionary">
+                <strong>${entry.word}</strong> ${entry.phonetic}
+                <hr />
+                <em>${entry.meanings[0].partOfSpeech}</em>: ${entry.meanings[0].definitions[0].definition}
+              </div>
+            `,
+            null,
+            null,
+            false
+          )
+        }
+      } catch(e) {
+        console.error('could not lookup word', e)
+      }
       break
 
     case 'stats':
@@ -707,24 +738,6 @@ function _setScore(guessed = 0) {
   this.bogdle.dom.status.scoreTotal.innerHTML = __getSolutionSize().toString()
   this.bogdle.dom.status.scoreTotalWords.innerHTML = ' words'
 
-  // if we're local and it doesn't exist
-  // add the starter words for debugging
-  if (this.bogdle.env == 'local') {
-    var startDiv = document.getElementById('local-debug-start')
-
-    if (!startDiv) {
-      startDiv = document.createElement('div')
-      startDiv.id = 'local-debug-start'
-      startDiv.classList.add('debug')
-
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
-
-      this.bogdle.dom.status.score.append(startDiv)
-    } else {
-      startDiv.innerHTML = Object.keys(this.bogdle.solutionSet[_getMaxWordLength()]).join(', ')
-    }
-  }
-
   // console.log('!score set!', `${this.bogdle.dom.status.score.innerHTML}`)
 }
 
@@ -732,6 +745,7 @@ function _setScore(guessed = 0) {
 function _checkGuess() {
   // reset classes
   this.bogdle.dom.status.guess.classList.remove('valid', 'first-guess')
+  this.bogdle.dom.interactive.btnGuessLookup.classList.remove('show')
 
   // player entered valid word length
   if (this.bogdle.dom.status.guess.innerHTML.length > 2) {
@@ -742,6 +756,7 @@ function _checkGuess() {
       if (parseInt(key) <= _getMaxWordLength()) {
         if (Object.keys(this.bogdle.solutionSet[key]).includes(word)) {
           this.bogdle.dom.status.guess.classList.toggle('valid')
+          this.bogdle.dom.interactive.btnGuessLookup.classList.add('show')
 
           // and it's the first time
           if (!this.bogdle.solutionSet[key][word]) {
@@ -1124,6 +1139,13 @@ function _clearHint() {
 
 // add event listeners to DOM
 function _addEventListeners() {
+  // 📕 dictionary lookup
+  this.bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
+    if (this.bogdle.dom.status.guess.classList.contains('valid')) {
+      modalOpen('dictionary')
+    }
+  })
+
   // [A] tile interaction
   Array.from(this.bogdle.dom.interactive.tiles).forEach(tile => {
     tile.addEventListener('click', (t) => {
@@ -1200,46 +1222,45 @@ function _addEventListeners() {
   document.addEventListener('keydown', (event) => {
     if (event.code == 'Enter') {
       submitWord(this.bogdle.dom.status.guess.innerHTML)
-    }
-    if (event.code == 'Backspace' || event.code == 'Delete') {
+    } else if (event.code == 'Backspace' || event.code == 'Delete') {
       _removeLastLetter()
-    }
-
-    var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
-    var validLetters = this.bogdle.letters.map(l => l.toUpperCase())
-    var pressedLetter = event.code.charAt(event.code.length - 1)
-
-    if (!excludedKeys.some(key => !event.getModifierState(key))) {
-      // console.log('no modifier key is being held, so trigger letter')
-
-      if (validLetters.includes(pressedLetter) && !event.getModifierState()) {
-        // find any available tiles to select
-        var boardTiles = Array.from(this.bogdle.dom.interactive.tiles)
-
-        var availableTiles = boardTiles.filter(tile =>
-          tile.innerHTML.toUpperCase() == pressedLetter &&
-          tile.dataset.state == 'tbd'
-        )
-
-        // if we found one, select first found
-        // this only works in Findle, not Bogdle
-        if (availableTiles.length) {
-          var tileToPush = availableTiles[0]
-
-          tileToPush.dataset.state = 'selected'
-
-          // push another selected tile onto selected array
-          this.bogdle.tilesSelected.push(tileToPush.dataset.pos)
-
-          // add selected tile to guess
-          this.bogdle.dom.status.guess.innerHTML += tileToPush.innerHTML
-
-          // check guess for validity
-          _checkGuess()
-        }
-      }
     } else {
-      // console.log('a modifier key is being held, so ignore letter')
+      var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
+      var validLetters = this.bogdle.letters.map(l => l.toUpperCase())
+      var pressedLetter = event.code.charAt(event.code.length - 1)
+
+      if (!excludedKeys.some(key => event.getModifierState(key))) {
+        // console.log('no modifier key is being held, so trigger letter')
+
+        if (validLetters.includes(pressedLetter)) {
+          // find any available tiles to select
+          var boardTiles = Array.from(this.bogdle.dom.interactive.tiles)
+
+          var availableTiles = boardTiles.filter(tile =>
+            tile.innerHTML.toUpperCase() == pressedLetter &&
+            tile.dataset.state == 'tbd'
+          )
+
+          // if we found one, select first found
+          // this only works in Findle, not Bogdle
+          if (availableTiles.length) {
+            var tileToPush = availableTiles[0]
+
+            tileToPush.dataset.state = 'selected'
+
+            // push another selected tile onto selected array
+            this.bogdle.tilesSelected.push(tileToPush.dataset.pos)
+
+            // add selected tile to guess
+            this.bogdle.dom.status.guess.innerHTML += tileToPush.innerHTML
+
+            // check guess for validity
+            _checkGuess()
+          }
+        }
+      } else {
+        // console.log('a modifier key is being held, so ignore letter', event)
+      }
     }
   })
 
