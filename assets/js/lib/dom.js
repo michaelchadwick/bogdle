@@ -12,6 +12,8 @@ this.bogdle.dom.interactive = {
   "btnClearGuess": document.getElementById('button-clear-guess'),
   "btnShuffle": document.getElementById('button-shuffle'),
   "btnShowProgress": document.getElementById('button-show-progress'),
+  "btnHint": document.getElementById('button-hint'),
+  "btnHintReset": document.getElementById('button-hint-reset'),
   "tiles": document.getElementsByClassName('tile')
 }
 // DOM > interactive elements (debug)

@@ -48,18 +48,27 @@
         <i class="fa-solid fa-question"></i>
       </button>
       <div id="debug-buttons" class="debug">
-        <button id="button-create-new" class="icon">
-          <i class="fa-solid fa-circle-plus"></i>
-        </button>
-        <button id="button-show-list" class="icon">
-          <i class="fa-solid fa-list"></i>
-        </button>
-        <button id="button-reset-progress" class="icon">
-          <i class="fa-solid fa-trash-can"></i>
-        </button>
-        <button id="button-show-config" class="icon">
-          <i class="fa-solid fa-gears"></i>
-        </button>
+        <nav class="ddmenu">
+          <div class="ddgroup">
+            <button id="button-debug-dropdown" class="icon debug">
+              <i class="fa-solid fa-bug"></i>
+            </button>
+            <div class="ddsub">
+              <button id="button-create-new" class="icon">
+                <i class="fa-solid fa-circle-plus"></i>
+              </button>
+              <button id="button-show-list" class="icon">
+                <i class="fa-solid fa-list"></i>
+              </button>
+              <button id="button-reset-progress" class="icon">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <button id="button-show-config" class="icon">
+                <i class="fa-solid fa-gears"></i>
+              </button>
+            </div>
+          </div>
+        </nav>
       </div>
     </div>
 
@@ -109,7 +118,16 @@
       </div>
     </div>
 
-    <div id="keyboard">
+    <div id="hint-container">
+      <span></span>
+      <div>
+        <button id="button-hint">?</button>
+        <button id="button-hint-reset">X</button>
+      </div>
+      <span></span>
+    </div>
+
+    <div id="keyboard-container">
       <div class="row">
         <button id="button-submit">
           <i class="fa-solid fa-check"></i>

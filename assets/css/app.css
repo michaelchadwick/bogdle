@@ -54,7 +54,7 @@ button {
   flex: 1;
   font-family: inherit;
   font-weight: bold;
-  height: 58px;
+  height: 50px;
   justify-content: center;
   margin: 0 6px 0 0;
   padding: 0;
@@ -158,12 +158,65 @@ header {
     padding: 0;
     width: 70px;
   }
-    header .menu-left #debug-buttons {
-      display: none;
+  header #debug-buttons {
+    display: none;
+  }
+  header #debug-buttons button {
+    color: #715ec7;
+  }
+  header #debug-buttons .ddmenu {
+    align-items: center;
+    display: flex;
+  }
+    header #debug-buttons .ddmenu .ddgroup {
+      border: 1px solid transparent;
+      position: relative;
+      text-decoration: none;
+      width: 100%;
     }
-    header .menu-left #debug-buttons button {
-      color: #715ec7;
-    }
+      header #debug-buttons .ddmenu .ddgroup button {
+        margin-right: 0;
+      }
+      header #debug-buttons .ddmenu .ddgroup:hover {
+        background: #d8d2f5;
+        border: 1px solid #8c85ae;
+        cursor: pointer;
+      }
+        header #debug-buttons .ddmenu .ddgroup .ddsub {
+          display: none;
+          left: -1px;
+          position: absolute;
+          top: 100%;
+          width: 100%;
+        }
+          header #debug-buttons .ddmenu .ddgroup .ddsub a {
+            box-sizing: border-box;
+            display: block;
+          }
+          header #debug-buttons .ddmenu .ddgroup .ddsub button {
+            background-color: #e3e0f3;
+            border: 1px solid transparent;
+            border-radius: 0;
+            height: 20px;
+            padding: 5px;
+            width: 26px;
+          }
+          header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
+            background: #e1ddf7;
+            border: 1px solid #8c85ae;
+          }
+          header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
+            display: flex;
+            flex-direction: column;
+          }
+        @media screen and (max-width: 640px) {
+          .ddmenu {
+            flex-wrap: wrap;
+          }
+          .ddsub {
+            position: static;
+          }
+        }
   header .title {
     font-family: 'Changa', sans-serif;
     font-weight: 700;
@@ -263,6 +316,7 @@ section#game {
     display: flex;
     flex-grow: 1;
     justify-content: center;
+    max-height: 310px;
     overflow: hidden;
   }
     section#game #board-container #board {
@@ -277,31 +331,67 @@ section#game {
         grid-gap: 5px;
         grid-template-columns: repeat(3, 1fr);
       }
-    section#game #keyboard {
-      margin: 0 8px;
-      user-select: none; /* no selecting text */
+
+  section#game #hint-container {
+    display: inline-grid;
+    grid-template-columns: 10% 80% 10%;
+    justify-items: center;
+    margin: 0 10px;
+    padding: 0 10px 30px;
+  }
+    section#game #hint-container button {
+      border: 1px solid transparent;
+      float: left;
+      padding: 5px;
     }
-      section#game #keyboard .row {
-        display: flex;
-        margin: 0 auto 8px;
-        /* Enable panning, pinch zoom, but not double-tap zoom */
-        touch-action: manipulation;
-        width: 100%;
+    section#game #hint-container button.not-a-button {
+      background-color: transparent;
+      color: #000;
+      cursor: text;
+    }
+    section#game #hint-container button#button-hint {
+      font-size: 1.5em;
+      min-width: 50px;
+    }
+    section#game #hint-container button#button-hint-reset {
+      display: none;
+      font-size: 1em;
+      min-width: 40px;
+    }
+    section#game #hint-container button#button-hint-reset.show {
+      display: block;
+    }
+    section#game #hint-container button:hover:not([disabled]) {
+      background-color: #888;
+      border: 1px solid #111;
+      color: #fff;
+    }
+
+  section#game #keyboard-container {
+    margin: 0 8px;
+    user-select: none; /* no selecting text */
+  }
+    section#game #keyboard-container .row {
+      display: flex;
+      margin: 0 auto 8px;
+      /* Enable panning, pinch zoom, but not double-tap zoom */
+      touch-action: manipulation;
+      width: 100%;
+    }
+    section#game #keyboard-container button {
+      border: 1px solid transparent;
+      font-size: 20px;
+      width: 100px;
+    }
+      section#game #keyboard-container button:last-of-type {
+        /* last button in row shouldn't have right-margin */
+        margin: 0;
       }
-      section#game #keyboard button {
-        border: 1px solid transparent;
-        font-size: 20px;
-        width: 100px;
+      section#game #keyboard-container button:hover:not([disabled]) {
+        background-color: #888;
+        border: 1px solid #111;
+        color: #fff;
       }
-        section#game #keyboard button:last-of-type {
-          /* last button in row shouldn't have right-margin */
-          margin: 0;
-        }
-        section#game #keyboard button:hover:not([disabled]) {
-          background-color: #888;
-          border: 1px solid #111;
-          color: #fff;
-        }
 
 #statistics {
   display: flex;

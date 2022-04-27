@@ -10,7 +10,7 @@ body.dark-mode {
     border: 2px solid #fff;
     color: #fff
   }
-  body.dark-mode #keyboard button {
+  body.dark-mode #keyboard-container button {
     background-color: #888;
   }
   body.dark-mode section#game #guess-container #guess {

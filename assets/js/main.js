@@ -3,8 +3,11 @@ this.bogdle = this.bogdle || {}
 this.bogdle.config = {}
 this.bogdle.config.difficulty = 'normal'
 this.bogdle.env = 'local'
+this.bogdle.hintWord = null
 // this.bogdle.startWord = 'education'
 this.bogdle.startWord = 'scenarios'
+this.bogdle.tempWord = []
+this.bogdle.tempWordCounter = 0
 
 /*************************************************************************
  * public methods *
@@ -1046,6 +1049,79 @@ function _saveStats() {
   }
 }
 
+function _initHint() {
+  // console.log('checking for hintWord...')
+
+  if (!this.bogdle.hintWord) {
+    const wordsLeft = __getUnGuessedWords()
+    this.bogdle.hintWord = wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
+
+    // console.log('hintWord created:', this.bogdle.hintWord.toUpperCase())
+
+    Array.from(this.bogdle.hintWord).forEach(l => this.bogdle.tempWord.push('_'))
+
+    this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
+
+    // console.log('tempWord reset:', this.bogdle.tempWord.join(' ').toUpperCase())
+  } else {
+    // console.log('hintWord already existing:', this.bogdle.hintWord.toUpperCase())
+  }
+
+  _cycleHint()
+}
+function _cycleHint() {
+  // console.log('cycling hintWord status...')
+
+  var maxLetters = Math.floor(this.bogdle.hintWord.length / 2)
+
+  if (this.bogdle.hintWord.length > 4) maxLetters += 1
+
+  // console.log(`length: ${this.bogdle.hintWord.length}, maxLetters: ${maxLetters}, count: ${this.bogdle.tempWordCounter}`)
+
+  // if we haven't yet revealed enough letters,
+  // change a _ to a letter
+  if (this.bogdle.tempWordCounter < maxLetters) {
+    var idx = 0
+    var foundEmpty = false
+
+    while (!foundEmpty) {
+      idx = Math.floor(Math.random() * this.bogdle.hintWord.length)
+      if (this.bogdle.hintWord[idx]) {
+        if (this.bogdle.tempWord[idx] == '_') {
+          this.bogdle.tempWord[idx] = this.bogdle.hintWord[idx];
+          foundEmpty = true
+        }
+      }
+    }
+
+    // console.log('this.bogdle.tempWord', this.bogdle.tempWord.join(' ').toUpperCase())
+
+    this.bogdle.dom.interactive.btnHint.innerHTML = this.bogdle.tempWord.join('')
+
+    this.bogdle.tempWordCounter++
+  }
+
+  if (this.bogdle.tempWordCounter == maxLetters) {
+    // console.log('maxLetters reached, no more letters')
+
+    this.bogdle.dom.interactive.btnHint.classList.add('not-a-button')
+    this.bogdle.dom.interactive.btnHint.setAttribute('disabled', true)
+  }
+}
+function _clearHint() {
+  // console.log('clearing hintWord...')
+
+  this.bogdle.dom.interactive.btnHint.classList.remove('not-a-button')
+  this.bogdle.dom.interactive.btnHint.removeAttribute('disabled')
+  this.bogdle.dom.interactive.btnHint.innerHTML = '?'
+
+  this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
+
+  this.bogdle.hintWord = null
+  this.bogdle.tempWord = []
+  this.bogdle.tempWordCounter = 0
+}
+
 // add event listeners to DOM
 function _addEventListeners() {
   // [A] tile interaction
@@ -1055,10 +1131,20 @@ function _addEventListeners() {
     })
   })
 
-  // ❔ buttons to open modals
+  // {} buttons to open modals
   this.bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
   this.bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
   this.bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
+
+  // ❔ hint
+  this.bogdle.dom.interactive.btnHint.addEventListener('click', () => {
+    _initHint()
+  })
+
+  // X hint reset
+  this.bogdle.dom.interactive.btnHintReset.addEventListener('click', () => {
+    _clearHint()
+  })
 
   // ✅ submit word
   this.bogdle.dom.interactive.btnSubmit.addEventListener('click', () => {
@@ -1196,6 +1282,21 @@ async function __getNewStartWord() {
   this.startWord = possibles[possibleIdx]
 
   return this.startWord
+}
+
+function __getUnGuessedWords() {
+  var words = this.bogdle.solutionSet
+  var wordsLeft = []
+
+  Object.keys(words).forEach(length => {
+    Object.keys(words[length]).forEach(word => {
+      if (!words[length][word]) {
+        wordsLeft.push(word)
+      }
+    })
+  })
+
+  return wordsLeft
 }
 
 // timestamp to display date
