@@ -1,4 +1,5 @@
 /* green: #529952 */
+/* light: #91c791 */
 /* debug: #715ec7 */
 
 * {
@@ -23,6 +24,7 @@ body {
   margin: 0;
   overflow-y: hidden;
   padding: 0;
+  touch-action: manipulation;
 }
 
 code {

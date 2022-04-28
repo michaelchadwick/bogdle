@@ -1137,6 +1137,19 @@ function _clearHint() {
   this.bogdle.tempWordCounter = 0
 }
 
+function _handleClickTouch(event) {
+  var dialog = document.getElementsByClassName('thin-ui-modal-dialog')[0]
+
+  if (dialog) {
+    var isConfirm = dialog.classList.contains('modal-confirm')
+
+    // only close if not a confirmation!
+    if (event.target == dialog && !isConfirm) {
+      dialog.remove()
+    }
+  }
+}
+
 // add event listeners to DOM
 function _addEventListeners() {
   // 📕 dictionary lookup
@@ -1264,19 +1277,9 @@ function _addEventListeners() {
     }
   })
 
-  // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener('click', (event) => {
-    var dialog = document.getElementsByClassName('thin-ui-modal-dialog')[0]
-
-    if (dialog) {
-      var isConfirm = dialog.classList.contains('modal-confirm')
-
-      // only close if not a confirmation!
-      if (event.target == dialog && !isConfirm) {
-        dialog.remove()
-      }
-    }
-  })
+  // When the user clicks or touches anywhere outside of the modal, close it
+  window.addEventListener('click', _handleClickTouch)
+  window.addEventListener('touchend', _handleClickTouch)
 
   window.onload = _resizeBoard
   window.onresize = _resizeBoard
