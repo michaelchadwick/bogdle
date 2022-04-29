@@ -42,7 +42,7 @@ async function modalOpen(type) {
         if (responseJson) {
           const entry = responseJson[0]
 
-          console.log('entry', entry)
+          // console.log('entry', entry)
 
           this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
             `
@@ -890,32 +890,32 @@ function _removeLastLetter() {
 
 // dynamically resize board depending on viewport
 function _resizeBoard() {
-  console.log('--------------- resizing board ---------------')
+  // console.log('--------------- resizing board ---------------')
 
   var boardContainer = document.querySelector('#board-container')
 
-  console.log('windowHeight', window.innerHeight)
-  console.log('docBodyScrollHeight', document.body.scrollHeight)
-  console.log('docDocElemClientHeight', document.documentElement.clientHeight)
-  console.log('docDocElemScrollHeight', document.documentElement.scrollHeight)
+  // console.log('windowHeight', window.innerHeight)
+  // console.log('docBodyScrollHeight', document.body.scrollHeight)
+  // console.log('docDocElemClientHeight', document.documentElement.clientHeight)
+  // console.log('docDocElemScrollHeight', document.documentElement.scrollHeight)
 
   var boardHeight = boardContainer.clientHeight + 40
 
-  console.log('boardHeight', boardHeight)
+  // console.log('boardHeight', boardHeight)
 
   var containerHeight = Math.min(Math.floor(boardHeight), 350)
 
-  console.log('containerHeight', containerHeight)
+  // console.log('containerHeight', containerHeight)
 
   var tileHeight = 2.5 * Math.floor(containerHeight / 3)
 
-  console.log('tileHeight', tileHeight)
+  // console.log('tileHeight', tileHeight)
 
   var board = document.querySelector('#board')
   board.style.width = `${containerHeight}px`
   board.style.height = `${tileHeight}px`
 
-  console.log(`resized to ${containerHeight}w x ${tileHeight}h`)
+  // console.log(`resized to ${containerHeight}w x ${tileHeight}h`)
 }
 
 // user clicks a tile

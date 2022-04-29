@@ -67,11 +67,6 @@ class Modal {
       this.modal.classList.add('temp');
     }
 
-    // if (this.modal) {
-    //   console.log('this.modal', this.modal);
-    //   this.modal.show();
-    // }
-
     // Message window
     const window = document.createElement('div');
     window.classList.add('thin-ui-modal-window');
