@@ -21,7 +21,7 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Bogdle',
         `
-          <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long. After each word is found, the counter of words out of the total words will increase. Find all valid words and win!</p>
+          <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
 
           <hr />
 
