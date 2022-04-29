@@ -245,26 +245,27 @@ header {
  * GAME
  */
 section#game {
+  /* background-color: #b9ffad; */
   display: flex;
   flex-direction: column;
-  height: calc(100% - 50px); /* whole screen except for header */
-  margin: 0.5em auto 0;
+  height: calc(100% - 40px); /* whole screen except for header */
+  margin: 0 auto;
   max-width: 500px;
   width: 100%;
 }
   section#game #score-container {
     font-size: 1em;
     height: 25px;
+    padding-top: 5px;
     text-align: center;
   }
   section#game #score-container #score-total {
     font-weight: 700;
   }
+
   section#game #guess-container {
     align-content: center;
     align-items: center;
-    /* background-color: #f9ffaa; */
-    /* border: 1px solid #000; */
     display: flex;
     font-family: 'Changa', sans-serif;
     font-size: 3.1em;
@@ -315,29 +316,28 @@ section#game {
         }
 
   section#game #lookup-container {
-    /* background-color: rgb(176, 255, 186); */
-    height: 30px;
-    margin: 10px auto 0;
+    height: 25px;
+    margin: 2px auto 0;
+    text-align: center;
+    width: 100%;
   }
     section#game #lookup-container #button-guess-lookup {
       display: none;
-      height: 20px;
+      height: 25px;
     }
     section#game #lookup-container #button-guess-lookup.show {
-      display: block;
+      display: inline-block;
     }
 
   section#game #board-container {
     align-items: center;
-    /* background-color: #ffc6c6; */
     display: flex;
     flex-grow: 1;
     justify-content: center;
-    max-height: 310px;
     overflow: hidden;
   }
     section#game #board-container #board {
-      /* background-color: #c6c7ff; */
+      box-sizing: border-box;
       display: grid;
       grid-template-rows: repeat(3, 1fr);
       grid-gap: 5px;
@@ -353,16 +353,18 @@ section#game {
     display: inline-grid;
     grid-template-columns: 10% 80% 10%;
     justify-items: center;
-    margin: 0 10px;
-    padding: 0 10px 30px;
+    margin: 0;
+    padding: 10px;
   }
     section#game #hint-container button {
-      border: 1px solid transparent;
+      border: 1px solid #529952;
       float: left;
+      height: 40px;
       padding: 5px;
     }
     section#game #hint-container button.not-a-button {
       background-color: transparent;
+      border: 1px solid transparent;
       color: #000;
       cursor: text;
     }
@@ -377,11 +379,6 @@ section#game {
     }
     section#game #hint-container button#button-hint-reset.show {
       display: block;
-    }
-    section#game #hint-container button:hover:not([disabled]) {
-      background-color: #888;
-      border: 1px solid #111;
-      color: #fff;
     }
 
   section#game #keyboard-container {

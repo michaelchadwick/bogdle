@@ -1,0 +1,17 @@
+section#game {
+  background-color: #b9ffad;
+}
+  section#game #score-container {
+    background-color: #f9ffaa;
+  }
+
+  section#game #lookup-container {
+    background-color: rgb(255, 176, 250);
+  }
+
+  section#game #board-container {
+    background-color: #ffc6c6;
+  }
+    section#game #board-container #board {
+      background-color: #c6c7ff;
+    }

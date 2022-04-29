@@ -66,7 +66,11 @@ class Modal {
     if (modalType == 'temp') {
       this.modal.classList.add('temp');
     }
-    this.modal.show();
+
+    // if (this.modal) {
+    //   console.log('this.modal', this.modal);
+    //   this.modal.show();
+    // }
 
     // Message window
     const window = document.createElement('div');
