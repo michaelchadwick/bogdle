@@ -78,6 +78,7 @@
   max-height: 500px;
   overflow-y: auto;
   padding: 0 16px;
+  width: 100%;
 }
   .thin-ui-modal-text ul,
   .thin-ui-modal-text {
@@ -115,7 +116,7 @@
 
 .thin-ui-modal-button-group {
   margin: auto 0 16px 0;
-  padding: 0 16px;
+  padding: 0 10px;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
@@ -131,12 +132,13 @@
   display: inline-block;
   width: fit-content;
   position: relative;
-  white-space: nowrap;
+  white-space: break-spaces;
   text-decoration: none;
   cursor: pointer;
   box-sizing: border-box;
   border: 0 none;
   border-radius: 2px;
+  line-height: 1.3;
 }
   .thin-ui-button:hover {
     box-shadow: inset 0 99px 0 rgba(0, 0, 0, 0.05);
