@@ -954,7 +954,7 @@ function _removeLastLetter() {
     if (this.bogdle.dom.status.guess.innerHTML.length) {
       this.bogdle.dom.status.guess.innerHTML = this.bogdle.dom.status.guess.innerHTML.slice(0, this.bogdle.dom.status.guess.innerHTML.length - 1)
 
-      audioPlay('delete-boop')
+      audioPlay('tile_delete')
 
       _checkGuess()
     }
@@ -1039,7 +1039,7 @@ function _displayGameConfig() {
           value = __getFormattedDate(new Date(value))
         }
 
-        html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+        html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
       })
 
       html += '</dl><code>}</code></dd>'
@@ -1053,7 +1053,11 @@ function _displayGameConfig() {
         }
       }
 
-      html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+      if (label == 'guessedWords') {
+        html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+      } else {
+        html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+      }
     }
   })
 
