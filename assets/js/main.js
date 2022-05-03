@@ -2,6 +2,7 @@ this.bogdle = this.bogdle || {}
 
 this.bogdle.config = {}
 this.bogdle.config.difficulty = 'normal'
+this.bogdle.config.noisy = false
 this.bogdle.env = 'local'
 this.bogdle.hintWord = null
 this.bogdle.lookupUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en'
@@ -9,25 +10,6 @@ this.bogdle.lookupUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 this.bogdle.startWord = 'scenarios'
 this.bogdle.tempWord = []
 this.bogdle.tempWordCounter = 0
-
-const audioPlay = async sound => {
-  const context = new AudioContext();
-  const gainNode = context.createGain();
-  const source = context.createBufferSource();
-  const path = 'assets/audio';
-  const format = 'wav';
-  const audioBuffer = await fetch(`${path}/${sound}.${format}`)
-    .then(res => res.arrayBuffer())
-    .then(ArrayBuffer => context.decodeAudioData(ArrayBuffer));
-
-  gainNode.gain.value = 0.1;
-  source.buffer = audioBuffer;
-
-  source.connect(gainNode);
-  source.connect(context.destination);
-
-  source.start();
-};
 
 /*************************************************************************
  * public methods *
@@ -108,18 +90,7 @@ async function modalOpen(type) {
       this.myModal = new Modal('perm', 'Settings',
         `
           <div id="settings">
-            <div class="setting-row">
-              <div class="text">
-                <div class="title">Dark Mode</div>
-              </div>
-              <div class="control">
-                <div class="container">
-                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_changeSetting('dark-mode')">
-                    <span class="knob"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- difficulty -->
             <div class="setting-row">
               <div class="text">
                 <div class="title">Difficulty</div>
@@ -145,6 +116,32 @@ async function modalOpen(type) {
                   <div class="radio">
                     <input id="diff-3" name="diff-radio" type="radio" data-diffid="normal" onclick="_changeSetting('difficulty')">
                     <label for="diff-3" class="radio-label">Normal (9)</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- dark mode -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Dark Mode</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_changeSetting('dark-mode')">
+                    <span class="knob"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- noisy -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Sounds</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div id="button-setting-noisy" data-status="" class="switch" onclick="_changeSetting('noisy')">
+                    <span class="knob"></span>
                   </div>
                 </div>
               </div>
@@ -242,14 +239,19 @@ function submitWord(word) {
 
           this.bogdle.solutionSet[word.length][word] = 1
           this.bogdle.statistics.wordsFound += 1
+          this.bogdle.dom.status.guess.classList.remove('first-guess')
 
+          // do a dance
           animateCSS('#guess', 'tada')
+
+          // clear hint if it's the same word
+          if (word == this.bogdle.hintWord) {
+            _clearHint()
+          }
 
           _saveGameState()
 
           _increaseScore()
-
-          this.bogdle.dom.status.guess.classList.remove('first-guess')
 
           _checkWinState()
         } else {
@@ -393,7 +395,14 @@ async function _createNewSolutionSet(newWord = null, isNewDiff = false) {
 
   this.bogdle.letters = []
 
-  this.bogdle.solutionSet = EMPTY_OBJ_SET
+  switch (DIFF_TO_LENGTH[parseInt(this.bogdle.difficulty)]) {
+    case 3: this.bogdle.solutionSet = EMPTY_OBJ_SET_3; break
+    case 5: this.bogdle.solutionSet = EMPTY_OBJ_SET_5; break
+    case 7: this.bogdle.solutionSet = EMPTY_OBJ_SET_7; break
+    case 9:
+    default:
+      this.bogdle.solutionSet = EMPTY_OBJ_SET; break
+  }
 
   this.bogdle.startWordsFile = './assets/json/'
   // currently, this loads the same word source every time,
@@ -480,7 +489,14 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
 
   this.bogdle.letters = []
 
-  this.bogdle.solutionSet = EMPTY_OBJ_SET
+  switch (_getMaxWordLength()) {
+    case 3: this.bogdle.solutionSet = EMPTY_OBJ_SET_3; break
+    case 5: this.bogdle.solutionSet = EMPTY_OBJ_SET_5; break
+    case 7: this.bogdle.solutionSet = EMPTY_OBJ_SET_7; break
+    case 9:
+    default:
+      this.bogdle.solutionSet = EMPTY_OBJ_SET; break
+  }
 
   this.bogdle.startWordsFile = './assets/json/'
   // currently, this loads the same word source every time,
@@ -666,19 +682,6 @@ async function _resetProgress() {
 // change a setting (gear icon) value
 async function _changeSetting(setting) {
   switch (setting) {
-    case 'dark-mode':
-      var st = document.getElementById('button-setting-dark-mode').dataset.status
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-dark-mode').dataset.status = 'true'
-        document.body.classList.add('dark-mode')
-        _saveSetting(LS_DARK_KEY, true)
-      } else {
-        document.getElementById('button-setting-dark-mode').dataset.status = 'false'
-        document.body.classList.remove('dark-mode')
-        _saveSetting(LS_DARK_KEY, false)
-      }
-
-      break
     case 'difficulty':
       var oldDiff = this.bogdle.config.difficulty
 
@@ -701,6 +704,8 @@ async function _changeSetting(setting) {
           if (confirmed) {
             this.bogdle.config.difficulty = newDiff
 
+            _clearHint()
+
             // start a new game with newDiff (but using current startWord)
             _loadExistingSolutionSet(this.bogdle.startWord, true)
           } // if not confirmed, reset DOM radio back to original setting
@@ -713,12 +718,38 @@ async function _changeSetting(setting) {
       }
 
       break
+    case 'dark-mode':
+      var st = document.getElementById('button-setting-dark-mode').dataset.status
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'true'
+        document.body.classList.add('dark-mode')
+        _saveSetting(LS_DARK_KEY, true)
+      } else {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'false'
+        document.body.classList.remove('dark-mode')
+        _saveSetting(LS_DARK_KEY, false)
+      }
+
+      break
+    case 'noisy':
+      var st = document.getElementById('button-setting-noisy').dataset.status
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-noisy').dataset.status = 'true'
+        this.bogdle.config.noisy = true
+        _saveSetting(LS_NOISY_KEY, true)
+      } else {
+        document.getElementById('button-setting-noisy').dataset.status = 'false'
+        this.bogdle.config.noisy = false
+        _saveSetting(LS_NOISY_KEY, false)
+      }
+
+      break
   }
 }
 
 // save a setting (gear icon) to localStorage
 function _saveSetting(setting, value) {
-  if (setting == LS_DARK_KEY) {
+  if (setting == LS_DARK_KEY || setting == LS_NOISY_KEY) {
     localStorage.setItem(setting, value)
   }
 }
@@ -733,6 +764,19 @@ function _loadSettings() {
       var setting = document.getElementById('button-setting-dark-mode')
 
       if (setting) {
+        setting.dataset.status = 'true'
+      }
+    }
+  }
+
+  if (localStorage.getItem(LS_NOISY_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_NOISY_KEY))
+
+    if (lsConfig) {
+      var setting = document.getElementById('button-setting-noisy')
+
+      if (setting) {
+        this.bogdle.config.noisy = true
         setting.dataset.status = 'true'
       }
     }
@@ -1117,6 +1161,7 @@ function _saveStats() {
   }
 }
 
+// hint functions
 function _initHint() {
   // console.log('checking for hintWord...')
 
@@ -1190,6 +1235,12 @@ function _clearHint() {
   this.bogdle.tempWordCounter = 0
 }
 
+// helper method to get game difficulty as a max letter length
+function _getMaxWordLength() {
+  return DIFF_TO_LENGTH[this.bogdle.config.difficulty]
+}
+
+// handle both clicks and touches outside of modals
 function _handleClickTouch(event) {
   var dialog = document.getElementsByClassName('thin-ui-modal-dialog')[0]
 

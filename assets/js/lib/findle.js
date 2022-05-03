@@ -7,9 +7,9 @@ class Findle {
 
   constructor(w, d, c) {
     this.word = w
-    this.solution = EMPTY_ARR_SET
     this.dictionary = d
     this.config = c
+    this.solution = EMPTY_ARR_SET
   }
 
   findWords = (word, trie = this.trie, cur = '', words = []) => {
@@ -45,10 +45,14 @@ class Findle {
       const jsonWords = await response.json()
       var words = []
 
-      this.solution = EMPTY_ARR_SET
-
-      //console.log('words', words)
-      //console.log('this.solution', this.solution)
+      switch (this.getMaxWordLength()) {
+        case 3: this.solution = EMPTY_ARR_SET_3; break
+        case 5: this.solution = EMPTY_ARR_SET_5; break
+        case 7: this.solution = EMPTY_ARR_SET_7; break
+        case 9:
+        default:
+          this.solution = EMPTY_ARR_SET; break
+      }
 
       // load dictionary into array
       Object.keys(jsonWords).forEach(key => {
@@ -84,22 +88,23 @@ class Findle {
   }
 
   setSolution = (set) => {
-    // get a range of object keys from 3...DIFF_TO_LENGTH[this.config.difficulty]
-    var categories = Array.from({length: DIFF_TO_LENGTH[this.config.difficulty] - 2}, (x, i) => (i + 3).toString());
-
-    // console.log('categories', categories)
+    var categories = Array.from({length: this.getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
 
     // zero them all out because setting it to the EMPTY_ARR_SET does not work :'(
     categories.forEach(category => {
       this.solution[category] = []
     })
+
     // add new solution words
     set.forEach(word => {
       this.solution[word.length].push(word)
     })
+
     // make sure startWord is in there
-    // this.solution[DIFF_TO_LENGTH[this.config.difficulty].toString()].push(this.word)
+    // this.solution[this.getMaxWordLength()].toString()].push(this.word)
   }
+
+  getMaxWordLength = () => DIFF_TO_LENGTH[this.config.difficulty]
 }
 
 async function createFindle(word, dictionary, config) {

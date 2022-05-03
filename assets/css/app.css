@@ -499,26 +499,31 @@ section#game {
       text-align: center;
     }
 
-#settings .setting-row {
-  align-items: center;
-  border-bottom: 1px sold #666;
+#settings {
   display: flex;
-  justify-content: space-between;
-  padding: 16px 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-  #settings .setting-row .text {
-    padding-right: 8px;
+  #settings .setting-row {
+    align-items: center;
+    border-bottom: 1px sold #666;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
   }
-    #settings .setting-row .text .title {
-      font-size: 18px;
+    #settings .setting-row .text {
+      padding-right: 8px;
+    }
+      #settings .setting-row .text .title {
+        font-size: 18px;
+        width: 150px;
+      }
+      #settings .setting-row .text .description {
+        color: #444;
+        font-size: 12px;
+      }
+    #settings .setting-row .control .container {
+      display: block;
+      margin-left: 1em;
       width: 150px;
     }
-    #settings .setting-row .text .description {
-      color: #444;
-      font-size: 12px;
-}
-  #settings .setting-row .control .container {
-    display: block;
-    margin-left: 1em;
-    width: 150px;
-  }
