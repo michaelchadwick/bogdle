@@ -312,11 +312,11 @@ this.bogdle.init = async () => {
 
 // load state/statistics from LS -> code model
 async function _loadGameState() {
-  var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
-
   // load game state
-  if (lsConfig) {
+  if (localStorage.getItem(LS_STATE_KEY)) {
     // console.log('localStorage key found and loading...', lsConfig)
+
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
 
     // set game difficulty
     this.bogdle.config.difficulty = lsConfig.difficulty
@@ -352,7 +352,7 @@ async function _loadGameState() {
     modalOpen('start')
   }
 
-  // load game settings
+  // load game (gear icon) settings
   _loadSettings()
 
   // load user statistics
@@ -723,11 +723,11 @@ async function _changeSetting(setting) {
       if (st == '' || st == 'false') {
         document.getElementById('button-setting-dark-mode').dataset.status = 'true'
         document.body.classList.add('dark-mode')
-        _saveSetting(LS_DARK_KEY, true)
+        _saveSetting(LS_STNG_DARK_KEY, true)
       } else {
         document.getElementById('button-setting-dark-mode').dataset.status = 'false'
         document.body.classList.remove('dark-mode')
-        _saveSetting(LS_DARK_KEY, false)
+        _saveSetting(LS_STNG_DARK_KEY, false)
       }
 
       break
@@ -736,11 +736,11 @@ async function _changeSetting(setting) {
       if (st == '' || st == 'false') {
         document.getElementById('button-setting-noisy').dataset.status = 'true'
         this.bogdle.config.noisy = true
-        _saveSetting(LS_NOISY_KEY, true)
+        _saveSetting(LS_STNG_NOISY_KEY, true)
       } else {
         document.getElementById('button-setting-noisy').dataset.status = 'false'
         this.bogdle.config.noisy = false
-        _saveSetting(LS_NOISY_KEY, false)
+        _saveSetting(LS_STNG_NOISY_KEY, false)
       }
 
       break
@@ -749,14 +749,32 @@ async function _changeSetting(setting) {
 
 // save a setting (gear icon) to localStorage
 function _saveSetting(setting, value) {
-  if (setting == LS_DARK_KEY || setting == LS_NOISY_KEY) {
+  if (setting == LS_STNG_DARK_KEY || setting == LS_STNG_NOISY_KEY) {
     localStorage.setItem(setting, value)
   }
 }
 // load settings (gear icon) from localStorage
 function _loadSettings() {
-  if (localStorage.getItem(LS_DARK_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_DARK_KEY))
+  // console.log('loading settings from LS...')
+
+  // STATE->DIFFICULTY
+  if (localStorage.getItem(LS_STATE_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
+
+    if (lsConfig) {
+      if (lsConfig.difficulty) {
+        var setting = document.querySelector(`#container-difficulty input[data-diffid="${lsConfig.difficulty}"]`)
+
+        if(setting) {
+          setting.checked = true
+        }
+      }
+    }
+  }
+
+  // DARK-MODE
+  if (localStorage.getItem(LS_STNG_DARK_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STNG_DARK_KEY))
 
     if (lsConfig) {
       document.body.classList.add('dark-mode')
@@ -769,29 +787,17 @@ function _loadSettings() {
     }
   }
 
-  if (localStorage.getItem(LS_NOISY_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_NOISY_KEY))
+  // NOISY
+  if (localStorage.getItem(LS_STNG_NOISY_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STNG_NOISY_KEY))
 
     if (lsConfig) {
+      this.bogdle.config.noisy = lsConfig
+
       var setting = document.getElementById('button-setting-noisy')
 
       if (setting) {
-        this.bogdle.config.noisy = true
         setting.dataset.status = 'true'
-      }
-    }
-  }
-
-  if (localStorage.getItem(LS_STATE_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
-
-    if (lsConfig) {
-      if (lsConfig.difficulty) {
-        var setting = document.querySelector(`#container-difficulty input[data-diffid="${lsConfig.difficulty}"]`)
-
-        if(setting) {
-          setting.checked = true
-        }
       }
     }
   }
