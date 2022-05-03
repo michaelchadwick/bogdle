@@ -10,6 +10,25 @@ this.bogdle.startWord = 'scenarios'
 this.bogdle.tempWord = []
 this.bogdle.tempWordCounter = 0
 
+const audioPlay = async sound => {
+  const context = new AudioContext();
+  const gainNode = context.createGain();
+  const source = context.createBufferSource();
+  const path = 'assets/audio';
+  const format = 'wav';
+  const audioBuffer = await fetch(`${path}/${sound}.${format}`)
+    .then(res => res.arrayBuffer())
+    .then(ArrayBuffer => context.decodeAudioData(ArrayBuffer));
+
+  gainNode.gain.value = 0.1;
+  source.buffer = audioBuffer;
+
+  source.connect(gainNode);
+  source.connect(context.destination);
+
+  source.start();
+};
+
 /*************************************************************************
  * public methods *
  *************************************************************************/
@@ -205,6 +224,14 @@ function submitWord(word) {
       if (typeof this.bogdle.solutionSet[word.length][word] != 'undefined') {
         if (this.bogdle.solutionSet[word.length][word] !== 1) {
 
+          if (word.length == _getMaxWordLength()) {
+            audioPlay(`doo-dah-doo`)
+          } else {
+            // choose haaahs[1-3] at random and play
+            var num = Math.floor(Math.random() * 3) + 1
+            audioPlay(`haaahs${num}`)
+          }
+
           if (!this.bogdle.config.guessedWords) {
             this.bogdle.config.guessedWords = []
           }
@@ -265,7 +292,7 @@ this.bogdle.init = async () => {
     var debugStyles = document.createElement('link')
     debugStyles.rel = 'stylesheet'
     debugStyles.href = './assets/css/debug.css'
-    document.head.appendChild(debugStyles)
+    //document.head.appendChild(debugStyles)
   }
 
   // attach event listeners to DOM elements
@@ -883,6 +910,8 @@ function _removeLastLetter() {
     if (this.bogdle.dom.status.guess.innerHTML.length) {
       this.bogdle.dom.status.guess.innerHTML = this.bogdle.dom.status.guess.innerHTML.slice(0, this.bogdle.dom.status.guess.innerHTML.length - 1)
 
+      audioPlay('delete-boop')
+
       _checkGuess()
     }
   }
@@ -933,6 +962,8 @@ function _onTileClick(tile) {
 
     // add selected tile to guess
     this.bogdle.dom.status.guess.innerHTML += tile.target.innerHTML
+
+    audioPlay('tile_click')
 
     // check guess for validity
     _checkGuess()
@@ -1288,6 +1319,8 @@ function _addEventListeners() {
 
             // add selected tile to guess
             this.bogdle.dom.status.guess.innerHTML += tileToPush.innerHTML
+
+            audioPlay('tile_click')
 
             // check guess for validity
             _checkGuess()
