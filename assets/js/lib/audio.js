@@ -9,11 +9,11 @@ const audioPlay = async sound => {
       .then(res => res.arrayBuffer())
       .then(ArrayBuffer => context.decodeAudioData(ArrayBuffer));
 
-    gainNode.gain.value = 0.1;
+    gainNode.gain.value = 0.3;
     source.buffer = audioBuffer;
 
     source.connect(gainNode);
-    source.connect(context.destination);
+    gainNode.connect(context.destination);
 
     source.start();
   }
