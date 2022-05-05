@@ -1,6 +1,6 @@
 # Bogdle
 
-A Boggle clone, inspired by Wordle.
+A Boggle clone, visually-inspired by Wordle, and mechanically-inspired by Wordsmyth.
 
 ## Animation
 
