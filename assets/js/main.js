@@ -1239,7 +1239,7 @@ function _clearHint() {
 
   this.bogdle.dom.interactive.btnHint.classList.remove('not-a-button')
   this.bogdle.dom.interactive.btnHint.removeAttribute('disabled')
-  this.bogdle.dom.interactive.btnHint.innerHTML = '?'
+  this.bogdle.dom.interactive.btnHint.innerHTML = 'HINT?'
 
   this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
 
