@@ -279,6 +279,9 @@ this.bogdle.init = async () => {
   // set env
   this.bogdle.env = document.location.hostname == ENV_PROD_URL ? 'prod' : 'local'
 
+  // disable lookup
+  this.bogdle.dom.interactive.btnGuessLookup.disabled = true
+
   // if local dev, show debug stuff
   if (this.bogdle.env == 'local') {
     // if debug buttons are in template
@@ -827,7 +830,7 @@ function _setScore(guessed = 0) {
 function _checkGuess() {
   // reset classes
   this.bogdle.dom.status.guess.classList.remove('valid', 'first-guess')
-  this.bogdle.dom.interactive.btnGuessLookup.classList.remove('show')
+  this.bogdle.dom.interactive.btnGuessLookup.disabled = true
 
   // player entered valid word length
   if (this.bogdle.dom.status.guess.innerHTML.length > 2) {
@@ -838,7 +841,7 @@ function _checkGuess() {
       if (parseInt(key) <= _getMaxWordLength()) {
         if (Object.keys(this.bogdle.solutionSet[key]).includes(word)) {
           this.bogdle.dom.status.guess.classList.toggle('valid')
-          this.bogdle.dom.interactive.btnGuessLookup.classList.add('show')
+          this.bogdle.dom.interactive.btnGuessLookup.disabled = false
 
           // and it's the first time
           if (!this.bogdle.solutionSet[key][word]) {

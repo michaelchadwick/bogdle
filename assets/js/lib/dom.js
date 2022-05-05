@@ -7,12 +7,12 @@ this.bogdle.dom.interactive = {
   "btnHelp": document.getElementById('button-help'),
   "btnStats": document.getElementById('button-stats'),
   "btnSettings": document.getElementById('button-settings'),
-  "btnGuessLookup": document.getElementById('button-guess-lookup'),
   "btnSubmit": document.getElementById('button-submit'),
   "btnBackspace": document.getElementById('button-backspace'),
   "btnClearGuess": document.getElementById('button-clear-guess'),
   "btnShuffle": document.getElementById('button-shuffle'),
   "btnShowProgress": document.getElementById('button-show-progress'),
+  "btnGuessLookup": document.getElementById('button-guess-lookup'),
   "btnHint": document.getElementById('button-hint'),
   "btnHintReset": document.getElementById('button-hint-reset'),
   "tiles": document.getElementsByClassName('tile')
