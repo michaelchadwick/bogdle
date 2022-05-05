@@ -382,20 +382,6 @@ section#game {
           color: #23b62d;
         }
 
-  section#game #lookup-container {
-    height: 25px;
-    margin: 2px auto 0;
-    text-align: center;
-    width: 100%;
-  }
-    section#game #lookup-container #button-guess-lookup {
-      display: none;
-      height: 25px;
-    }
-    section#game #lookup-container #button-guess-lookup.show {
-      display: inline-block;
-    }
-
   section#game #board-container {
     align-items: center;
     display: flex;
@@ -417,36 +403,49 @@ section#game {
       }
 
   section#game #hint-container {
-    display: inline-grid;
-    grid-template-columns: 10% 80% 10%;
-    justify-items: center;
-    margin: 0;
+    display: block;
+    margin: 0 auto;
     padding: 10px;
   }
-    section#game #hint-container button {
-      border: 1px solid #529952;
-      float: left;
-      height: 40px;
-      padding: 5px;
-    }
-    section#game #hint-container button.not-a-button {
-      background-color: transparent;
-      border: 1px solid transparent;
-      color: #000;
-      cursor: text;
-    }
-    section#game #hint-container button#button-hint {
-      font-size: 1.5em;
-      min-width: 50px;
-    }
-    section#game #hint-container button#button-hint-reset {
-      display: none;
-      font-size: 1em;
-      min-width: 40px;
-    }
-    section#game #hint-container button#button-hint-reset.show {
-      display: block;
-    }
+      section#game #hint-container button {
+        background-color: transparent;
+        /* border: 1px solid #529952; */
+        border: 1px solid #888;
+        height: 40px;
+      }
+        section#game #hint-container button:hover {
+          background-color: #888;
+          border: 1px solid #111;
+          color: #fff;
+        }
+        section#game #hint-container #hint-arena button#button-hint {
+          float: left;
+          font-size: 1.5em;
+          font-weight: normal;
+          margin-right: 0;
+          min-width: 50px;
+          padding: 5px 10px;
+        }
+          section#game #hint-container #hint-arena button#button-hint.not-a-button {
+            background-color: transparent;
+            border: 1px solid transparent;
+            color: #000;
+            cursor: text;
+          }
+        section#game #hint-container button#button-hint-reset {
+          display: none;
+          float: left;
+          font-size: 1em;
+          height: 40px;
+          margin-left: 6px;
+          max-width: 40px;
+          max-height: 40px;
+          padding: 0;
+          width: 40px;
+        }
+          section#game #hint-container button#button-hint-reset.show {
+            display: block;
+          }
 
   section#game #keyboard-container {
     margin: 0 8px;

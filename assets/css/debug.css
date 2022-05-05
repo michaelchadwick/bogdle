@@ -5,13 +5,16 @@ section#game {
     background-color: #f9ffaa;
   }
 
-  section#game #lookup-container {
-    background-color: rgb(255, 176, 250);
-  }
-
   section#game #board-container {
     background-color: #ffc6c6;
   }
     section#game #board-container #board {
       background-color: #c6c7ff;
+    }
+
+  section#game #hint-container {
+    background-color: rgb(255, 176, 250);
+  }
+    section#game #hint-container #hint-arena {
+      background-color: rgb(235, 131, 155);
     }
