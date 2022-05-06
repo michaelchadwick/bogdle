@@ -100,7 +100,7 @@ class Findle {
       this.solution[word.length].push(word)
     })
 
-    // make sure startWord is in there
+    // make sure seedWord is in there
     // this.solution[this.getMaxWordLength()].toString()].push(this.word)
   }
 

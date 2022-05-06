@@ -1,10 +1,12 @@
-const LS_STATE_KEY = 'bogdle-state'
-const LS_STATS_KEY = 'bogdle-statistics'
+const LS_STATE_DAILY_KEY = 'bogdle-state-daily'
+const LS_STATS_DAILY_KEY = 'bogdle-stats-daily'
 
-const LS_STNG_DARK_KEY = 'bogdle-dark-mode'
-const LS_STNG_NOISY_KEY = 'bogdle-noisy'
+const LS_STATE_FREE_KEY = 'bogdle-state-free'
+
+const LS_SETTINGS_KEY = 'bogdle-settings'
 
 const CACHE_AUDIO_KEY = 'bogdle-audio-cache'
+const DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 
 const ENV_PROD_URL = 'bogdle.fun'
 

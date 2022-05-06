@@ -1,6 +1,16 @@
 section#game {
   background-color: #b9ffad;
 }
+  section#game #mode-container {
+    background-color: #ffe8aa;
+  }
+    section#game #mode-container #gamemode-selection {
+      background-color: #ffdcaa;
+    }
+    section#game #mode-container #difficulty-selection {
+      background-color: #ffd3aa;
+    }
+
   section#game #score-container {
     background-color: #f9ffaa;
   }

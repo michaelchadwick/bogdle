@@ -86,7 +86,7 @@ async function useFetch(url) {
 }
 
 const audioPlay = async sound => {
-  if (this.bogdle.config.noisy) {
+  if (this.bogdle.settings.noisy) {
     const path = '/assets/audio';
     const format = 'wav';
     const url = `${path}/${sound}.${format}`

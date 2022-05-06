@@ -1,15 +1,29 @@
+// global namespace
 this.bogdle = this.bogdle || {}
+this.bogdle.settings = {}
 
+// global settings
+this.bogdle.settings.darkMode = false
+this.bogdle.settings.gameMode = 'free'
+this.bogdle.settings.noisy = false
+
+// state: keep track of stuff that DOES go to localStorage
+this.bogdle.state = {}
+// state->daily
+this.bogdle.state.daily = {}
+// state->free
+this.bogdle.state.free = {}
+
+// config: keep track of stuff that DOES NOT go to localStorage
 this.bogdle.config = {}
-this.bogdle.config.difficulty = 'normal'
-this.bogdle.config.noisy = false
-this.bogdle.env = 'local'
-this.bogdle.hintWord = null
-this.bogdle.lookupUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en'
-// this.bogdle.startWord = 'education'
-this.bogdle.startWord = 'scenarios'
-this.bogdle.tempWord = []
-this.bogdle.tempWordCounter = 0
+// config->daily
+this.bogdle.config.daily = {}
+// config->free
+this.bogdle.config.free = {}
+this.bogdle.config.free.hintWord = null
+this.bogdle.config.free.seedWord = 'scenarios'
+this.bogdle.config.free.tempWord = []
+this.bogdle.config.free.tempWordCounter = 0
 
 /*************************************************************************
  * public methods *
@@ -37,7 +51,7 @@ async function modalOpen(type) {
       var word = this.bogdle.dom.status.guess.innerHTML
 
       try {
-        const response = await fetch(`${this.bogdle.lookupUrl}/${word}`)
+        const response = await fetch(`${DEFINE_LOOKUP_URL}/${word}`)
         const responseJson = await response.json()
 
         if (responseJson) {
@@ -70,11 +84,11 @@ async function modalOpen(type) {
           <div class="container">
             <div id="statistics">
               <div class="statistic-container">
-                <div class="statistic">${this.bogdle.statistics.gamesPlayed}</div>
+                <div class="statistic">${this.bogdle.state.daily.statistics.gamesPlayed}</div>
                 <div class="statistic-label">Played</div>
               </div>
               <div class="statistic-container">
-                <div class="statistic">${this.bogdle.statistics.wordsFound}</div>
+                <div class="statistic">${this.bogdle.state.daily.statistics.wordsFound}</div>
                 <div class="statistic-label">Words Found</div>
               </div>
             </div>
@@ -90,36 +104,6 @@ async function modalOpen(type) {
       this.myModal = new Modal('perm', 'Settings',
         `
           <div id="settings">
-            <!-- difficulty -->
-            <div class="setting-row">
-              <div class="text">
-                <div class="title">Difficulty</div>
-                <div class="description">The max length of a word</div>
-              </div>
-              <div class="control">
-                <div class="container" id="container-difficulty">
-                  <div class="radio">
-                    <input id="diff-0" name="diff-radio" type="radio" data-diffid="kid" onclick="_changeSetting('difficulty')">
-                    <label for="diff-0" class="radio-label">Kid (3)</label>
-                  </div>
-
-                  <div class="radio">
-                    <input id="diff-1" name="diff-radio" type="radio" data-diffid="easy" onclick="_changeSetting('difficulty')">
-                    <label for="diff-1" class="radio-label">Easy (5)</label>
-                  </div>
-
-                  <div class="radio">
-                    <input id="diff-2" name="diff-radio" type="radio" data-diffid="medium" onclick="_changeSetting('difficulty')">
-                    <label for="diff-2" class="radio-label">Med (7)</label>
-                  </div>
-
-                  <div class="radio">
-                    <input id="diff-3" name="diff-radio" type="radio" data-diffid="normal" onclick="_changeSetting('difficulty')">
-                    <label for="diff-3" class="radio-label">Normal (9)</label>
-                  </div>
-                </div>
-              </div>
-            </div>
             <!-- dark mode -->
             <div class="setting-row">
               <div class="text">
@@ -127,7 +111,7 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_changeSetting('dark-mode')">
+                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="_changeSetting('darkMode')">
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -153,7 +137,7 @@ async function modalOpen(type) {
       )
 
 
-      _loadSettings()
+      _loadGlobalSettings()
 
       break
 
@@ -216,10 +200,10 @@ async function modalOpen(type) {
 function submitWord(word) {
   // console.log('submitting word...', word)
 
-  if (this.bogdle.config.gameState == 'IN_PROGRESS') {
+  if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
     if (word.length > 2) {
-      if (typeof this.bogdle.solutionSet[word.length][word] != 'undefined') {
-        if (this.bogdle.solutionSet[word.length][word] !== 1) {
+      if (typeof this.bogdle.config.free.solutionSet[word.length][word] != 'undefined') {
+        if (this.bogdle.config.free.solutionSet[word.length][word] !== 1) {
 
           if (word.length == _getMaxWordLength()) {
             audioPlay(`doo-dah-doo`)
@@ -229,23 +213,23 @@ function submitWord(word) {
             audioPlay(`haaahs${num}`)
           }
 
-          if (!this.bogdle.config.guessedWords) {
-            this.bogdle.config.guessedWords = []
+          if (!this.bogdle.state.free.guessedWords) {
+            this.bogdle.state.free.guessedWords = []
           }
 
-          this.bogdle.config.guessedWords.push(word)
-          this.bogdle.config.guessedWords.sort()
-          this.bogdle.config.lastPlayedTime = new Date().getTime()
+          this.bogdle.state.free.guessedWords.push(word)
+          this.bogdle.state.free.guessedWords.sort()
+          this.bogdle.state.free.lastPlayedTime = new Date().getTime()
 
-          this.bogdle.solutionSet[word.length][word] = 1
-          this.bogdle.statistics.wordsFound += 1
+          this.bogdle.config.free.solutionSet[word.length][word] = 1
+          this.bogdle.state.daily.statistics.wordsFound += 1
           this.bogdle.dom.status.guess.classList.remove('first-guess')
 
           // do a dance
           animateCSS('#guess', 'tada')
 
           // clear hint if it's the same word
-          if (word == this.bogdle.hintWord) {
+          if (word == this.bogdle.config.free.hintWord) {
             _clearHint()
           }
 
@@ -302,61 +286,115 @@ this.bogdle.init = async () => {
  * _private methods *
  *************************************************************************/
 
+// add debug stuff if local
+function _initDebug() {
+  // if debug buttons are in template
+  if (this.bogdle.dom.interactive.debug.all) {
+    // show debug buttons
+    this.bogdle.dom.interactive.debug.all.style.display = 'flex'
+    // make header buttons smaller to fit in debug buttons
+    document.querySelectorAll('button.icon').forEach((btn) => {
+      btn.style.fontSize = '16px'
+    })
+  }
+
+  var qd = {};
+  if (location.search) location.search.substr(1).split("&").forEach(function(item) {
+    var s = item.split("="),
+        k = s[0],
+        v = s[1] && decodeURIComponent(s[1]); //  null-coalescing / short-circuit
+    //(k in qd) ? qd[k].push(v) : qd[k] = [v]
+    (qd[k] = qd[k] || []).push(v) // null-coalescing / short-circuit
+  })
+
+  if (qd.debugCSS && qd.debugCSS == 1) {
+    var debugStyles = document.createElement('link')
+    debugStyles.rel = 'stylesheet'
+    debugStyles.href = './assets/css/debug.css'
+    document.head.appendChild(debugStyles)
+  }
+}
+
+// add audio files to CacheStorage
+async function _initAudio() {
+  caches.open(CACHE_AUDIO_KEY).then(cache => {
+    cache.addAll([
+      '/assets/audio/doo-dah-doo.wav',
+      '/assets/audio/haaahs1.wav',
+      '/assets/audio/haaahs2.wav',
+      '/assets/audio/haaahs3.wav',
+      '/assets/audio/tile_click.wav',
+      '/assets/audio/tile_delete.wav'
+    ]);
+  })
+}
+
 // load state/statistics from LS -> code model
 async function _loadGameState() {
-  // load game state
-  if (localStorage.getItem(LS_STATE_KEY)) {
-    // console.log('localStorage key found and loading...', lsConfig)
+  var lsStateDaily = JSON.parse(localStorage.getItem(LS_STATE_DAILY_KEY))
 
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
+  // load daily game state
+  if (lsStateDaily) {
+    console.log('localStorage DAILY state key found and loading...', lsStateDaily)
 
-    // set game difficulty
-    this.bogdle.config.difficulty = lsConfig.difficulty
-
-    // set game state
-    this.bogdle.config.gameState = lsConfig.gameState
-
-    // set pre-guessed words
-    this.bogdle.config.guessedWords = lsConfig.guessedWords
-
-    // set last completed
-    this.bogdle.config.lastCompletedTime = lsConfig.lastCompletedTime
-    // set last played
-    this.bogdle.config.lastPlayedTime = lsConfig.lastPlayedTime
-
-    await _loadExistingSolutionSet(this.bogdle.startWord)
+    this.bogdle.state.daily.gameState = lsStateDaily.gameState
+    this.bogdle.state.daily.guessedWords = lsStateDaily.guessedWords
+    this.bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime
+    this.bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime
 
     // no lastPlayedTime?
-    if (this.bogdle.config.lastPlayedTime == null) {
+    if (this.bogdle.state.daily.lastPlayedTime == null) {
       modalOpen('help')
     }
 
-    // console.log('!localStorage key loaded!', this.bogdle.config)
+    console.log('!localStorage DAILY key loaded!', this.bogdle.state.daily)
   } else {
-    // console.log('no localStorage key found; defaults being set')
+    console.log('no localStorage DAILY key found; defaults being set')
+
+    this.bogdle.state.daily.gameState = 'IN_PROGRESS'
+    this.bogdle.state.daily.guessedWords = []
+    this.bogdle.state.daily.lastCompletedTime = null
+    this.bogdle.state.daily.lastPlayedTime = null
+  }
+
+  var lsStateFree = JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY))
+
+  // load free game state
+  if (lsStateFree) {
+    console.log('localStorage FREE state key found and loading...', lsStateFree)
+
+    this.bogdle.state.free.difficulty = lsStateFree.difficulty
+    this.bogdle.state.free.gameState = lsStateFree.gameState
+    this.bogdle.state.free.guessedWords = lsStateFree.guessedWords
+
+    await _loadExistingSolutionSet(this.bogdle.config.free.seedWord)
+
+    console.log('!localStorage FREE key loaded!', this.bogdle.state.free)
+  } else {
+    console.log('no localStorage FREE key found; defaults being set')
 
     if (this.bogdle.env == 'prod') {
       await _createNewSolutionSet()
     } else {
-      await _createNewSolutionSet(this.bogdle.startWord)
+      await _createNewSolutionSet(this.bogdle.config.free.seedWord)
     }
-
-    modalOpen('start')
   }
 
-  // load game (gear icon) settings
-  _loadSettings()
+  // load global (gear icon) settings
+  _loadGlobalSettings()
 
   // load user statistics
-  if (localStorage.getItem(LS_STATS_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STATS_KEY))
+  var lsConfigDailyStats = JSON.parse(localStorage.getItem(LS_STATS_DAILY_KEY))
 
-    this.bogdle.statistics = {
-      "gamesPlayed": lsConfig.gamesPlayed,
-      "wordsFound": lsConfig.wordsFound
+  if (lsConfigDailyStats) {
+    console.log('localStorage DAILY stats key found and loading...', lsConfigDailyStats)
+
+    this.bogdle.state.daily.statistics = {
+      "gamesPlayed": lsConfigDailyStats.gamesPlayed,
+      "wordsFound": lsConfigDailyStats.wordsFound
     }
   } else {
-    this.bogdle.statistics = {
+    this.bogdle.state.daily.statistics = {
       "gamesPlayed": 0,
       "wordsFound": 0
     }
@@ -364,52 +402,179 @@ async function _loadGameState() {
 
   _saveGameState()
 
-  // console.log('!progress loaded!', this.bogdle.solutionSet)
+  if (!lsStateDaily && !lsStateFree) {
+    modalOpen('start')
+  }
+
+  console.log('!daily progress loaded!', this.bogdle.config.daily.solutionSet)
+  console.log('!free progress loaded!', this.bogdle.config.free.solutionSet)
+}
+
+// save game state/settings from code model -> LS
+function _saveGameState() {
+  console.log('saving game state and global settings to localStorage...')
+
+  // save daily game state
+  try {
+    localStorage.setItem(LS_STATE_DAILY_KEY, JSON.stringify(this.bogdle.state.daily))
+
+    console.log('!localStorage DAILY state saved!', JSON.parse(localStorage.getItem(LS_STATE_DAILY_KEY)))
+  } catch(error) {
+    console.error('localStorage DAILY state save failed', error)
+  }
+
+  // save free game state
+  try {
+    localStorage.setItem(LS_STATE_FREE_KEY, JSON.stringify(this.bogdle.state.free))
+
+    console.log('!localStorage FREE state saved!', JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY)))
+  } catch(error) {
+    console.error('localStorage FREE state save failed', error)
+  }
+
+  // save global game settings
+  try {
+    localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(this.bogdle.settings))
+
+    console.log('!localStorage global settings saved!', JSON.parse(localStorage.getItem(LS_SETTINGS_KEY)))
+  } catch(error) {
+    console.error('localStorage global settings save failed', error)
+  }
+}
+
+// save game stats from code model -> LS
+function _saveGameStats() {
+  try {
+    localStorage.setItem(LS_STATS_DAILY_KEY, JSON.stringify(this.bogdle.state.daily.statistics))
+
+    console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_DAILY_KEY)))
+  } catch(error) {
+    console.error(`localStorage could not be set for ${LS_STATS_DAILY_KEY}`, error)
+  }
+}
+
+// save a setting (gear icon) to localStorage
+function _saveGlobalSetting(setting, value) {
+  console.log('saving setting to LS...', setting, value)
+
+  var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+
+  // console.log('current settings', settings)
+
+  // set temp obj that will go to LS
+  settings[setting] = value
+  // set internal code model
+  this.bogdle.settings[setting] = value
+
+  localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
+
+  // console.log('!global setting saved!', this.bogdle.settings)
+}
+// load settings (gear icon) from localStorage
+function _loadGlobalSettings() {
+  console.log('loading global settings from LS...')
+
+  // STATE->GAMEMODE
+  if (this.bogdle.settings.gameMode == 'free') {
+    this.bogdle.dom.interactive.freeDifficultySelection.classList.add('show')
+  }
+
+  // STATE->FREE->DIFFICULTY
+  if (localStorage.getItem(LS_STATE_FREE_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY))
+
+    if (lsConfig) {
+      if (lsConfig.difficulty) {
+        var setting = document.querySelector(`#difficulty-selection input[data-diffid="${lsConfig.difficulty}"]`)
+
+        if (setting) {
+          setting.checked = true
+        }
+      }
+    }
+  }
+
+  // SETTINGS
+  if (localStorage.getItem(LS_SETTINGS_KEY)) {
+    var lsConfig = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+
+    if (lsConfig) {
+      if (lsConfig.darkMode) {
+        this.bogdle.settings.darkMode = lsConfig.darkMode
+
+        document.body.classList.add('dark-mode')
+
+        var setting = document.getElementById('button-setting-dark-mode')
+
+        if (setting) {
+          setting.dataset.status = 'true'
+        }
+      }
+
+      if (lsConfig.noisy) {
+        this.bogdle.settings.noisy = lsConfig.noisy
+
+        var setting = document.getElementById('button-setting-noisy')
+
+        if (setting) {
+          setting.dataset.status = 'true'
+        }
+      }
+    }
+  } else {
+    this.bogdle.settings.darkMode = false
+    this.bogdle.settings.gameMode = 'free'
+    this.bogdle.settings.noisy = false
+  }
+
+  console.log('loaded global settings from LS!', this.bogdle.settings)
 }
 
 // create new solution set, which resets progress
-async function _createNewSolutionSet(newWord = null, isNewDiff = false) {
-  // default config and stats (both save to, and are loaded from, localStorage)
-  this.bogdle.config.gameState = 'IN_PROGRESS'
-  this.bogdle.config.guessedWords = []
-  this.bogdle.config.lastCompletedTime = null
-  this.bogdle.config.lastPlayedTime = null
+async function _createNewSolutionSet(newWord = null) {
+  console.log('creating a new solution set...')
 
-  this.bogdle.statistics = {
-    "gamesPlayed": 0,
-    "wordsFound": 0
+  // default config and stats (both save to, and are loaded from, localStorage)
+  let diff = 'normal'
+  if (this.bogdle.state.free.difficulty) {
+    diff = this.bogdle.state.free.difficulty
   }
+
+  this.bogdle.state.free.gameState = 'IN_PROGRESS'
+  this.bogdle.state.free.guessedWords = []
+  this.bogdle.state.free.lastCompletedTime = null
+  this.bogdle.state.free.lastPlayedTime = null
 
   // dictionary to pull from
-  this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
 
-  // console.log('this.bogdle.dictionary', this.bogdle.dictionary)
+  this.bogdle.config.free.letters = []
 
-  this.bogdle.letters = []
-
+  // grab appopriate EMPTY_OBJ_SET
   switch (DIFF_TO_LENGTH[parseInt(this.bogdle.difficulty)]) {
-    case 3: this.bogdle.solutionSet = EMPTY_OBJ_SET_3; break
-    case 5: this.bogdle.solutionSet = EMPTY_OBJ_SET_5; break
-    case 7: this.bogdle.solutionSet = EMPTY_OBJ_SET_7; break
+    case 3: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_3; break
+    case 5: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_5; break
+    case 7: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_7; break
     case 9:
     default:
-      this.bogdle.solutionSet = EMPTY_OBJ_SET; break
+      this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET; break
   }
 
-  this.bogdle.startWordsFile = './assets/json/'
+  // construct start words file
+  this.bogdle.config.free.startWordsFile = './assets/json/'
   // currently, this loads the same word source every time,
   // but future iterations may actually switch
-  this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]
-  this.bogdle.startWordsFile += `/words_9-9.json`
+  this.bogdle.config.free.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]
+  this.bogdle.config.free.startWordsFile += `/words_9-9.json`
 
-  // console.log('this.bogdle.startWordsFiles', this.bogdle.startWordsFile)
+  // console.log('this.bogdle.config.free.startWordsFiles', this.bogdle.config.free.startWordsFile)
 
   // keep track of which tiles have been selected
-  this.bogdle.tilesSelected = []
+  this.bogdle.config.free.tilesSelected = []
 
   // new game with static start word
   if (newWord) {
-    // console.log(`new solution requested with static word '${newWord}'...`)
+    console.log(`new solution requested with static word '${newWord}'...`)
   } // new game with random start word
   else {
     try {
@@ -421,14 +586,14 @@ async function _createNewSolutionSet(newWord = null, isNewDiff = false) {
     }
   }
 
-  this.bogdle.startWord = newWord
+  this.bogdle.config.free.seedWord = newWord
 
   // create new game
   try {
     const findle = await createFindle(
-      this.bogdle.startWord,
-      this.bogdle.dictionary,
-      this.bogdle.config
+      this.bogdle.config.free.seedWord,
+      this.bogdle.config.free.dictionary,
+      this.bogdle.state.free
     )
 
     if (findle) {
@@ -444,24 +609,24 @@ async function _createNewSolutionSet(newWord = null, isNewDiff = false) {
 
       // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
       categories.forEach(category => {
-        this.bogdle.solutionSet[category] = {}
+        this.bogdle.config.free.solutionSet[category] = {}
       })
 
       // create bogdle's solution set
       Object.keys(findle).forEach(key => {
         findle[key].forEach(word => {
-          if (!this.bogdle.solutionSet[key.toString()][word]) {
-            this.bogdle.solutionSet[key.toString()][word] = {}
+          if (!this.bogdle.config.free.solutionSet[key.toString()][word]) {
+            this.bogdle.config.free.solutionSet[key.toString()][word] = {}
           }
 
-          this.bogdle.solutionSet[key.toString()][word] = 0
+          this.bogdle.config.free.solutionSet[key.toString()][word] = 0
         })
       })
 
-      // console.log('test: this.bogdle.solutionSet', this.bogdle.solutionSet)
+      // console.log('test: this.bogdle.config.free.solutionSet', this.bogdle.config.free.solutionSet)
 
       // set tile letter tracking
-      this.bogdle.letters = newWord.split('')
+      this.bogdle.config.free.letters = newWord.split('')
 
       // set score
       _setScore(0)
@@ -476,30 +641,32 @@ async function _createNewSolutionSet(newWord = null, isNewDiff = false) {
 
 // load existing solution set, which retains past progress
 async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
-  // dictionary to pull from
-  this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  console.log('loading existing solution set...')
 
-  this.bogdle.letters = []
+  // dictionary to pull from
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+
+  this.bogdle.config.free.letters = []
 
   switch (_getMaxWordLength()) {
-    case 3: this.bogdle.solutionSet = EMPTY_OBJ_SET_3; break
-    case 5: this.bogdle.solutionSet = EMPTY_OBJ_SET_5; break
-    case 7: this.bogdle.solutionSet = EMPTY_OBJ_SET_7; break
+    case 3: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_3; break
+    case 5: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_5; break
+    case 7: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_7; break
     case 9:
     default:
-      this.bogdle.solutionSet = EMPTY_OBJ_SET; break
+      this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET; break
   }
 
-  this.bogdle.startWordsFile = './assets/json/'
+  this.bogdle.config.free.startWordsFile = './assets/json/'
   // currently, this loads the same word source every time,
   // but future iterations may actually switch
-  this.bogdle.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]
-  this.bogdle.startWordsFile += `/words_9-9.json`
+  this.bogdle.config.free.startWordsFile += WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]
+  this.bogdle.config.free.startWordsFile += `/words_9-9.json`
 
-  // console.log('this.bogdle.startWordsFiles', this.bogdle.startWordsFile)
+  // console.log('this.bogdle.config.free.startWordsFiles', this.bogdle.config.free.startWordsFile)
 
   // keep track of which tiles have been selected
-  this.bogdle.tilesSelected = []
+  this.bogdle.config.free.tilesSelected = []
 
   // new game with static start word
   if (newWord) {
@@ -515,14 +682,14 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
     }
   }
 
-  this.bogdle.startWord = newWord
+  this.bogdle.config.free.seedWord = newWord
 
   // load existing game
   try {
     const findle = await createFindle(
-      this.bogdle.startWord,
-      this.bogdle.dictionary,
-      this.bogdle.config
+      this.bogdle.config.free.seedWord,
+      this.bogdle.config.free.dictionary,
+      this.bogdle.state.free
     )
 
     if (findle) {
@@ -538,33 +705,33 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
 
       // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
       categories.forEach(category => {
-        this.bogdle.solutionSet[category] = {}
+        this.bogdle.config.free.solutionSet[category] = {}
       })
 
       // re-create bogdle's solution set
       Object.keys(findle).forEach(key => {
         findle[key].forEach(word => {
-          if (!this.bogdle.solutionSet[key.toString()][word]) {
-            this.bogdle.solutionSet[key.toString()][word] = {}
+          if (!this.bogdle.config.free.solutionSet[key.toString()][word]) {
+            this.bogdle.config.free.solutionSet[key.toString()][word] = {}
           }
 
-          this.bogdle.solutionSet[key.toString()][word] = 0
+          this.bogdle.config.free.solutionSet[key.toString()][word] = 0
         })
       })
 
       // set tile letter tracking
-      this.bogdle.letters = newWord.split('')
+      this.bogdle.config.free.letters = newWord.split('')
 
       // if just changing difficulty, clear guessedWords
       if (isNewDiff) {
-        this.bogdle.config.guessedWords = []
+        this.bogdle.state.free.guessedWords = []
         _setScore(0)
         _saveGameState()
       } // else check for pre-guessed words
       else {
-        var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
+        var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_DAILY_KEY))
 
-        this.bogdle.config.guessedWords = []
+        this.bogdle.state.free.guessedWords = []
 
         // console.log('checking off pre-guessed words...', lsConfig)
 
@@ -572,14 +739,14 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
           // console.log('found some pre-guessed words, so adding to code')
 
           lsConfig.guessedWords.forEach(word => {
-            this.bogdle.config.guessedWords.push(word)
-            this.bogdle.solutionSet[word.length][word] = 1
+            this.bogdle.state.free.guessedWords.push(word)
+            this.bogdle.config.free.solutionSet[word.length][word] = 1
           })
 
-          // console.log('loaded existing solutionSet and checked off pre-guessed words', this.bogdle.solutionSet)
+          // console.log('loaded existing solutionSet and checked off pre-guessed words', this.bogdle.config.free.solutionSet)
 
           // set score to existing number of guessedWords
-          _setScore(this.bogdle.config.guessedWords.length)
+          _setScore(this.bogdle.state.free.guessedWords.length)
         } else {
           // set score back to 0
           // console.log('found no pre-guessed words')
@@ -595,7 +762,7 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
   }
 }
 
-// debug: ask to create new bogdle
+// ask to create new bogdle
 async function _confirmCreateNew() {
   this.myConfirm = new Modal('confirm-debug', 'Create New Bogdle?',
     'Are you <strong>sure</strong> you want to create a new Bogdle?',
@@ -641,19 +808,19 @@ async function _resetProgress() {
   // console.log('resetting progress...')
 
   // set config to defaults
-  this.bogdle.config = {
-    "difficulty": this.bogdle.config.difficulty,
+  this.bogdle.state.free = {
+    "difficulty": this.bogdle.state.free.difficulty,
     "gameState": "IN_PROGRESS",
     "guessedWords": [],
     "lastCompletedTime": null,
     "lastPlayedTime": null
   }
-  this.bogdle.statistics = {
+  this.bogdle.state.daily.statistics = {
     "gamesPlayed": 0,
     "wordsFound": 0
   }
 
-  this.bogdle.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.config.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
 
   // save those defaults to local storage
   _saveGameState()
@@ -675,7 +842,7 @@ async function _resetProgress() {
 async function _changeSetting(setting) {
   switch (setting) {
     case 'difficulty':
-      var oldDiff = this.bogdle.config.difficulty
+      var oldDiff = this.bogdle.state.free.difficulty
 
       var elem = document.querySelectorAll('#container-difficulty input[type="radio"]:checked')
       var newDiff = elem[0].dataset.diffid
@@ -694,12 +861,12 @@ async function _changeSetting(setting) {
 
           // if confirmed, set new difficulty and reset game
           if (confirmed) {
-            this.bogdle.config.difficulty = newDiff
+            this.bogdle.state.free.difficulty = newDiff
 
             _clearHint()
 
-            // start a new game with newDiff (but using current startWord)
-            _loadExistingSolutionSet(this.bogdle.startWord, true)
+            // start a new game with newDiff (but using current seedWord)
+            _loadExistingSolutionSet(this.bogdle.config.free.seedWord, true)
           } // if not confirmed, reset DOM radio back to original setting
           else {
             document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
@@ -710,127 +877,36 @@ async function _changeSetting(setting) {
       }
 
       break
-    case 'dark-mode':
+    case 'darkMode':
       var st = document.getElementById('button-setting-dark-mode').dataset.status
+
       if (st == '' || st == 'false') {
         document.getElementById('button-setting-dark-mode').dataset.status = 'true'
         document.body.classList.add('dark-mode')
-        _saveSetting(LS_STNG_DARK_KEY, true)
+
+        _saveGlobalSetting('darkMode', true)
       } else {
         document.getElementById('button-setting-dark-mode').dataset.status = 'false'
         document.body.classList.remove('dark-mode')
-        _saveSetting(LS_STNG_DARK_KEY, false)
+
+        _saveGlobalSetting('darkMode', false)
       }
 
       break
     case 'noisy':
       var st = document.getElementById('button-setting-noisy').dataset.status
+
       if (st == '' || st == 'false') {
         document.getElementById('button-setting-noisy').dataset.status = 'true'
-        this.bogdle.config.noisy = true
-        _saveSetting(LS_STNG_NOISY_KEY, true)
+
+        _saveGlobalSetting('noisy', true)
       } else {
         document.getElementById('button-setting-noisy').dataset.status = 'false'
-        this.bogdle.config.noisy = false
-        _saveSetting(LS_STNG_NOISY_KEY, false)
+
+        _saveGlobalSetting('noisy', false)
       }
 
       break
-  }
-}
-
-function _initDebug() {
-  // if debug buttons are in template
-  if (this.bogdle.dom.interactive.debug.all) {
-    // show debug buttons
-    this.bogdle.dom.interactive.debug.all.style.display = 'flex'
-    // make header buttons smaller to fit in debug buttons
-    document.querySelectorAll('button.icon').forEach((btn) => {
-      btn.style.fontSize = '16px'
-    })
-  }
-
-  var debugStyles = document.createElement('link')
-  debugStyles.rel = 'stylesheet'
-  debugStyles.href = './assets/css/debug.css'
-  //document.head.appendChild(debugStyles)
-}
-
-async function _initAudio() {
-  caches.open(CACHE_AUDIO_KEY).then(cache => {
-    cache.addAll([
-      '/assets/audio/doo-dah-doo.wav',
-      '/assets/audio/haaahs1.wav',
-      '/assets/audio/haaahs2.wav',
-      '/assets/audio/haaahs3.wav',
-      '/assets/audio/tile_click.wav',
-      '/assets/audio/tile_delete.wav'
-    ]);
-  })
-
-  // console.log('CacheStorage', await caches.keys())
-  // await caches.open(CACHE_AUDIO_KEY).then(cache => {
-  //   cache.keys().then(keys => {
-  //     keys.forEach((req, index, array) => {
-  //       console.log(req, index, array)
-  //     })
-  //   })
-  // })
-}
-
-// save a setting (gear icon) to localStorage
-function _saveSetting(setting, value) {
-  if (setting == LS_STNG_DARK_KEY || setting == LS_STNG_NOISY_KEY) {
-    localStorage.setItem(setting, value)
-  }
-}
-// load settings (gear icon) from localStorage
-function _loadSettings() {
-  // console.log('loading settings from LS...')
-
-  // STATE->DIFFICULTY
-  if (localStorage.getItem(LS_STATE_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STATE_KEY))
-
-    if (lsConfig) {
-      if (lsConfig.difficulty) {
-        var setting = document.querySelector(`#container-difficulty input[data-diffid="${lsConfig.difficulty}"]`)
-
-        if(setting) {
-          setting.checked = true
-        }
-      }
-    }
-  }
-
-  // DARK-MODE
-  if (localStorage.getItem(LS_STNG_DARK_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STNG_DARK_KEY))
-
-    if (lsConfig) {
-      document.body.classList.add('dark-mode')
-
-      var setting = document.getElementById('button-setting-dark-mode')
-
-      if (setting) {
-        setting.dataset.status = 'true'
-      }
-    }
-  }
-
-  // NOISY
-  if (localStorage.getItem(LS_STNG_NOISY_KEY)) {
-    var lsConfig = JSON.parse(localStorage.getItem(LS_STNG_NOISY_KEY))
-
-    if (lsConfig) {
-      this.bogdle.config.noisy = lsConfig
-
-      var setting = document.getElementById('button-setting-noisy')
-
-      if (setting) {
-        setting.dataset.status = 'true'
-      }
-    }
   }
 }
 
@@ -865,14 +941,14 @@ function _checkGuess() {
     var word = this.bogdle.dom.status.guess.innerHTML.trim()
 
     // player guessed a valid word
-    Object.keys(this.bogdle.solutionSet).forEach(key => {
+    Object.keys(this.bogdle.config.free.solutionSet).forEach(key => {
       if (parseInt(key) <= _getMaxWordLength()) {
-        if (Object.keys(this.bogdle.solutionSet[key]).includes(word)) {
+        if (Object.keys(this.bogdle.config.free.solutionSet[key]).includes(word)) {
           this.bogdle.dom.status.guess.classList.toggle('valid')
           this.bogdle.dom.interactive.btnGuessLookup.disabled = false
 
           // and it's the first time
-          if (!this.bogdle.solutionSet[key][word]) {
+          if (!this.bogdle.config.free.solutionSet[key][word]) {
             this.bogdle.dom.status.guess.classList.add('first-guess')
             animateCSS('#guess', 'pulse')
           }
@@ -886,30 +962,30 @@ function _checkGuess() {
   }
 }
 function _checkWinState() {
-  // console.log('checking for win state...', this.bogdle.solutionSet)
+  // console.log('checking for win state...', this.bogdle.config.free.solutionSet)
 
-  if (this.bogdle.solutionSet) {
-    if (Object.values(this.bogdle.solutionSet).every((val) => val == 1)) {
-      // console.log('_checkWinState(): game won!', this.bogdle.solutionSet)
+  if (this.bogdle.config.free.solutionSet) {
+    if (Object.values(this.bogdle.config.free.solutionSet).every((val) => val == 1)) {
+      // console.log('_checkWinState(): game won!', this.bogdle.config.free.solutionSet)
 
-      if (this.bogdle.config.gameState == 'IN_PROGRESS') {
-        this.bogdle.statistics.gamesPlayed += 1
-        this.bogdle.statistics = {
-          "gamesPlayed": this.bogdle.statistics.gamesPlayed,
-          "wordsFound": this.bogdle.statistics.wordsFound
+      if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
+        this.bogdle.state.daily.statistics.gamesPlayed += 1
+        this.bogdle.state.daily.statistics = {
+          "gamesPlayed": this.bogdle.state.daily.statistics.gamesPlayed,
+          "wordsFound": this.bogdle.state.daily.statistics.wordsFound
         }
 
-        _saveStats()
+        _saveGameStats()
       }
 
       // display modal win thingy
       modalOpen('win')
 
       // set config stuff
-      this.bogdle.config.gameState = 'GAME_OVER'
+      this.bogdle.state.free.gameState = 'GAME_OVER'
 
-      if (this.bogdle.config.lastCompletedTime == null) {
-        this.bogdle.config.lastCompletedTime = new Date().getTime()
+      if (this.bogdle.state.free.lastCompletedTime == null) {
+        this.bogdle.state.free.lastCompletedTime = new Date().getTime()
       }
 
       _saveGameState()
@@ -948,7 +1024,7 @@ function _resetTiles() {
 }
 // randomize the order of tiles
 function _shuffleTiles() {
-  let letters = this.bogdle.letters
+  let letters = this.bogdle.config.free.letters
 
   // shuffle order of letters
   var j, x, index;
@@ -975,10 +1051,10 @@ function _resetGuess() {
 }
 // remove last letter in DOM guess div
 function _removeLastLetter() {
-  if (this.bogdle.config.gameState == 'IN_PROGRESS') {
+  if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
     // remove last position from selected array
-    if (this.bogdle.tilesSelected.length) {
-      var last = this.bogdle.tilesSelected.pop()
+    if (this.bogdle.config.free.tilesSelected.length) {
+      var last = this.bogdle.config.free.tilesSelected.pop()
 
       Array.from(this.bogdle.dom.interactive.tiles).forEach(tile => {
         if (tile.dataset.pos == last) {
@@ -1039,7 +1115,7 @@ function _onTileClick(tile) {
     tile.target.dataset.state = 'selected'
 
     // push another selected tile onto selected array
-    this.bogdle.tilesSelected.push(tile.target.dataset.pos)
+    this.bogdle.config.free.tilesSelected.push(tile.target.dataset.pos)
 
     // add selected tile to guess
     this.bogdle.dom.status.guess.innerHTML += tile.target.innerHTML
@@ -1051,10 +1127,10 @@ function _onTileClick(tile) {
   }
 }
 
-// modal: debug: pretty this.bogdle.config display
+// modal: debug: pretty this.bogdle.state.free display
 function _displayGameConfig() {
-  var config = this.bogdle.config
-  var dict = this.bogdle.dictionary
+  var config = this.bogdle.state.free
+  var dict = this.bogdle.config.free.dictionary
   var env = this.bogdle.env
 
   var html = '<dl>'
@@ -1104,21 +1180,21 @@ function _displayGameConfig() {
 }
 // modal: show how many words have been guessed
 function _displayGameProgress() {
-  var html = `<h6>Difficulty: ${this.bogdle.config.difficulty}</h6>`
+  var html = `<h6>Difficulty: ${this.bogdle.state.free.difficulty}</h6>`
 
   html += '<ul>'
 
   // check each length category (max...3, etc.)
   // total up words guessed in each
-  Object.keys(this.bogdle.solutionSet).reverse().forEach(category => {
+  Object.keys(this.bogdle.config.free.solutionSet).reverse().forEach(category => {
     if (parseInt(category) <= _getMaxWordLength()) {
       html += `<li><span class="solution-category">${category}-LETTER</span>`
 
-      var categoryEntries = Object.entries(this.bogdle.solutionSet[category])
+      var categoryEntries = Object.entries(this.bogdle.config.free.solutionSet[category])
       var categoryGuessed = categoryEntries
         .filter(entry => entry[1])
 
-      categoryLength = Object.keys(this.bogdle.solutionSet[category])
+      categoryLength = Object.keys(this.bogdle.config.free.solutionSet[category])
         .length
 
       html += ` ${categoryGuessed.length} of ${categoryLength}`
@@ -1134,19 +1210,19 @@ function _displayGameProgress() {
 }
 // modal: debug: pretty display of words in solution
 function _displayGameSolution() {
-  var html = `<h6>Difficulty: ${this.bogdle.config.difficulty}</h6>`
+  var html = `<h6>Difficulty: ${this.bogdle.state.free.difficulty}</h6>`
 
   html += '<ul>'
 
   // check each length category (max...3, etc.)
-  Object.keys(this.bogdle.solutionSet).reverse().forEach(key => {
+  Object.keys(this.bogdle.config.free.solutionSet).reverse().forEach(key => {
     if (key <= _getMaxWordLength()) {
       var words = []
 
       html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
 
       // create sorted array of each length category's words
-      var sortedArr = Array.from(Object.keys(this.bogdle.solutionSet[key])).sort()
+      var sortedArr = Array.from(Object.keys(this.bogdle.config.free.solutionSet[key])).sort()
 
       // go through each word in each category
       sortedArr.forEach(word => {
@@ -1166,7 +1242,7 @@ function _displayGameSolution() {
 
 // get max word length via difficulty setting
 function _getMaxWordLength() {
-  var diff = this.bogdle.config.difficulty
+  var diff = this.bogdle.state.free.difficulty
 
   // console.log('diff', diff)
 
@@ -1177,48 +1253,23 @@ function _getMaxWordLength() {
   return max
 }
 
-// save gamestate from code model -> LS
-function _saveGameState() {
-  // console.log('saving to localStorage...', this.bogdle.config)
-
-  // save game state
-  try {
-    localStorage.setItem(LS_STATE_KEY, JSON.stringify(this.bogdle.config))
-
-    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATE_KEY)))
-  } catch(error) {
-    console.error(`localStorage could not be set for ${LS_STATE_KEY}`, error)
-  }
-}
-
-// save statistics from code model -> LS
-function _saveStats() {
-  try {
-    localStorage.setItem(LS_STATS_KEY, JSON.stringify(this.bogdle.statistics))
-
-    // console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_KEY)))
-  } catch(error) {
-    console.error(`localStorage could not be set for ${LS_STATS_KEY}`, error)
-  }
-}
-
 // hint functions
 function _initHint() {
   // console.log('checking for hintWord...')
 
-  if (!this.bogdle.hintWord) {
+  if (!this.bogdle.config.free.hintWord) {
     const wordsLeft = __getUnGuessedWords()
-    this.bogdle.hintWord = wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
+    this.bogdle.config.free.hintWord = wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
 
-    // console.log('hintWord created:', this.bogdle.hintWord.toUpperCase())
+    // console.log('hintWord created:', this.bogdle.config.free.hintWord.toUpperCase())
 
-    Array.from(this.bogdle.hintWord).forEach(l => this.bogdle.tempWord.push('_'))
+    Array.from(this.bogdle.config.free.hintWord).forEach(l => this.bogdle.config.free.tempWord.push('_'))
 
     this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
 
-    // console.log('tempWord reset:', this.bogdle.tempWord.join(' ').toUpperCase())
+    // console.log('tempWord reset:', this.bogdle.config.free.tempWord.join(' ').toUpperCase())
   } else {
-    // console.log('hintWord already existing:', this.bogdle.hintWord.toUpperCase())
+    // console.log('hintWord already existing:', this.bogdle.config.free.hintWord.toUpperCase())
   }
 
   _cycleHint()
@@ -1226,36 +1277,36 @@ function _initHint() {
 function _cycleHint() {
   // console.log('cycling hintWord status...')
 
-  var maxLetters = Math.floor(this.bogdle.hintWord.length / 2)
+  var maxLetters = Math.floor(this.bogdle.config.free.hintWord.length / 2)
 
-  if (this.bogdle.hintWord.length > 4) maxLetters += 1
+  if (this.bogdle.config.free.hintWord.length > 4) maxLetters += 1
 
-  // console.log(`length: ${this.bogdle.hintWord.length}, maxLetters: ${maxLetters}, count: ${this.bogdle.tempWordCounter}`)
+  // console.log(`length: ${this.bogdle.config.free.hintWord.length}, maxLetters: ${maxLetters}, count: ${this.bogdle.config.free.tempWordCounter}`)
 
   // if we haven't yet revealed enough letters,
   // change a _ to a letter
-  if (this.bogdle.tempWordCounter < maxLetters) {
+  if (this.bogdle.config.free.tempWordCounter < maxLetters) {
     var idx = 0
     var foundEmpty = false
 
     while (!foundEmpty) {
-      idx = Math.floor(Math.random() * this.bogdle.hintWord.length)
-      if (this.bogdle.hintWord[idx]) {
-        if (this.bogdle.tempWord[idx] == '_') {
-          this.bogdle.tempWord[idx] = this.bogdle.hintWord[idx];
+      idx = Math.floor(Math.random() * this.bogdle.config.free.hintWord.length)
+      if (this.bogdle.config.free.hintWord[idx]) {
+        if (this.bogdle.config.free.tempWord[idx] == '_') {
+          this.bogdle.config.free.tempWord[idx] = this.bogdle.config.free.hintWord[idx];
           foundEmpty = true
         }
       }
     }
 
-    // console.log('this.bogdle.tempWord', this.bogdle.tempWord.join(' ').toUpperCase())
+    // console.log('this.bogdle.config.free.tempWord', this.bogdle.config.free.tempWord.join(' ').toUpperCase())
 
-    this.bogdle.dom.interactive.btnHint.innerHTML = this.bogdle.tempWord.join('')
+    this.bogdle.dom.interactive.btnHint.innerHTML = this.bogdle.config.free.tempWord.join('')
 
-    this.bogdle.tempWordCounter++
+    this.bogdle.config.free.tempWordCounter++
   }
 
-  if (this.bogdle.tempWordCounter == maxLetters) {
+  if (this.bogdle.config.free.tempWordCounter == maxLetters) {
     // console.log('maxLetters reached, no more letters')
 
     this.bogdle.dom.interactive.btnHint.classList.add('not-a-button')
@@ -1271,14 +1322,14 @@ function _clearHint() {
 
   this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
 
-  this.bogdle.hintWord = null
-  this.bogdle.tempWord = []
-  this.bogdle.tempWordCounter = 0
+  this.bogdle.config.free.hintWord = null
+  this.bogdle.config.free.tempWord = []
+  this.bogdle.config.free.tempWordCounter = 0
 }
 
 // helper method to get game difficulty as a max letter length
 function _getMaxWordLength() {
-  return DIFF_TO_LENGTH[this.bogdle.config.difficulty]
+  return DIFF_TO_LENGTH[this.bogdle.state.free.difficulty]
 }
 
 // handle both clicks and touches outside of modals
@@ -1297,6 +1348,11 @@ function _handleClickTouch(event) {
 
 // add event listeners to DOM
 function _addEventListeners() {
+  // + create new solution
+  this.bogdle.dom.interactive.debug.btnCreateNew.addEventListener('click', () => {
+    _confirmCreateNew()
+  })
+
   // 📕 dictionary lookup
   this.bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
     if (this.bogdle.dom.status.guess.classList.contains('valid')) {
@@ -1354,11 +1410,6 @@ function _addEventListeners() {
   // local debug buttons
   if (this.bogdle.env == 'local') {
     if (this.bogdle.dom.interactive.debug.all) {
-      // + create new solution
-      this.bogdle.dom.interactive.debug.btnCreateNew.addEventListener('click', () => {
-        _confirmCreateNew()
-      })
-
       // := show list of words
       this.bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
         modalOpen('show-list')
@@ -1367,11 +1418,6 @@ function _addEventListeners() {
       // ⚙ show current bogdle config
       this.bogdle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
         modalOpen('show-config')
-      })
-
-      // 🗑️ reset progress (i.e. set LS to defaults)
-      this.bogdle.dom.interactive.debug.btnResetProgress.addEventListener('click', () => {
-        _confirmResetProgress()
       })
     }
   }
@@ -1384,7 +1430,7 @@ function _addEventListeners() {
       _removeLastLetter()
     } else {
       var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
-      var validLetters = this.bogdle.letters.map(l => l.toUpperCase())
+      var validLetters = this.bogdle.config.free.letters.map(l => l.toUpperCase())
       var pressedLetter = event.code.charAt(event.code.length - 1)
 
       if (!excludedKeys.some(key => event.getModifierState(key))) {
@@ -1407,7 +1453,7 @@ function _addEventListeners() {
             tileToPush.dataset.state = 'selected'
 
             // push another selected tile onto selected array
-            this.bogdle.tilesSelected.push(tileToPush.dataset.pos)
+            this.bogdle.config.free.tilesSelected.push(tileToPush.dataset.pos)
 
             // add selected tile to guess
             this.bogdle.dom.status.guess.innerHTML += tileToPush.innerHTML
@@ -1443,20 +1489,20 @@ async function __getNewStartWord() {
   // gets max-length start words via fetch()
   // if success, grabs a random one
 
-  const response = await fetch(this.bogdle.startWordsFile)
+  const response = await fetch(this.bogdle.config.free.startWordsFile)
   const responseJson = await response.json()
 
   // random max-length word
   let possibles = responseJson['9']
   let possibleIdx = Math.floor(Math.random() * possibles.length)
 
-  this.startWord = possibles[possibleIdx]
+  this.seedWord = possibles[possibleIdx]
 
-  return this.startWord
+  return this.seedWord
 }
 
 function __getUnGuessedWords() {
-  var words = this.bogdle.solutionSet
+  var words = this.bogdle.config.free.solutionSet
   var wordsLeft = []
 
   Object.keys(words).forEach(length => {
@@ -1484,14 +1530,14 @@ function __getFormattedDate(date) {
   return formatted_date
 }
 
-// return this.bogdle.solutionSet size
+// return this.bogdle.config.free.solutionSet size
 function __getSolutionSize() {
   let categorySize = 0
   let solutionSize = 0
 
-  Object.keys(this.bogdle.solutionSet).forEach(category => {
+  Object.keys(this.bogdle.config.free.solutionSet).forEach(category => {
     if (parseInt(category) <= _getMaxWordLength()) {
-      categorySize = Object.keys(this.bogdle.solutionSet[category]).length
+      categorySize = Object.keys(this.bogdle.config.free.solutionSet[category]).length
       solutionSize += categorySize
     }
   })

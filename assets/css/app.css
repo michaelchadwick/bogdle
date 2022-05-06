@@ -138,45 +138,48 @@ button {
     border: 2px solid #333;
     color: #fff;
   }
-  .radio {
-    margin: 0.2rem;
+.radio {
+  margin: 0.2rem;
+}
+  .radio input[type=radio] {
+    position: absolute;
+    opacity: 0;
   }
-    .radio input[type=radio] {
-      position: absolute;
-      opacity: 0;
+    .radio input[type=radio] + .radio-label.radio-label-disabled {
+      color: #666;
     }
-      .radio input[type=radio] + .radio-label:before {
-        background: #f4f4f4;
-        border: 1px solid #b4b4b4;
-        border-radius: 100%;
-        content: "";
-        cursor: pointer;
-        display: inline-block;
-        height: 1em;
-        margin-right: 0.5em;
-        position: relative;
-        text-align: center;
-        transition: all 250ms ease;
-        top: 0;
-        vertical-align: top;
-        width: 1em;
-      }
-      .radio input[type=radio]:checked + .radio-label:before {
-        background-color: #529952;
-        box-shadow: inset 0 0 0 4px #f4f4f4;
-      }
-      .radio input[type=radio]:focus + .radio-label:before {
-        outline: none;
-        border-color: #529952;
-      }
-      .radio input[type=radio]:disabled + .radio-label:before {
-        box-shadow: inset 0 0 0 4px #f4f4f4;
-        border-color: #b4b4b4;
-        background: #b4b4b4;
-      }
-      .radio input[type=radio] + .radio-label:empty:before {
-        margin-right: 0;
-      }
+    .radio input[type=radio] + .radio-label:before {
+      background: #f4f4f4;
+      border: 1px solid #b4b4b4;
+      border-radius: 100%;
+      content: "";
+      cursor: pointer;
+      display: inline-block;
+      height: 1em;
+      margin-right: 0.5em;
+      position: relative;
+      text-align: center;
+      transition: all 250ms ease;
+      top: 0;
+      vertical-align: top;
+      width: 1em;
+    }
+    .radio input[type=radio]:checked + .radio-label:before {
+      background-color: #529952;
+      box-shadow: inset 0 0 0 4px #f4f4f4;
+    }
+    .radio input[type=radio]:focus + .radio-label:before {
+      outline: none;
+      border-color: #529952;
+    }
+    .radio input[type=radio]:disabled + .radio-label:before {
+      box-shadow: inset 0 0 0 4px #f4f4f4;
+      border-color: #b4b4b4;
+      background: #b4b4b4;
+    }
+    .radio input[type=radio] + .radio-label:empty:before {
+      margin-right: 0;
+    }
 
   .switch {
     background-color: #444;
@@ -321,6 +324,43 @@ section#game {
   max-width: 500px;
   width: 100%;
 }
+  section#game #mode-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+    section#game #mode-container .setting-row {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0;
+    }
+      section#game #mode-container .setting-row .container {
+        flex-direction: row;
+        height: 30px;
+        padding: 0;
+      }
+        section#game #mode-container .setting-row .container button#button-create-new {
+          background-color: #ddd;
+          border-radius: 4px;
+          font-weight: normal;
+          height: 25px;
+          margin-left: 10px;
+          padding: 10px 5px;
+        }
+          section#game #mode-container .setting-row .container button#button-create-new i {
+            margin-right: 5px;
+          }
+        section#game #mode-container .setting-row .container .radio {
+          margin: 0.4rem;
+        }
+    section#game #mode-container #difficulty-selection {
+      display: none;
+    }
+      section#game #mode-container #difficulty-selection.show {
+        display: flex;
+      }
+
   section#game #score-container {
     font-size: 1em;
     height: 25px;
@@ -411,7 +451,7 @@ section#game {
         background-color: transparent;
         /* border: 1px solid #529952; */
         border: 1px solid #888;
-        height: 40px;
+        height: 30px;
       }
         section#game #hint-container button:hover {
           background-color: #888;
@@ -505,11 +545,14 @@ section#game {
 }
   #settings .setting-row {
     align-items: center;
-    border-bottom: 1px sold #666;
+    border-bottom: 1px solid #666;
     display: flex;
     justify-content: space-between;
     padding: 0;
   }
+      #settings .setting-row:last-of-type {
+        border-bottom: none;
+      }
     #settings .setting-row .text {
       padding-right: 8px;
     }
