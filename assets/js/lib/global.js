@@ -4,6 +4,8 @@ const LS_STATS_KEY = 'bogdle-statistics'
 const LS_STNG_DARK_KEY = 'bogdle-dark-mode'
 const LS_STNG_NOISY_KEY = 'bogdle-noisy'
 
+const CACHE_AUDIO_KEY = 'bogdle-audio-cache'
+
 const ENV_PROD_URL = 'bogdle.fun'
 
 const DIFFICULTY = {

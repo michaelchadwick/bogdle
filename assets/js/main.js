@@ -284,21 +284,10 @@ this.bogdle.init = async () => {
 
   // if local dev, show debug stuff
   if (this.bogdle.env == 'local') {
-    // if debug buttons are in template
-    if (this.bogdle.dom.interactive.debug.all) {
-      // show debug buttons
-      this.bogdle.dom.interactive.debug.all.style.display = 'flex'
-      // make header buttons smaller to fit in debug buttons
-      document.querySelectorAll('button.icon').forEach((btn) => {
-        btn.style.fontSize = '16px'
-      })
-    }
-
-    var debugStyles = document.createElement('link')
-    debugStyles.rel = 'stylesheet'
-    debugStyles.href = './assets/css/debug.css'
-    //document.head.appendChild(debugStyles)
+    _initDebug()
   }
+
+  _initAudio()
 
   // attach event listeners to DOM elements
   _addEventListeners()
@@ -748,6 +737,45 @@ async function _changeSetting(setting) {
 
       break
   }
+}
+
+function _initDebug() {
+  // if debug buttons are in template
+  if (this.bogdle.dom.interactive.debug.all) {
+    // show debug buttons
+    this.bogdle.dom.interactive.debug.all.style.display = 'flex'
+    // make header buttons smaller to fit in debug buttons
+    document.querySelectorAll('button.icon').forEach((btn) => {
+      btn.style.fontSize = '16px'
+    })
+  }
+
+  var debugStyles = document.createElement('link')
+  debugStyles.rel = 'stylesheet'
+  debugStyles.href = './assets/css/debug.css'
+  //document.head.appendChild(debugStyles)
+}
+
+async function _initAudio() {
+  caches.open(CACHE_AUDIO_KEY).then(cache => {
+    cache.addAll([
+      '/assets/audio/doo-dah-doo.wav',
+      '/assets/audio/haaahs1.wav',
+      '/assets/audio/haaahs2.wav',
+      '/assets/audio/haaahs3.wav',
+      '/assets/audio/tile_click.wav',
+      '/assets/audio/tile_delete.wav'
+    ]);
+  })
+
+  // console.log('CacheStorage', await caches.keys())
+  // await caches.open(CACHE_AUDIO_KEY).then(cache => {
+  //   cache.keys().then(keys => {
+  //     keys.forEach((req, index, array) => {
+  //       console.log(req, index, array)
+  //     })
+  //   })
+  // })
 }
 
 // save a setting (gear icon) to localStorage

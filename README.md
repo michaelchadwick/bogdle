@@ -6,6 +6,10 @@ A Boggle clone, visually-inspired by Wordle, and mechanically-inspired by Wordsm
 
 Animation is provided by [Animate.css](https://animate.style), a very cool drop-in CSS file that allows you to add simple animations to things easily.
 
+## Audio
+
+There are a few optional sound effects to turn on. Loading is done through [CacheStorage](https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage) to avoid making a bunch of needless XHR calls.
+
 ## Dictionary
 
 I always wanted a quick way to look up an unknown-to-me word in a game, so I added a quick lookup. Thanks to [Free Dictionary API](https://api.dictionaryapi.dev) for existing!
