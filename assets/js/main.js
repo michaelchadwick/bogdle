@@ -196,66 +196,6 @@ async function modalOpen(type) {
   }
 }
 
-// submit a guess
-function submitWord(word) {
-  // console.log('submitting word...', word)
-
-  if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
-    if (word.length > 2) {
-      if (typeof this.bogdle.config.free.solutionSet[word.length][word] != 'undefined') {
-        if (this.bogdle.config.free.solutionSet[word.length][word] !== 1) {
-
-          if (word.length == _getMaxWordLength()) {
-            audioPlay(`doo-dah-doo`)
-          } else {
-            // choose haaahs[1-3] at random and play
-            var num = Math.floor(Math.random() * 3) + 1
-            audioPlay(`haaahs${num}`)
-          }
-
-          if (!this.bogdle.state.free.guessedWords) {
-            this.bogdle.state.free.guessedWords = []
-          }
-
-          this.bogdle.state.free.guessedWords.push(word)
-          this.bogdle.state.free.guessedWords.sort()
-          this.bogdle.state.free.lastPlayedTime = new Date().getTime()
-
-          this.bogdle.config.free.solutionSet[word.length][word] = 1
-          this.bogdle.state.daily.statistics.wordsFound += 1
-          this.bogdle.dom.status.guess.classList.remove('first-guess')
-
-          // do a dance
-          animateCSS('#guess', 'tada')
-
-          // clear hint if it's the same word
-          if (word == this.bogdle.config.free.hintWord) {
-            _clearHint()
-          }
-
-          _saveGameState()
-
-          _increaseScore()
-
-          _checkWinState()
-        } else {
-          modalOpen('repeated-word', true, true)
-          animateCSS('#guess', 'headShake')
-        }
-      } else {
-        modalOpen('invalid-word', true, true)
-        animateCSS('#guess', 'headShake')
-      }
-    } else {
-      modalOpen('invalid-length', true, true)
-      animateCSS('#guess', 'headShake')
-    }
-  } else {
-    // game is over, so no more guessed allowed
-    // console.error('current game is over; no more guesses!')
-  }
-}
-
 // start the engine
 this.bogdle.init = async () => {
   // console.log('init started')
@@ -910,6 +850,66 @@ async function _changeSetting(setting) {
   }
 }
 
+// submit a guess
+function _submitWord(word) {
+  // console.log('submitting word...', word)
+
+  if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
+    if (word.length > 2) {
+      if (typeof this.bogdle.config.free.solutionSet[word.length][word] != 'undefined') {
+        if (this.bogdle.config.free.solutionSet[word.length][word] !== 1) {
+
+          if (word.length == _getMaxWordLength()) {
+            audioPlay(`doo-dah-doo`)
+          } else {
+            // choose haaahs[1-3] at random and play
+            var num = Math.floor(Math.random() * 3) + 1
+            audioPlay(`haaahs${num}`)
+          }
+
+          if (!this.bogdle.state.free.guessedWords) {
+            this.bogdle.state.free.guessedWords = []
+          }
+
+          this.bogdle.state.free.guessedWords.push(word)
+          this.bogdle.state.free.guessedWords.sort()
+          this.bogdle.state.free.lastPlayedTime = new Date().getTime()
+
+          this.bogdle.config.free.solutionSet[word.length][word] = 1
+          this.bogdle.state.daily.statistics.wordsFound += 1
+          this.bogdle.dom.status.guess.classList.remove('first-guess')
+
+          // do a dance
+          animateCSS('#guess', 'tada')
+
+          // clear hint if it's the same word
+          if (word == this.bogdle.config.free.hintWord) {
+            _clearHint()
+          }
+
+          _saveGameState()
+
+          _increaseScore()
+
+          _checkWinState()
+        } else {
+          modalOpen('repeated-word', true, true)
+          animateCSS('#guess', 'headShake')
+        }
+      } else {
+        modalOpen('invalid-word', true, true)
+        animateCSS('#guess', 'headShake')
+      }
+    } else {
+      modalOpen('invalid-length', true, true)
+      animateCSS('#guess', 'headShake')
+    }
+  } else {
+    // game is over, so no more guessed allowed
+    // console.error('current game is over; no more guesses!')
+  }
+}
+
 // increase score
 function _increaseScore() {
   // get current score as an integer
@@ -1384,7 +1384,7 @@ function _addEventListeners() {
 
   // ✅ submit word
   this.bogdle.dom.interactive.btnSubmit.addEventListener('click', () => {
-    submitWord(this.bogdle.dom.status.guess.innerHTML)
+    _submitWord(this.bogdle.dom.status.guess.innerHTML)
   })
 
   // ⌫ backspace
@@ -1425,7 +1425,7 @@ function _addEventListeners() {
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
     if (event.code == 'Enter') {
-      submitWord(this.bogdle.dom.status.guess.innerHTML)
+      _submitWord(this.bogdle.dom.status.guess.innerHTML)
     } else if (event.code == 'Backspace' || event.code == 'Delete') {
       _removeLastLetter()
     } else {
