@@ -475,9 +475,8 @@ async function _createNewSolutionSet(newWord = null) {
   console.log('creating a new solution set...')
 
   // default config and stats (both save to, and are loaded from, localStorage)
-  let diff = 'normal'
-  if (this.bogdle.state.free.difficulty) {
-    diff = this.bogdle.state.free.difficulty
+  if (!this.bogdle.state.free.difficulty) {
+    this.bogdle.state.free.difficulty = 'normal'
   }
 
   this.bogdle.state.free.gameState = 'IN_PROGRESS'
@@ -702,10 +701,10 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
   }
 }
 
-// ask to create new bogdle
+// ask to create new free gamemode puzzle
 async function _confirmCreateNew() {
-  this.myConfirm = new Modal('confirm-debug', 'Create New Bogdle?',
-    'Are you <strong>sure</strong> you want to create a new Bogdle?',
+  this.myConfirm = new Modal('confirm', 'Create New Puzzle?',
+    'Are you <strong>sure</strong> you want to create a new puzzle?',
     'Yes, please',
     'No, never mind'
   )
@@ -723,27 +722,7 @@ async function _confirmCreateNew() {
   }
 }
 
-// debug: ask to reset config and LS
-async function _confirmResetProgress() {
-  this.myConfirm = new Modal('confirm-debug', 'Reset progress?',
-    'Are you <strong>sure</strong> you want to reset your progress?',
-    'Yes, please',
-    'No, never mind'
-  )
-
-  try {
-    // wait for modal confirmation
-    var confirmed = await myConfirm.question()
-
-    if (confirmed) {
-      _resetProgress()
-    }
-  } catch (err) {
-    console.error('progress reset failed', err)
-  }
-}
-
-// debug: reset config and LS
+// reset config and LS
 async function _resetProgress() {
   // console.log('resetting progress...')
 
@@ -754,10 +733,6 @@ async function _resetProgress() {
     "guessedWords": [],
     "lastCompletedTime": null,
     "lastPlayedTime": null
-  }
-  this.bogdle.state.daily.statistics = {
-    "gamesPlayed": 0,
-    "wordsFound": 0
   }
 
   this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
