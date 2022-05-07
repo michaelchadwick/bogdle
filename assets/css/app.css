@@ -8,8 +8,7 @@
 }
 
 html {
-  /* whole viewport minus neb.host footer */
-  height: calc(100% - 40px);
+  height: 100%;
 }
 
 body {
@@ -517,6 +516,9 @@ section#game {
       touch-action: manipulation;
       width: 100%;
     }
+      section#game #keyboard-container .row:last-of-type {
+        margin-bottom: 20px;
+      }
       section#game #keyboard-container .row.sub button {
         background-color: #d6cece;
       }

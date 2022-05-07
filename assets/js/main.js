@@ -49,13 +49,15 @@ async function modalOpen(type) {
             <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle</li>
           </ul>
 
-          <hr />
-
           <p>One mode is available now: <strong>Free Play</strong>. Play as many puzzles as you'd like. Tap on <button class="help"><i class="fa-solid fa-circle-plus"></i></button> to load a new one.</p>
 
           <hr />
 
           <p><em>Coming soon</em>: <strong>Daily</strong>. This will be like Wordle (and its variants), offering a new puzzle each day.</p>
+
+          <hr />
+
+          <p><strong>Programming/Design</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. <strong>Sound effects</strong>: Fliss.</p>
         `,
         null,
         null
