@@ -1410,7 +1410,7 @@ function _initHint() {
 
     Array.from(this.bogdle.config.free.hintWord).forEach(l => this.bogdle.config.free.tempWord.push('_'))
 
-    this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
+    this.bogdle.dom.interactive.btnHintReset.classList.add('show')
 
     // console.log('tempWord reset:', this.bogdle.config.free.tempWord.join(' ').toUpperCase())
   } else {
@@ -1465,7 +1465,7 @@ function _clearHint() {
   this.bogdle.dom.interactive.btnHint.removeAttribute('disabled')
   this.bogdle.dom.interactive.btnHint.innerHTML = 'HINT?'
 
-  this.bogdle.dom.interactive.btnHintReset.classList.toggle('show')
+  this.bogdle.dom.interactive.btnHintReset.classList.remove('show')
 
   this.bogdle.config.free.hintWord = null
   this.bogdle.config.free.tempWord = []
