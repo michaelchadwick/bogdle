@@ -1,3 +1,75 @@
+/* MODAL->STATISTICS */
+.statistic-header {
+  align-items: center;
+  display: flex;
+  font-size: 20px;
+  font-variant-numeric: proportional-nums;
+  font-weight: 400;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.statistics {
+  display: flex;
+  padding-bottom: 10px;
+}
+  .statistics .statistic-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+    .statistics .statistic-container .statistic {
+      align-items: center;
+      display: flex;
+      font-size: 36px;
+      font-variant-numeric: proportional-nums;
+      font-weight: 400;
+      justify-content: center;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    .statistics .statistic-container .statistic-label {
+      align-items: center;
+      display: flex;
+      font-size: 1em;
+      justify-content: center;
+      max-width: 85px;
+      text-align: center;
+    }
+
+/* MODAL->SETTINGS */
+#settings {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+  #settings .setting-row {
+    align-items: center;
+    border-bottom: 1px solid #666;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+  }
+      #settings .setting-row:last-of-type {
+        border-bottom: none;
+      }
+    #settings .setting-row .text {
+      padding: 8px;
+    }
+      #settings .setting-row .text .title {
+        font-size: 18px;
+      }
+      #settings .setting-row .text .description {
+        color: #444;
+        font-size: 12px;
+      }
+    #settings .setting-row .control {
+      display: block;
+      margin-left: 1em;
+    }
+
+
 .thin-ui-modal-dialog {
   align-items: center;
   background-color: rgb(0,0,0);
@@ -86,6 +158,9 @@
     margin: 0;
     padding: 10px;
   }
+    .thin-ui-modal-text ul.help {
+      padding-bottom: 0;
+    }
     .thin-ui-modal-text ul ul {
       padding: 2px 10px;
     }

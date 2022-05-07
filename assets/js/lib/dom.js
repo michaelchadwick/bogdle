@@ -7,9 +7,10 @@ this.bogdle.dom.interactive = {
   "btnHelp": document.getElementById('button-help'),
   "btnStats": document.getElementById('button-stats'),
   "btnSettings": document.getElementById('button-settings'),
+  "difficultyContainer": document.getElementById('difficulty-container'),
+  "difficultyContainerLinks": document.querySelectorAll('#difficulty-container a'),
   "gameModeDaily": document.getElementById('gamemode-0'),
   "gameModeFree": document.getElementById('gamemode-1'),
-  "freeDifficultySelection": document.getElementById('difficulty-selection'),
   "gameModeFree": document.getElementById('gamemode-1'),
   "btnSubmit": document.getElementById('button-submit'),
   "btnBackspace": document.getElementById('button-backspace'),
@@ -25,9 +26,10 @@ this.bogdle.dom.interactive = {
 this.bogdle.dom.interactive.debug = {
   "all": document.getElementById('debug-buttons'),
   "btnCreateNew": document.getElementById('button-create-new'),
-  "btnShowList": document.getElementById('button-show-list'),
+  "btnShowList": document.getElementById('button-show-solution'),
   "btnResetProgress": document.getElementById('button-reset-progress'),
-  "btnShowConfig": document.getElementById('button-show-config')
+  "btnShowConfig": document.getElementById('button-show-config'),
+  "btnShowState": document.getElementById('button-show-state')
 }
 // DOM > status elements
 this.bogdle.dom.status = {}

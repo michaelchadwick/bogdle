@@ -63,11 +63,14 @@
               <i class="fa-solid fa-bug"></i>
             </button>
             <div class="ddsub">
-              <button id="button-show-list" class="icon">
-                <i class="fa-solid fa-list"></i>
-              </button>
               <button id="button-show-config" class="icon">
                 <i class="fa-solid fa-gears"></i>
+              </button>
+              <button id="button-show-state" class="icon">
+                <i class="fa-solid fa-sliders"></i>
+              </button>
+              <button id="button-show-solution" class="icon">
+                <i class="fa-solid fa-list"></i>
               </button>
             </div>
           </div>
@@ -94,50 +97,53 @@
   <section id="game">
     <div id="mode-container">
 
-      <div id="gamemode-selection" class="setting-row">
-        <div class="container" id="container-gamemode">
+      <div id="gamemode-container" class="setting-row">
+        <a href="#" id="gamemode-0" class="disabled"
+          data-active="false"
+          date-gamemodeid="free"
+          onclick="_changeSetting('gamemode')"
+          disabled
+        >Daily</a>
 
-          <div class="radio">
-            <input id="gamemode-0" name="gamemode-radio" type="radio" data-gamemodeid="daily" onclick="_changeSetting('gamemode')" disabled>
-            <label for="gamemode-0" class="radio-label radio-label-disabled">Daily</label>
-          </div>
+        &nbsp;/&nbsp;
 
-          <div class="radio">
-            <input id="gamemode-1" name="gamemode-radio" type="radio" data-gamemodeid="free" onclick="_changeSetting('gamemode')" checked>
-            <label for="gamemode-1" class="radio-label">Free Play</label>
-          </div>
-
-          <button id="button-create-new" class="icon">
-            <i class="fa-solid fa-circle-plus"></i> New Game?
-          </button>
-
-        </div>
+        <a href="#" id="gamemode-1"
+          data-active="true"
+          date-gamemodeid="free"
+          onclick="_changeSetting('gamemode')"
+        >Free Play</a>
       </div>
 
-      <div id="difficulty-selection" class="setting-row">
-        <div class="container" id="container-difficulty">
+      <div id="difficulty-container" class="setting-row">
+        <a href="#" id="diff-kid"
+          data-active="false"
+          data-diffid="kid"
+          onclick="_changeSetting('difficulty', event)"
+        >Kid</a>
 
-          <div class="radio">
-            <input id="diff-0" name="diff-radio" type="radio" data-diffid="kid" onclick="_changeSetting('difficulty')">
-            <label for="diff-0" class="radio-label" title="Kid (3)">Kid</label>
-          </div>
+        &nbsp;/&nbsp;
 
-          <div class="radio">
-            <input id="diff-1" name="diff-radio" type="radio" data-diffid="easy" onclick="_changeSetting('difficulty')">
-            <label for="diff-1" class="radio-label" title="Easy (5)">Easy</label>
-          </div>
+        <a href="#" id="diff-easy"
+          data-active="false"
+          data-diffid="easy"
+          onclick="_changeSetting('difficulty', event)"
+        >Easy</a>
 
-          <div class="radio">
-            <input id="diff-2" name="diff-radio" type="radio" data-diffid="medium" onclick="_changeSetting('difficulty')">
-            <label for="diff-2" class="radio-label" title="Med (7)">Med</label>
-          </div>
+        &nbsp;/&nbsp;
 
-          <div class="radio">
-            <input id="diff-3" name="diff-radio" type="radio" data-diffid="normal" onclick="_changeSetting('difficulty')" checked>
-            <label for="diff-3" class="radio-label" title="Normal (9)">Normal</label>
-          </div>
+        <a href="#" id="diff-medium"
+          data-active="false"
+          data-diffid="medium"
+          onclick="_changeSetting('difficulty', event)"
+        >Medium</a>
 
-        </div>
+        &nbsp;/&nbsp;
+
+        <a href="#" id="diff-normal"
+          data-active="true"
+          data-diffid="normal"
+          onclick="_changeSetting('difficulty', event)"
+        >Normal</a>
       </div>
 
     </div>
@@ -193,12 +199,15 @@
           <i class="fa-solid fa-shuffle"></i>
         </button>
       </div>
-      <div class="row">
+      <div class="row sub">
         <button id="button-show-progress" title="Show progress">
           <i class="fa-solid fa-list-check"></i>
         </button>
         <button id="button-guess-lookup" title="Define valid word">
           <i class="fa-solid fa-book"></i>
+        </button>
+        <button id="button-create-new" title="Create new puzzle">
+          <i class="fa-solid fa-circle-plus"></i>
         </button>
       </div>
     </div>

@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 hr {
-  margin: 1em 0;
+  margin: 0.5em 0;
 }
 
 button {
@@ -80,10 +80,20 @@ button {
     button.icon:hover {
       color: #529952;
     }
-
-.debug {
-  color: #715ec7;
-}
+  button.help {
+    background-color: #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    height: 20px;
+    margin-right: 2px;
+    position: relative;
+    top: 1px;
+    width: 20px;
+  }
+    button.help i {
+      bottom: 1px;
+      position: relative;
+    }
 
 .container {
   align-items: center;
@@ -92,6 +102,7 @@ button {
   justify-content: center;
   padding: 16px 0;
 }
+
 .row {
   touch-action: manipulation;
 }
@@ -325,44 +336,47 @@ section#game {
   max-width: 500px;
   width: 100%;
 }
+
+  /* MODE-CONTAINER */
   section#game #mode-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    text-underline-offset: 2px;
+    width: 100%;
   }
     section#game #mode-container .setting-row {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      padding: 0;
+      font-size: 20px;
+      margin: 0 auto;
+      padding: 4px;
+      text-align: center;
     }
-      section#game #mode-container .setting-row .container {
-        flex-direction: row;
-        height: 26px;
-        padding: 0;
+      section#game #mode-container .setting-row a {
+        color: #111;
+        text-decoration: none;
       }
-        section#game #mode-container .setting-row .container button#button-create-new {
-          background-color: #ddd;
-          border-radius: 4px;
-          font-weight: normal;
-          height: 22px;
-          margin-left: 10px;
-          padding: 13px 5px;
+      section#game #mode-container .setting-row a:hover:not(.disabled),
+      section#game #mode-container .setting-row a[data-active=true] {
+        text-decoration: underline;
+      }
+      section#game #mode-container .setting-row button#button-create-new {
+        background-color: #ddd;
+        border-radius: 4px;
+        font-weight: normal;
+        height: 22px;
+        margin-left: 10px;
+        padding: 13px 5px;
+      }
+        section#game #mode-container .setting-row button#button-create-new i {
+          margin-right: 5px;
         }
-          section#game #mode-container .setting-row .container button#button-create-new i {
-            margin-right: 5px;
-          }
-        section#game #mode-container .setting-row .container .radio {
-          margin: 0.4rem;
-        }
-    section#game #mode-container #difficulty-selection {
+    section#game #mode-container #difficulty-container {
       display: none;
     }
-      section#game #mode-container #difficulty-selection.show {
-        display: flex;
+      section#game #mode-container #difficulty-container.show {
+        display: block;
       }
 
+  /* GUESS-CONTAINER */
   section#game #guess-container {
     align-content: center;
     align-items: center;
@@ -376,7 +390,7 @@ section#game {
     position: relative;
     text-align: center;
     text-transform: uppercase;
-    top: 1px;
+    top: 0;
     vertical-align: middle;
     word-break: break-word;
     word-wrap: break-word;
@@ -414,6 +428,7 @@ section#game {
           color: #23b62d;
         }
 
+  /* BOARD-CONTAINER */
   section#game #board-container {
     align-items: center;
     display: flex;
@@ -434,16 +449,17 @@ section#game {
         grid-template-columns: repeat(3, 1fr);
       }
 
+  /* SCORE-CONTAINER */
   section#game #score-container {
-    font-size: 1em;
+    font-size: 20px;
     height: 25px;
-    padding-top: 5px;
     text-align: center;
   }
     section#game #score-container #score-total {
       font-weight: 700;
     }
 
+  /* HINT-CONTAINER */
   section#game #hint-container {
     display: block;
     margin: 0 auto;
@@ -489,6 +505,7 @@ section#game {
             display: block;
           }
 
+  /* KEYBOARD-CONTAINER */
   section#game #keyboard-container {
     margin: 0 8px;
     user-select: none; /* no selecting text */
@@ -500,6 +517,9 @@ section#game {
       touch-action: manipulation;
       width: 100%;
     }
+      section#game #keyboard-container .row.sub button {
+        background-color: #d6cece;
+      }
     section#game #keyboard-container button {
       border: 1px solid transparent;
       font-size: 20px;
@@ -515,72 +535,12 @@ section#game {
         color: #fff;
       }
 
-.statistic-header {
-  align-items: center;
-  display: flex;
-  font-size: 20px;
-  font-variant-numeric: proportional-nums;
-  font-weight: 400;
-  justify-content: center;
-  letter-spacing: 0.05em;
-  text-align: center;
+/* utility classes */
+.debug {
+  color: #715ec7;
 }
-.statistics {
-  display: flex;
-  padding-bottom: 10px;
-}
-  .statistics .statistic-container {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-    .statistics .statistic-container .statistic {
-      align-items: center;
-      display: flex;
-      font-size: 36px;
-      font-variant-numeric: proportional-nums;
-      font-weight: 400;
-      justify-content: center;
-      letter-spacing: 0.05em;
-      text-align: center;
-    }
-    .statistics .statistic-container .statistic-label {
-      align-items: center;
-      display: flex;
-      font-size: 1em;
-      justify-content: center;
-      max-width: 85px;
-      text-align: center;
-    }
 
-#settings {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.disabled {
+  color: #888 !important;
+  cursor: default;
 }
-  #settings .setting-row {
-    align-items: center;
-    border-bottom: 1px solid #666;
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
-  }
-      #settings .setting-row:last-of-type {
-        border-bottom: none;
-      }
-    #settings .setting-row .text {
-      padding-right: 8px;
-    }
-      #settings .setting-row .text .title {
-        font-size: 18px;
-        width: 150px;
-      }
-      #settings .setting-row .text .description {
-        color: #444;
-        font-size: 12px;
-      }
-    #settings .setting-row .control .container {
-      display: block;
-      margin-left: 1em;
-      width: 150px;
-    }

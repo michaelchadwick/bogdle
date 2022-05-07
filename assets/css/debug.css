@@ -4,10 +4,10 @@ section#game {
   section#game #mode-container {
     background-color: #ffe8aa;
   }
-    section#game #mode-container #gamemode-selection {
+    section#game #mode-container #gamemode-container {
       background-color: #ffdcaa;
     }
-    section#game #mode-container #difficulty-selection {
+    section#game #mode-container #difficulty-container {
       background-color: #ffd3aa;
     }
 

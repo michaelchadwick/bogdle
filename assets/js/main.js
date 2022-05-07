@@ -37,11 +37,25 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Bogdle',
         `
-          <p>Find all the words in the jumble of letters! Each word is between 3 and 9 letters long.</p>
+          <p>Find all the words in the jumble of letters! Each word is at least 3 letters and as long as the difficulty (KID: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Letters don't need to be adjacent (unlike actual Boggle).</p>
+
+          <ul class="help">
+            <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word</li>
+            <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess</li>
+            <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
+            <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles</li>
+            <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
+            <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
+            <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle</li>
+          </ul>
 
           <hr />
 
-          <p>A new BOGDLE will be available each day!</p>
+          <p>One mode is available now: <strong>Free Play</strong>. Play as many puzzles as you'd like. Tap on <button class="help"><i class="fa-solid fa-circle-plus"></i></button> to load a new one.</p>
+
+          <hr />
+
+          <p><em>Coming soon</em>: <strong>Daily</strong>. This will be like Wordle (and its variants), offering a new puzzle each day.</p>
         `,
         null,
         null
@@ -124,6 +138,7 @@ async function modalOpen(type) {
             <div class="setting-row">
               <div class="text">
                 <div class="title">Dark Mode</div>
+                <div class="description">Change colors to better suit low light</div>
               </div>
               <div class="control">
                 <div class="container">
@@ -137,6 +152,7 @@ async function modalOpen(type) {
             <div class="setting-row">
               <div class="text">
                 <div class="title">Sounds</div>
+                <div class="description">Enable some cute sound effects</div>
               </div>
               <div class="control">
                 <div class="container">
@@ -164,7 +180,8 @@ async function modalOpen(type) {
         null
       )
       break
-    case 'show-list':
+
+    case 'show-solution':
       this.myModal = new Modal('perm-debug', 'Master Word List',
         _displayGameSolution(),
         null,
@@ -172,8 +189,15 @@ async function modalOpen(type) {
       )
       break
     case 'show-config':
-      this.myModal = new Modal('perm-debug', 'Game Config/State',
-        _displayGameConfigState(),
+      this.myModal = new Modal('perm-debug', 'Game Config',
+        _displayGameConfig(),
+        null,
+        null
+      )
+      break
+    case 'show-state':
+      this.myModal = new Modal('perm-debug', 'Game State',
+        _displayGameState(),
         null,
         null
       )
@@ -291,7 +315,7 @@ async function _loadGameState() {
 
   // load daily game state
   if (lsStateDaily) {
-    console.log('localStorage DAILY state key found and loading...', lsStateDaily)
+    // console.log('localStorage DAILY state key found and loading...', lsStateDaily)
 
     this.bogdle.state.daily.gameState = lsStateDaily.gameState
     this.bogdle.state.daily.guessedWords = lsStateDaily.guessedWords
@@ -307,9 +331,9 @@ async function _loadGameState() {
       modalOpen('help')
     }
 
-    console.log('!localStorage DAILY key loaded!', this.bogdle.state.daily)
+    // console.log('!localStorage DAILY key loaded!', this.bogdle.state.daily)
   } else {
-    console.log('no localStorage DAILY key found; defaults being set')
+    // console.log('no localStorage DAILY key found; defaults being set')
 
     this.bogdle.state.daily.gameState = 'IN_PROGRESS'
     this.bogdle.state.daily.guessedWords = []
@@ -325,7 +349,7 @@ async function _loadGameState() {
 
   // load free game state
   if (lsStateFree) {
-    console.log('localStorage FREE state key found and loading...', lsStateFree)
+    // console.log('localStorage FREE state key found and loading...', lsStateFree)
 
     this.bogdle.state.free.difficulty = lsStateFree.difficulty
     this.bogdle.state.free.gameState = lsStateFree.gameState
@@ -339,9 +363,9 @@ async function _loadGameState() {
 
     await _loadExistingSolutionSet(this.bogdle.config.free.seedWord)
 
-    console.log('!localStorage FREE key loaded!', this.bogdle.state.free)
+    // console.log('!localStorage FREE key loaded!', this.bogdle.state.free)
   } else {
-    console.log('no localStorage FREE key found; defaults being set')
+    // console.log('no localStorage FREE key found; defaults being set')
 
     this.bogdle.state.free.difficulty = 'normal'
     this.bogdle.state.free.gameState = 'IN_PROGRESS'
@@ -369,19 +393,19 @@ async function _loadGameState() {
     modalOpen('start')
   }
 
-  console.log('!daily progress loaded!', this.bogdle.config.daily.solutionSet)
-  console.log('!free progress loaded!', this.bogdle.config.free.solutionSet)
+  // console.log('!daily progress loaded!', this.bogdle.config.daily.solutionSet)
+  // console.log('!free progress loaded!', this.bogdle.config.free.solutionSet)
 }
 
 // save game state/settings from code model -> LS
 function _saveGameState() {
-  console.log('saving game state and global settings to localStorage...')
+  // console.log('saving game state and global settings to localStorage...')
 
   // save daily game state
   try {
     localStorage.setItem(LS_STATE_DAILY_KEY, JSON.stringify(this.bogdle.state.daily))
 
-    console.log('!localStorage DAILY state saved!', JSON.parse(localStorage.getItem(LS_STATE_DAILY_KEY)))
+    // console.log('!localStorage DAILY state saved!', JSON.parse(localStorage.getItem(LS_STATE_DAILY_KEY)))
   } catch(error) {
     console.error('localStorage DAILY state save failed', error)
   }
@@ -390,7 +414,7 @@ function _saveGameState() {
   try {
     localStorage.setItem(LS_STATE_FREE_KEY, JSON.stringify(this.bogdle.state.free))
 
-    console.log('!localStorage FREE state saved!', JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY)))
+    // console.log('!localStorage FREE state saved!', JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY)))
   } catch(error) {
     console.error('localStorage FREE state save failed', error)
   }
@@ -399,7 +423,7 @@ function _saveGameState() {
   try {
     localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(this.bogdle.settings))
 
-    console.log('!localStorage global settings saved!', JSON.parse(localStorage.getItem(LS_SETTINGS_KEY)))
+    // console.log('!localStorage global settings saved!', JSON.parse(localStorage.getItem(LS_SETTINGS_KEY)))
   } catch(error) {
     console.error('localStorage global settings save failed', error)
   }
@@ -407,7 +431,7 @@ function _saveGameState() {
 
 // save a setting (gear icon) to localStorage
 function _saveGlobalSetting(setting, value) {
-  console.log('saving setting to LS...', setting, value)
+  // console.log('saving setting to LS...', setting, value)
 
   var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
 
@@ -424,11 +448,11 @@ function _saveGlobalSetting(setting, value) {
 }
 // load settings (gear icon) from localStorage
 function _loadGlobalSettings() {
-  console.log('loading global settings from LS...')
+  // console.log('loading global settings from LS...')
 
   // STATE->GAMEMODE
   if (this.bogdle.settings.gameMode == 'free') {
-    this.bogdle.dom.interactive.freeDifficultySelection.classList.add('show')
+    this.bogdle.dom.interactive.difficultyContainer.classList.add('show')
   }
 
   // STATE->FREE->DIFFICULTY
@@ -437,10 +461,11 @@ function _loadGlobalSettings() {
 
     if (lsConfig) {
       if (lsConfig.difficulty) {
-        var setting = document.querySelector(`#difficulty-selection input[data-diffid="${lsConfig.difficulty}"]`)
+        this.bogdle.dom.interactive.difficultyContainerLinks.forEach(link => link.dataset.active = false)
+        var setting = document.getElementById(`diff-${lsConfig.difficulty}`)
 
         if (setting) {
-          setting.checked = true
+          setting.dataset.active = true
         }
       }
     }
@@ -479,12 +504,12 @@ function _loadGlobalSettings() {
     this.bogdle.settings.noisy = false
   }
 
-  console.log('loaded global settings from LS!', this.bogdle.settings)
+  // console.log('loaded global settings from LS!', this.bogdle.settings)
 }
 
 // create new solution set, which resets progress
 async function _createNewSolutionSet(newWord = null) {
-  console.log('creating a new solution set...')
+  // console.log('creating a new solution set...')
 
   // default config and stats (both save to, and are loaded from, localStorage)
   if (!this.bogdle.state.free.difficulty) {
@@ -525,7 +550,7 @@ async function _createNewSolutionSet(newWord = null) {
 
   // new game with static start word
   if (newWord) {
-    console.log(`new solution requested with static word '${newWord}'...`)
+    // console.log(`new solution requested with static word '${newWord}'...`)
   } // new game with random start word
   else {
     try {
@@ -592,7 +617,7 @@ async function _createNewSolutionSet(newWord = null) {
 
 // load existing solution set, which retains past progress
 async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
-  console.log('loading existing solution set...')
+  // console.log('loading existing solution set...')
 
   // dictionary to pull from
   this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
@@ -770,18 +795,17 @@ async function _resetProgress() {
 }
 
 // change a setting (gear icon) value
-async function _changeSetting(setting) {
+async function _changeSetting(setting, event) {
   switch (setting) {
     case 'difficulty':
+      var target = event.target
       var oldDiff = this.bogdle.state.free.difficulty
-
-      var elem = document.querySelectorAll('#container-difficulty input[type="radio"]:checked')
-      var newDiff = elem[0].dataset.diffid
+      var newDiff = target.dataset.diffid
 
       // don't prompt unless new difficulty
       if (newDiff != oldDiff) {
         var mySubConfirm = new Modal('confirm', 'Change Difficulty?',
-          'Changing the difficulty will start a new game, and the current game will be lost. Are you sure you want to do this?',
+          'Changing the difficulty will start a new puzzle, and the current one will be lost. Are you sure you want to do this?',
           'Yes, change the difficulty',
           'No, never mind'
         )
@@ -792,7 +816,12 @@ async function _changeSetting(setting) {
 
           // if confirmed, set new difficulty and reset game
           if (confirmed) {
+            // set internal code model
             this.bogdle.state.free.difficulty = newDiff
+
+            // set dom status
+            document.getElementById(`diff-${oldDiff}`).dataset.active = false
+            document.getElementById(target.id).dataset.active = true
 
             _clearHint()
 
@@ -800,7 +829,7 @@ async function _changeSetting(setting) {
             _loadExistingSolutionSet(this.bogdle.config.free.seedWord, true)
           } // if not confirmed, reset DOM radio back to original setting
           else {
-            document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
+            // document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
           }
         } catch (err) {
           console.error('difficulty change failed', err)
@@ -1113,106 +1142,6 @@ function _onTileClick(tile) {
   }
 }
 
-// modal: debug: pretty this.bogdle.state display
-function _displayGameConfigState() {
-  let configs = this.bogdle.config
-  let states = this.bogdle.state
-
-  var html = ''
-
-  html += `<h4>GLOBAL (${this.bogdle.env})</h4>`
-  html += '<h4>----------------------------</h4>'
-
-  html += '<dl>'
-
-  Object.keys(configs).forEach(config => {
-    html += `<h4>CONFIG: ${config}</h4>`
-    Object.keys(configs[config]).forEach(key => {
-      if (typeof config[key] == 'object'
-        && !Array.isArray(config[key])
-        && config[key] != null
-      ) {
-        html += `<dd><code>${key}: {</code><dl>`
-
-        Object.keys(config[key]).forEach(k => {
-          var label = k
-          var value = config[key][k]
-
-          if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-            value = __getFormattedDate(new Date(value))
-          }
-
-          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-        })
-
-        html += '</dl><code>}</code></dd>'
-      } else {
-        var label = key
-        var value = config[key]
-
-        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-          if (value) {
-            value = __getFormattedDate(new Date(value))
-          }
-        }
-
-        if (label == 'guessedWords') {
-          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-        } else {
-          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-        }
-      }
-    })
-  })
-
-  Object.keys(states).forEach(state => {
-    html += `<h4>STATE: ${state}</h4>`
-    Object.keys(states[state]).forEach(key => {
-      if (typeof state[key] == 'object'
-        && !Array.isArray(state[key])
-        && state[key] != null
-      ) {
-        html += `<dd><code>${key}: {</code><dl>`
-
-        Object.keys(state[key]).forEach(k => {
-          var label = k
-          var value = state[key][k]
-
-          if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-            value = __getFormattedDate(new Date(value))
-          }
-
-          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-        })
-
-        html += '</dl><code>}</code></dd>'
-      } else {
-        var label = key
-        var value = state[key]
-
-        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-          if (value) {
-            value = __getFormattedDate(new Date(value))
-          }
-        }
-
-        if (label == 'guessedWords') {
-          if (value) {
-            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-          } else {
-            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-          }
-        } else {
-          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-        }
-      }
-    })
-  })
-
-  html += '</dl>'
-
-  return html
-}
 // modal: show how many words have been guessed
 function _displayGameProgress() {
   var gameMode = this.bogdle.gameMode
@@ -1245,6 +1174,151 @@ function _displayGameProgress() {
   })
 
   html += '</ul>'
+
+  return html
+}
+
+// modal: debug: prettily display this.bogdle.config
+function _displayGameConfig() {
+  let configs = this.bogdle.config
+
+  var html = ''
+
+  html += `<h4>GLOBAL (ENV: ${this.bogdle.env})</h4>`
+  html += '<h4>----------------------------</h4>'
+
+  html += '<dl>'
+
+  Object.keys(configs).forEach(config => {
+    html += `<h4>CONFIG: ${config}</h4>`
+
+    Object.keys(configs[config]).sort().forEach(key => {
+
+      if (
+        (typeof configs[config][key] == 'object'
+          && !Array.isArray(configs[config][key])
+          && configs[config][key] != null
+        )
+      ) {
+        html += `<dd><code>${key}: {</code><dl>`
+
+        // skip object-within-object key
+        if (key == 'solutionSet') {
+          html += '</dl><code>}</code></dd>'
+        } else {
+          Object.keys(configs[config][key]).forEach(k => {
+            var label = k
+            var value = configs[config][key][k]
+
+            if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+              value = __getFormattedDate(new Date(value))
+            }
+
+            if (Object.keys(value)) {
+              console.log('found another object', key, label, value)
+            } else {
+              html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+            }
+          })
+
+          html += '</dl><code>}</code></dd>'
+        }
+      }
+      else {
+        var label = key
+        var value = configs[config][key]
+
+        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+          if (value) {
+            value = __getFormattedDate(new Date(value))
+          }
+        }
+
+        if (label == 'guessedWords') {
+          if (value) {
+            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+          } else {
+            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+          }
+        } else {
+          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+        }
+      }
+    })
+  })
+
+  html += '</dl>'
+
+  return html
+}
+// modal: debug: prettily display this.bogdle.state
+function _displayGameState() {
+  let states = this.bogdle.state
+
+  var html = ''
+
+  html += '<dl>'
+
+  Object.keys(states).forEach(state => {
+    html += `<h4>STATE: ${state}</h4>`
+
+    Object.keys(states[state]).forEach(key => {
+      if (typeof states[state][key] == 'object'
+        && !Array.isArray(states[state][key])
+        && states[state][key] != null
+      ) {
+        html += `<dd><code>${key}: {</code><dl>`
+
+        if (key == 'statistics') {
+          Object.keys(states[state][key]).forEach(subkey => {
+            var label = subkey
+            var value = states[state][key][subkey]
+
+            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+          })
+
+          html += '</dl><code>}</code></dd>'
+        }
+        else {
+          Object.keys(states[state][key]).forEach(k => {
+            var label = k
+            var value = states[state][key][k]
+
+            if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+              value = __getFormattedDate(new Date(value))
+            }
+
+            if (value) {
+              html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+            }
+          })
+
+          html += '</dl><code>}</code></dd>'
+        }
+      } else {
+        var label = key
+        var value = states[state][key]
+
+        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+          if (value) {
+            value = __getFormattedDate(new Date(value))
+          }
+        }
+
+        if (label == 'guessedWords') {
+          if (value) {
+            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+          } else {
+            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+          }
+        } else {
+          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+        }
+      }
+    })
+  })
+
+  html += '</dl>'
 
   return html
 }
@@ -1481,12 +1555,17 @@ function _addEventListeners() {
     if (this.bogdle.dom.interactive.debug.all) {
       // := show list of words
       this.bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
-        modalOpen('show-list')
+        modalOpen('show-solution')
       })
 
       // ⚙ show current bogdle config
       this.bogdle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
         modalOpen('show-config')
+      })
+
+      // 🎚️ show current bogdle state
+      this.bogdle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
+        modalOpen('show-state')
       })
     }
   }
