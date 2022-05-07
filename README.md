@@ -1,6 +1,6 @@
 # Bogdle
 
-A Boggle clone, visually-inspired by Wordle, and mechanically-inspired by Wordsmyth.
+A Boggle clone, visually-inspired by [Wordle](https://nytimes.com/games/wordle), and mechanically-inspired by [Wordsmyth](https://apps.apple.com/us/app/wordsmyth-a-daily-word-game/id1534959553) (and a little by [Crosswordle](https://crosswordle.vercel.app)).
 
 ## Animation
 
