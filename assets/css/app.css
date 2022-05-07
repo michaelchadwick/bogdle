@@ -240,6 +240,7 @@ header {
   header #debug-buttons .ddmenu {
     align-items: center;
     display: flex;
+    z-index: 10;
   }
     header #debug-buttons .ddmenu .ddgroup {
       border: 1px solid transparent;
@@ -328,6 +329,7 @@ section#game {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 20px;
   }
     section#game #mode-container .setting-row {
       align-items: center;
@@ -368,7 +370,7 @@ section#game {
     font-family: 'Changa', sans-serif;
     font-size: 3.1em;
     font-weight: 700;
-    height: 45px;
+    height: 60px;
     margin: 0 auto;
     max-width: 100%;
     position: relative;
@@ -513,14 +515,26 @@ section#game {
         color: #fff;
       }
 
-#statistics {
+.statistic-header {
+  align-items: center;
+  display: flex;
+  font-size: 20px;
+  font-variant-numeric: proportional-nums;
+  font-weight: 400;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.statistics {
   display: flex;
   padding-bottom: 10px;
 }
-  #statistics .statistic-container {
+  .statistics .statistic-container {
+    display: flex;
     flex: 1;
+    flex-direction: column;
   }
-    #statistics .statistic-container .statistic {
+    .statistics .statistic-container .statistic {
       align-items: center;
       display: flex;
       font-size: 36px;
@@ -530,11 +544,12 @@ section#game {
       letter-spacing: 0.05em;
       text-align: center;
     }
-    #statistics .statistic-container .statistic-label {
+    .statistics .statistic-container .statistic-label {
       align-items: center;
       display: flex;
       font-size: 1em;
       justify-content: center;
+      max-width: 85px;
       text-align: center;
     }
 

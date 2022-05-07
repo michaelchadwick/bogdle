@@ -18,6 +18,7 @@ this.bogdle.state.free = {}
 this.bogdle.config = {}
 // config->daily
 this.bogdle.config.daily = {}
+this.bogdle.config.daily.solutionSet = EMPTY_OBJ_SET
 // config->free
 this.bogdle.config.free = {}
 this.bogdle.config.free.hintWord = null
@@ -82,15 +83,30 @@ async function modalOpen(type) {
       this.myModal = new Modal('perm', 'Statistics',
         `
           <div class="container">
-            <div id="statistics">
+
+            <div class="statistic-header">Daily</div>
+            <div class="statistics">
               <div class="statistic-container">
                 <div class="statistic">${this.bogdle.state.daily.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Played</div>
+                <div class="statistic-label">Games Played</div>
               </div>
               <div class="statistic-container">
                 <div class="statistic">${this.bogdle.state.daily.statistics.wordsFound}</div>
                 <div class="statistic-label">Words Found</div>
               </div>
+            </div>
+
+            <div class="statistic-header">Free Play</div>
+            <div class="statistics">
+              <div class="statistic-container">
+                <div class="statistic">${this.bogdle.state.free.statistics.gamesPlayed}</div>
+                <div class="statistic-label">Games Played</div>
+              </div>
+              <div class="statistic-container">
+                <div class="statistic">${this.bogdle.state.free.statistics.wordsFound}</div>
+                <div class="statistic-label">Words Found</div>
+              </div>
+
             </div>
           </div>
         `,
@@ -156,8 +172,8 @@ async function modalOpen(type) {
       )
       break
     case 'show-config':
-      this.myModal = new Modal('perm-debug', 'Bogdle Config',
-        _displayGameConfig(),
+      this.myModal = new Modal('perm-debug', 'Game Config/State',
+        _displayGameConfigState(),
         null,
         null
       )
@@ -281,6 +297,10 @@ async function _loadGameState() {
     this.bogdle.state.daily.guessedWords = lsStateDaily.guessedWords
     this.bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime
     this.bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime
+    this.bogdle.state.daily.statistics = {
+      "gamesPlayed": lsStateDaily.statistics.gamesPlayed,
+      "wordsFound": lsStateDaily.statistics.wordsFound
+    }
 
     // no lastPlayedTime?
     if (this.bogdle.state.daily.lastPlayedTime == null) {
@@ -295,6 +315,10 @@ async function _loadGameState() {
     this.bogdle.state.daily.guessedWords = []
     this.bogdle.state.daily.lastCompletedTime = null
     this.bogdle.state.daily.lastPlayedTime = null
+    this.bogdle.state.daily.statistics = {
+      "gamesPlayed": 0,
+      "wordsFound": 0
+    }
   }
 
   var lsStateFree = JSON.parse(localStorage.getItem(LS_STATE_FREE_KEY))
@@ -306,12 +330,28 @@ async function _loadGameState() {
     this.bogdle.state.free.difficulty = lsStateFree.difficulty
     this.bogdle.state.free.gameState = lsStateFree.gameState
     this.bogdle.state.free.guessedWords = lsStateFree.guessedWords
+    this.bogdle.state.free.lastCompletedTime = lsStateFree.lastCompletedTime
+    this.bogdle.state.free.lastPlayedTime = lsStateFree.lastPlayedTime
+    this.bogdle.state.free.statistics = {
+      "gamesPlayed": lsStateFree.statistics.gamesPlayed,
+      "wordsFound": lsStateFree.statistics.gamesPlayed
+    }
 
     await _loadExistingSolutionSet(this.bogdle.config.free.seedWord)
 
     console.log('!localStorage FREE key loaded!', this.bogdle.state.free)
   } else {
     console.log('no localStorage FREE key found; defaults being set')
+
+    this.bogdle.state.free.difficulty = 'normal'
+    this.bogdle.state.free.gameState = 'IN_PROGRESS'
+    this.bogdle.state.free.guessedWords = []
+    this.bogdle.state.free.lastCompletedTime = null
+    this.bogdle.state.free.lastPlayedTime = null
+    this.bogdle.state.free.statistics = {
+      "gamesPlayed": 0,
+      "wordsFound": 0
+    }
 
     if (this.bogdle.env == 'prod') {
       await _createNewSolutionSet()
@@ -322,23 +362,6 @@ async function _loadGameState() {
 
   // load global (gear icon) settings
   _loadGlobalSettings()
-
-  // load user statistics
-  var lsConfigDailyStats = JSON.parse(localStorage.getItem(LS_STATS_DAILY_KEY))
-
-  if (lsConfigDailyStats) {
-    console.log('localStorage DAILY stats key found and loading...', lsConfigDailyStats)
-
-    this.bogdle.state.daily.statistics = {
-      "gamesPlayed": lsConfigDailyStats.gamesPlayed,
-      "wordsFound": lsConfigDailyStats.wordsFound
-    }
-  } else {
-    this.bogdle.state.daily.statistics = {
-      "gamesPlayed": 0,
-      "wordsFound": 0
-    }
-  }
 
   _saveGameState()
 
@@ -379,17 +402,6 @@ function _saveGameState() {
     console.log('!localStorage global settings saved!', JSON.parse(localStorage.getItem(LS_SETTINGS_KEY)))
   } catch(error) {
     console.error('localStorage global settings save failed', error)
-  }
-}
-
-// save game stats from code model -> LS
-function _saveGameStats() {
-  try {
-    localStorage.setItem(LS_STATS_DAILY_KEY, JSON.stringify(this.bogdle.state.daily.statistics))
-
-    console.log('!localStorage progress saved!', JSON.parse(localStorage.getItem(LS_STATS_DAILY_KEY)))
-  } catch(error) {
-    console.error(`localStorage could not be set for ${LS_STATS_DAILY_KEY}`, error)
   }
 }
 
@@ -732,7 +744,11 @@ async function _resetProgress() {
     "gameState": "IN_PROGRESS",
     "guessedWords": [],
     "lastCompletedTime": null,
-    "lastPlayedTime": null
+    "lastPlayedTime": null,
+    "statistics": {
+      "gamesPlayed": 0,
+      "wordsFound": 0
+    }
   }
 
   this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
@@ -849,9 +865,10 @@ function _submitWord(word) {
           this.bogdle.state.free.guessedWords.push(word)
           this.bogdle.state.free.guessedWords.sort()
           this.bogdle.state.free.lastPlayedTime = new Date().getTime()
+          this.bogdle.state.free.statistics.wordsFound += 1
 
           this.bogdle.config.free.solutionSet[word.length][word] = 1
-          this.bogdle.state.daily.statistics.wordsFound += 1
+
           this.bogdle.dom.status.guess.classList.remove('first-guess')
 
           // do a dance
@@ -945,12 +962,6 @@ function _checkWinState() {
 
       if (this.bogdle.state.free.gameState == 'IN_PROGRESS') {
         this.bogdle.state.daily.statistics.gamesPlayed += 1
-        this.bogdle.state.daily.statistics = {
-          "gamesPlayed": this.bogdle.state.daily.statistics.gamesPlayed,
-          "wordsFound": this.bogdle.state.daily.statistics.wordsFound
-        }
-
-        _saveGameStats()
       }
 
       // display modal win thingy
@@ -1102,51 +1113,100 @@ function _onTileClick(tile) {
   }
 }
 
-// modal: debug: pretty this.bogdle.state.free display
-function _displayGameConfig() {
-  var config = this.bogdle.state.free
-  var dict = this.bogdle.config.free.dictionary
-  var env = this.bogdle.env
+// modal: debug: pretty this.bogdle.state display
+function _displayGameConfigState() {
+  let configs = this.bogdle.config
+  let states = this.bogdle.state
 
-  var html = '<dl>'
-  html += `<dd><code>dictionary:</code></dd><dt>${dict}</dt>`
-  html += `<dd><code>env:</code></dd><dt>${env}</dt>`
+  var html = ''
 
-  Object.keys(config).forEach(key => {
-    if (typeof config[key] == 'object'
-      && !Array.isArray(config[key])
-      && config[key] != null
-    ) {
-      html += `<dd><code>${key}: {</code><dl>`
+  html += `<h4>GLOBAL (${this.bogdle.env})</h4>`
+  html += '<h4>----------------------------</h4>'
 
-      Object.keys(config[key]).forEach(k => {
-        var label = k
-        var value = config[key][k]
+  html += '<dl>'
+
+  Object.keys(configs).forEach(config => {
+    html += `<h4>CONFIG: ${config}</h4>`
+    Object.keys(configs[config]).forEach(key => {
+      if (typeof config[key] == 'object'
+        && !Array.isArray(config[key])
+        && config[key] != null
+      ) {
+        html += `<dd><code>${key}: {</code><dl>`
+
+        Object.keys(config[key]).forEach(k => {
+          var label = k
+          var value = config[key][k]
+
+          if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+            value = __getFormattedDate(new Date(value))
+          }
+
+          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+        })
+
+        html += '</dl><code>}</code></dd>'
+      } else {
+        var label = key
+        var value = config[key]
 
         if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-          value = __getFormattedDate(new Date(value))
+          if (value) {
+            value = __getFormattedDate(new Date(value))
+          }
         }
 
-        html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-      })
-
-      html += '</dl><code>}</code></dd>'
-    } else {
-      var label = key
-      var value = config[key]
-
-      if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
-        if (value) {
-          value = __getFormattedDate(new Date(value))
+        if (label == 'guessedWords') {
+          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+        } else {
+          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
         }
       }
+    })
+  })
 
-      if (label == 'guessedWords') {
-        html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+  Object.keys(states).forEach(state => {
+    html += `<h4>STATE: ${state}</h4>`
+    Object.keys(states[state]).forEach(key => {
+      if (typeof state[key] == 'object'
+        && !Array.isArray(state[key])
+        && state[key] != null
+      ) {
+        html += `<dd><code>${key}: {</code><dl>`
+
+        Object.keys(state[key]).forEach(k => {
+          var label = k
+          var value = state[key][k]
+
+          if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+            value = __getFormattedDate(new Date(value))
+          }
+
+          html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+        })
+
+        html += '</dl><code>}</code></dd>'
       } else {
-        html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+        var label = key
+        var value = state[key]
+
+        if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
+          if (value) {
+            value = __getFormattedDate(new Date(value))
+          }
+        }
+
+        if (label == 'guessedWords') {
+          if (value) {
+            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
+          } else {
+            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+          }
+        } else {
+          html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
+        }
       }
-    }
+    })
   })
 
   html += '</dl>'
@@ -1155,7 +1215,12 @@ function _displayGameConfig() {
 }
 // modal: show how many words have been guessed
 function _displayGameProgress() {
-  var html = `<h6>Difficulty: ${this.bogdle.state.free.difficulty}</h6>`
+  var gameMode = this.bogdle.gameMode
+  var html = ''
+
+  if (gameMode == 'free') {
+    html += `<h6>Difficulty: ${this.bogdle.state.free.difficulty}</h6>`
+  }
 
   html += '<ul>'
 
@@ -1185,7 +1250,11 @@ function _displayGameProgress() {
 }
 // modal: debug: pretty display of words in solution
 function _displayGameSolution() {
-  var html = `<h6>Difficulty: ${this.bogdle.state.free.difficulty}</h6>`
+  var html = ''
+
+  // display FREE solution
+  html += `<h3>Game Mode: FREE</h3>`
+  html += `<h5>Difficulty: ${this.bogdle.state.free.difficulty}</h5>`
 
   html += '<ul>'
 
@@ -1208,6 +1277,31 @@ function _displayGameSolution() {
       html += words.join(', ')
       html += `</li></ul></li>`
     }
+  })
+
+  html += '</ul>'
+
+  // display DAILY solution
+  html += `<h3>Game Mode: DAILY</h3>`
+  html += '<ul>'
+
+  // check each length category (max...3, etc.)
+  Object.keys(this.bogdle.config.daily.solutionSet).reverse().forEach(key => {
+    var words = []
+
+    html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
+
+    // create sorted array of each length category's words
+    var sortedArr = Array.from(Object.keys(this.bogdle.config.daily.solutionSet[key])).sort()
+
+    // go through each word in each category
+    sortedArr.forEach(word => {
+      words.push(word.toUpperCase())
+    })
+
+    // add all the words to the markup
+    html += words.join(', ')
+    html += `</li></ul></li>`
   })
 
   html += '</ul>'

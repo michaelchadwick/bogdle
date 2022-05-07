@@ -1,6 +1,4 @@
 const LS_STATE_DAILY_KEY = 'bogdle-state-daily'
-const LS_STATS_DAILY_KEY = 'bogdle-stats-daily'
-
 const LS_STATE_FREE_KEY = 'bogdle-state-free'
 
 const LS_SETTINGS_KEY = 'bogdle-settings'
