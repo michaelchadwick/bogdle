@@ -1102,7 +1102,7 @@ function _resizeBoard() {
   // console.log('docDocElemClientHeight', document.documentElement.clientHeight)
   // console.log('docDocElemScrollHeight', document.documentElement.scrollHeight)
 
-  var boardHeight = boardContainer.clientHeight + 40
+  var boardHeight = boardContainer.clientHeight + 20
 
   // console.log('boardHeight', boardHeight)
 
