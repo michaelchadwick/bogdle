@@ -1481,7 +1481,7 @@ function _getMaxWordLength() {
 
 // handle both clicks and touches outside of modals
 function _handleClickTouch(event) {
-  var dialog = document.getElementsByClassName('thin-ui-modal-dialog')[0]
+  var dialog = document.getElementsByClassName('modal-dialog')[0]
 
   if (dialog) {
     var isConfirm = dialog.classList.contains('modal-confirm')

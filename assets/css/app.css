@@ -61,7 +61,7 @@ button {
   padding: 0;
   text-transform: uppercase;
   user-select: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
   button:disabled {
     background-color: #eee;
@@ -327,7 +327,6 @@ header {
  * GAME
  */
 section#game {
-  /* background-color: #b9ffad; */
   display: flex;
   flex-direction: column;
   height: calc(100% - 40px); /* whole screen except for header */
@@ -407,7 +406,6 @@ section#game {
   }
     section#game #guess-container #guess {
       animation-duration: 700ms;
-      /* background-color: rgb(255, 189, 189); */
       color: #364333;
       font-size: 1em;
       line-height: 0.7em;
@@ -466,7 +464,6 @@ section#game {
   }
       section#game #hint-container button {
         background-color: transparent;
-        /* border: 1px solid #529952; */
         border: 1px solid #888;
         height: 30px;
       }

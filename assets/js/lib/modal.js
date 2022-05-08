@@ -58,7 +58,7 @@ class Modal {
   _createModal(modalType) {
     // Background dialog
     this.modal = document.createElement('dialog');
-    this.modal.classList.add('thin-ui-modal-dialog');
+    this.modal.classList.add('modal-dialog');
     if (modalType == 'confirm' || modalType == 'confirm-debug') {
       this.modal.classList.add('modal-confirm');
     }
@@ -69,7 +69,7 @@ class Modal {
 
     // Message window
     const window = document.createElement('div');
-    window.classList.add('thin-ui-modal-window');
+    window.classList.add('modal-window');
     window.classList.add('animate__animated', 'animate__fadeInUp');
 
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
@@ -81,7 +81,7 @@ class Modal {
     if (modalType != 'temp') {
       // Title
       const title = document.createElement('div');
-      title.classList.add('thin-ui-modal-title');
+      title.classList.add('modal-title');
       if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
         title.classList.add('debug');
       }
@@ -97,7 +97,7 @@ class Modal {
         this.closeButton = document.createElement('button');
         this.closeButton.type = 'button';
         this.closeButton.innerHTML = '&times;';
-        this.closeButton.classList.add('thin-ui-modal-close');
+        this.closeButton.classList.add('modal-close');
         this.closeButton.addEventListener('click', () => {
           this._destroyModal();
         });
@@ -107,7 +107,7 @@ class Modal {
 
     // Main text
     const text = document.createElement('div');
-    text.classList.add('thin-ui-modal-text');
+    text.classList.add('modal-text');
     text.innerHTML = this.modalText;
     window.appendChild(text);
 
@@ -115,7 +115,7 @@ class Modal {
     if (modalType == 'confirm' || modalType == 'confirm-debug') {
       // Accept and cancel button group
       const buttonGroup = document.createElement('div');
-      buttonGroup.classList.add('thin-ui-modal-button-group');
+      buttonGroup.classList.add('modal-button-group');
       if (modalType == 'confirm-debug') {
         buttonGroup.classList.add('debug');
       }
@@ -124,18 +124,18 @@ class Modal {
       // Cancel button
       this.cancelButton = document.createElement('button');
       this.cancelButton.type = 'button';
-      this.cancelButton.classList.add('thin-ui-button');
-      this.cancelButton.classList.add('thin-ui-button-secondary');
-      this.cancelButton.classList.add('thin-ui-button-regular');
+      this.cancelButton.classList.add('modal-button');
+      this.cancelButton.classList.add('modal-button-secondary');
+      this.cancelButton.classList.add('modal-button-regular');
       this.cancelButton.textContent = this.cancelText;
       buttonGroup.appendChild(this.cancelButton);
 
       // Accept button
       this.acceptButton = document.createElement('button');
       this.acceptButton.type = 'button';
-      this.acceptButton.classList.add('thin-ui-button');
-      this.acceptButton.classList.add('thin-ui-button-primary');
-      this.acceptButton.classList.add('thin-ui-button-regular');
+      this.acceptButton.classList.add('modal-button');
+      this.acceptButton.classList.add('modal-button-primary');
+      this.acceptButton.classList.add('modal-button-regular');
       this.acceptButton.textContent = this.acceptText;
       buttonGroup.appendChild(this.acceptButton);
     }
