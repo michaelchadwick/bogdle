@@ -977,6 +977,7 @@ function _checkGuess() {
           }
         } else {
           // player guessed an invalid word (not on list)
+          this.bogdle.dom.interactive.btnGuessLookup.disabled = true
         }
       }
     })
@@ -1065,6 +1066,7 @@ function _shuffleTiles() {
 function _resetGuess() {
   this.bogdle.dom.status.guess.innerHTML = ''
   this.bogdle.dom.status.guess.classList.remove('valid')
+  this.bogdle.dom.interactive.btnGuessLookup.disabled = true
 }
 // remove last letter in DOM guess div
 function _removeLastLetter() {
