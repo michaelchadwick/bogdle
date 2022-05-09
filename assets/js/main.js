@@ -1495,17 +1495,11 @@ function _handleClickTouch(event) {
 
 // add event listeners to DOM
 function _addEventListeners() {
-  // + create new solution
-  this.bogdle.dom.interactive.debug.btnCreateNew.addEventListener('click', () => {
-    _confirmCreateNew()
-  })
-
-  // 📕 dictionary lookup
-  this.bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
-    if (this.bogdle.dom.status.guess.classList.contains('valid')) {
-      modalOpen('dictionary')
-    }
-  })
+  // {} header icons to open modals
+  this.bogdle.dom.interactive.btnNav.addEventListener('click', () => this.bogdle.dom.status.navOverlay.classList.toggle('show'))
+  this.bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
+  this.bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
+  this.bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
 
   // [A] tile interaction
   Array.from(this.bogdle.dom.interactive.tiles).forEach(tile => {
@@ -1513,11 +1507,6 @@ function _addEventListeners() {
       _onTileClick(t)
     })
   })
-
-  // {} buttons to open modals
-  this.bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
-  this.bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
-  this.bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
 
   // ❔ hint
   this.bogdle.dom.interactive.btnHint.addEventListener('click', () => {
@@ -1552,6 +1541,18 @@ function _addEventListeners() {
   // := show current game word list progress
   this.bogdle.dom.interactive.btnShowProgress.addEventListener('click', () => {
     modalOpen('show-progress')
+  })
+
+  // + create new solution
+  this.bogdle.dom.interactive.debug.btnCreateNew.addEventListener('click', () => {
+    _confirmCreateNew()
+  })
+
+  // 📕 dictionary lookup
+  this.bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
+    if (this.bogdle.dom.status.guess.classList.contains('valid')) {
+      modalOpen('dictionary')
+    }
   })
 
   // local debug buttons

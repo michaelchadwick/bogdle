@@ -4,6 +4,7 @@ this.bogdle = this.bogdle || {}
 this.bogdle.dom = {}
 // DOM > interactive elements
 this.bogdle.dom.interactive = {
+  "btnNav": document.getElementById('button-nav'),
   "btnHelp": document.getElementById('button-help'),
   "btnStats": document.getElementById('button-stats'),
   "btnSettings": document.getElementById('button-settings'),
@@ -33,6 +34,7 @@ this.bogdle.dom.interactive.debug = {
 }
 // DOM > status elements
 this.bogdle.dom.status = {}
+this.bogdle.dom.status.navOverlay = document.getElementById('nav-overlay'),
 this.bogdle.dom.status.guess = document.getElementById('guess')
 this.bogdle.dom.status.score = document.getElementById('score-container')
 this.bogdle.dom.status.scoreGuessed = document.getElementById('score-guessed')
