@@ -251,6 +251,8 @@ this.bogdle.init = async () => {
   // if local dev, show debug stuff
   if (this.bogdle.env == 'local') {
     _initDebug()
+
+    document.title = '(local) ' + document.title
   }
 
   _initAudio()
