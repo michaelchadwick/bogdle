@@ -797,10 +797,26 @@ async function _resetProgress() {
 }
 
 // change a setting (gear icon) value
-async function _changeSetting(setting, event) {
+async function _changeSetting(setting, value) {
   switch (setting) {
+    // case 'gameMode':
+    //   var target = value.target
+
+    //   if (value == 'daily') {
+    //     try {
+    //       const response = await fetch('scripts/daily.php')
+    //       const responseWord = await response.text()
+
+    //       if (responseWord) {
+    //         console.log('daily word to use', responseWord)
+    //       }
+    //     } catch (e) {
+    //       console.error('could not get daily word', e)
+    //     }
+    //   }
+    //   break
     case 'difficulty':
-      var target = event.target
+      var target = value.target
       var oldDiff = this.bogdle.state.free.difficulty
       var newDiff = target.dataset.diffid
 
@@ -829,7 +845,7 @@ async function _changeSetting(setting, event) {
 
             // start a new game with newDiff (but using current seedWord)
             _loadExistingSolutionSet(this.bogdle.config.free.seedWord, true)
-          } // if not confirmed, reset DOM radio back to original setting
+          }
           else {
             // document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
           }
@@ -1496,7 +1512,7 @@ function _handleClickTouch(event) {
 // add event listeners to DOM
 function _addEventListeners() {
   // {} header icons to open modals
-  this.bogdle.dom.interactive.btnNav.addEventListener('click', () => this.bogdle.dom.status.navOverlay.classList.toggle('show'))
+  // this.bogdle.dom.interactive.btnNav.addEventListener('click', () => this.bogdle.dom.status.navOverlay.classList.toggle('show'))
   this.bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
   this.bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
   this.bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
