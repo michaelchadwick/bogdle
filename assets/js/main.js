@@ -526,7 +526,7 @@ async function _createNewSolutionSet(newWord = null) {
   this.bogdle.state.free.lastPlayedTime = null
 
   // dictionary to pull from
-  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${__getMaxWordLength()}.json`
 
   this.bogdle.config.free.letters = []
 
@@ -584,8 +584,8 @@ async function _createNewSolutionSet(newWord = null) {
       * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
       *********************************************************************/
 
-      // get a range of object keys from 3.._getMaxWordLength()
-      var categories = Array.from({length: _getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
+      // get a range of object keys from 3..__getMaxWordLength()
+      var categories = Array.from({length: __getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
 
       // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
       categories.forEach(category => {
@@ -624,11 +624,11 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
   // console.log('loading existing solution set...')
 
   // dictionary to pull from
-  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${__getMaxWordLength()}.json`
 
   this.bogdle.config.free.letters = []
 
-  switch (_getMaxWordLength()) {
+  switch (__getMaxWordLength()) {
     case 3: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_3; break
     case 5: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_5; break
     case 7: this.bogdle.config.free.solutionSet = EMPTY_OBJ_SET_7; break
@@ -680,8 +680,8 @@ async function _loadExistingSolutionSet(newWord = null, isNewDiff = false) {
       * turn into object of objects (e.g. {"3":{'aaa':0},"4":{'aaaa':0}}) *
       *********************************************************************/
 
-      // get a range of object keys from 3.._getMaxWordLength()
-      var categories = Array.from({length: _getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
+      // get a range of object keys from 3..__getMaxWordLength()
+      var categories = Array.from({length: __getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
 
       // zero them all out because setting it to the EMPTY_OBJ_SET does not work :'(
       categories.forEach(category => {
@@ -780,7 +780,7 @@ async function _resetProgress() {
     }
   }
 
-  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${_getMaxWordLength()}.json`
+  this.bogdle.config.free.dictionary = `./assets/json/${WORD_SOURCES[DIFFICULTY[this.bogdle.state.free.difficulty]]}/words_3-${__getMaxWordLength()}.json`
 
   // save those defaults to local storage
   _saveGameState()
@@ -899,7 +899,7 @@ function _submitWord(word) {
       if (typeof this.bogdle.config.free.solutionSet[word.length][word] != 'undefined') {
         if (this.bogdle.config.free.solutionSet[word.length][word] !== 1) {
 
-          if (word.length == _getMaxWordLength()) {
+          if (word.length == __getMaxWordLength()) {
             audioPlay(`doo-dah-doo`)
           } else {
             // choose haaahs[1-3] at random and play
@@ -983,7 +983,7 @@ function _checkGuess() {
 
     // player guessed a valid word
     Object.keys(this.bogdle.config.free.solutionSet).forEach(key => {
-      if (parseInt(key) <= _getMaxWordLength()) {
+      if (parseInt(key) <= __getMaxWordLength()) {
         if (Object.keys(this.bogdle.config.free.solutionSet[key]).includes(word)) {
           this.bogdle.dom.status.guess.classList.toggle('valid')
           this.bogdle.dom.interactive.btnGuessLookup.disabled = false
@@ -1178,7 +1178,7 @@ function _displayGameProgress() {
   // check each length category (max...3, etc.)
   // total up words guessed in each
   Object.keys(this.bogdle.config.free.solutionSet).reverse().forEach(category => {
-    if (parseInt(category) <= _getMaxWordLength()) {
+    if (parseInt(category) <= __getMaxWordLength()) {
       html += `<li><span class="solution-category">${category}-LETTER</span>`
 
       var categoryEntries = Object.entries(this.bogdle.config.free.solutionSet[category])
@@ -1356,7 +1356,7 @@ function _displayGameSolution() {
 
   // check each length category (max...3, etc.)
   Object.keys(this.bogdle.config.free.solutionSet).reverse().forEach(key => {
-    if (key <= _getMaxWordLength()) {
+    if (key <= __getMaxWordLength()) {
       var words = []
 
       html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
@@ -1405,20 +1405,7 @@ function _displayGameSolution() {
   return html
 }
 
-// get max word length via difficulty setting
-function _getMaxWordLength() {
-  var diff = this.bogdle.state.free.difficulty
-
-  // console.log('diff', diff)
-
-  var max = DIFF_TO_LENGTH[diff]
-
-  // console.log('max', max)
-
-  return max
-}
-
-// hint functions
+// initialize hint system when button clicked
 function _initHint() {
   // console.log('checking for hintWord...')
 
@@ -1439,6 +1426,7 @@ function _initHint() {
 
   _cycleHint()
 }
+// continually add letters to hint until max reached
 function _cycleHint() {
   // console.log('cycling hintWord status...')
 
@@ -1478,6 +1466,7 @@ function _cycleHint() {
     this.bogdle.dom.interactive.btnHint.setAttribute('disabled', true)
   }
 }
+// change not-a-button hint back to button hint
 function _clearHint() {
   // console.log('clearing hintWord...')
 
@@ -1490,11 +1479,6 @@ function _clearHint() {
   this.bogdle.config.free.hintWord = null
   this.bogdle.config.free.tempWord = []
   this.bogdle.config.free.tempWordCounter = 0
-}
-
-// helper method to get game difficulty as a max letter length
-function _getMaxWordLength() {
-  return DIFF_TO_LENGTH[this.bogdle.state.free.difficulty]
 }
 
 // handle both clicks and touches outside of modals
@@ -1672,6 +1656,7 @@ async function __getNewStartWord() {
   return this.seedWord
 }
 
+// get array of words not yet guessed for hint system
 function __getUnGuessedWords() {
   var words = this.bogdle.config.free.solutionSet
   var wordsLeft = []
@@ -1707,7 +1692,7 @@ function __getSolutionSize() {
   let solutionSize = 0
 
   Object.keys(this.bogdle.config.free.solutionSet).forEach(category => {
-    if (parseInt(category) <= _getMaxWordLength()) {
+    if (parseInt(category) <= __getMaxWordLength()) {
       categorySize = Object.keys(this.bogdle.config.free.solutionSet[category]).length
       solutionSize += categorySize
     }
@@ -1717,6 +1702,18 @@ function __getSolutionSize() {
 
   return solutionSize
 }
+
+// helper method to get game difficulty as a max letter length
+function __getMaxWordLength() {
+  const diff = this.bogdle.state.free.difficulty
+  const max = DIFF_TO_LENGTH[diff]
+
+  return max
+}
+
+/************************************************************************
+ * ON PAGE LOAD, DO THIS *
+ ************************************************************************/
 
 // set up game
 this.bogdle.init()
