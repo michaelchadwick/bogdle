@@ -1,5 +1,6 @@
 /* green: #529952 */
 /* light: #91c791 */
+/* dark:  #2c652c */
 /* debug: #715ec7 */
 
 * {
@@ -257,11 +258,12 @@ header {
       display: flex;
     }
       header #nav-overlay #nav-content {
-        border: 1px solid #000;
+        animation: SlideRight 200ms;
+        background-color: #fff;
         border-radius: 0;
         box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
         box-sizing: border-box;
-        margin-top: 41px;
+        margin-top: 51px;
         max-height: calc(100% - 41px);
         max-width: 500px;
         overflow-y: auto;
@@ -269,12 +271,67 @@ header {
         position: relative;
         width: 100%;
       }
-        header #nav-overlay #nav-content .close-icon-nav {
+      @media (min-width: 415px) {
+        header #nav-overlay #nav-content {
+          width: 325px;
+        }
+      }
+        header #nav-overlay #nav-content a {
+          color: #111;
+          text-decoration: none;
+        }
+
+        header #nav-overlay #nav-content .container {
+          align-items: normal;
+          padding: 0;
+        }
+          header #nav-overlay #nav-content .container .nav-header {
+            font-size: 20px;
+            padding-bottom: 18px;
+            padding-left: 18px;
+            padding-top: 18px;
+          }
+          header #nav-overlay #nav-content .container .nav-list a {
+            align-items: center;
+            background-color: transparent;
+            display: flex;
+            font-size: 16px;
+            font-weight: bold;
+            height: 30px;
+            justify-content: left;
+            padding: 4px 0 4px 18px;
+          }
+          header #nav-overlay #nav-content .container .nav-list a:hover {
+            background-color: #91c791;
+          }
+        header #nav-overlay #nav-content #button-nav-close {
+          font-size: 20px;
           height: 24px;
-          position: relative;
+          position: absolute;
           right: 16px;
           top: 16px;
           width: 24px;
+        }
+        header #nav-overlay #nav-content .nav-footer {
+          display: flex;
+        }
+        #footer-neb-host {
+          background: #529952;
+          border-top: 2px solid #2c652c;
+          bottom: 0;
+          color: #111;
+          font-family: 'Consolas', sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+          height: 18px;
+          left: 0;
+          letter-spacing: initial;
+          margin-top: 20px;
+          padding: 10px 18px;
+          position: absolute;
+          right: 0;
+          text-align: left;
+          z-index: 2
         }
 
   header #debug-buttons {
@@ -578,4 +635,29 @@ section#game {
 .disabled {
   color: #888 !important;
   cursor: default;
+}
+
+/* animation */
+@keyFrames SlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+@keyFrames SlideLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
 }

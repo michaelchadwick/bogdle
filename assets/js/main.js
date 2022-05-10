@@ -1483,6 +1483,8 @@ function _clearHint() {
 
 // handle both clicks and touches outside of modals
 function _handleClickTouch(event) {
+  console.log('event', event.target)
+
   var dialog = document.getElementsByClassName('modal-dialog')[0]
 
   if (dialog) {
@@ -1493,12 +1495,21 @@ function _handleClickTouch(event) {
       dialog.remove()
     }
   }
+
+  if (event.target == this.bogdle.dom.status.navOverlay) {
+    this.bogdle.dom.status.navOverlay.classList.toggle('show')
+  }
 }
 
 // add event listeners to DOM
 function _addEventListeners() {
   // {} header icons to open modals
-  // this.bogdle.dom.interactive.btnNav.addEventListener('click', () => this.bogdle.dom.status.navOverlay.classList.toggle('show'))
+  this.bogdle.dom.interactive.btnNav.addEventListener('click', () => {
+    this.bogdle.dom.status.navOverlay.classList.toggle('show')
+  })
+  this.bogdle.dom.interactive.btnNavClose.addEventListener('click', () => {
+    this.bogdle.dom.status.navOverlay.classList.toggle('show')
+  })
   this.bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
   this.bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
   this.bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
