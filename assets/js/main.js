@@ -252,7 +252,7 @@ this.bogdle.init = async () => {
   if (this.bogdle.env == 'local') {
     _initDebug()
 
-    document.title = '(local) ' + document.title
+    document.title = '(LH) ' + document.title
   }
 
   _initAudio()
