@@ -16,7 +16,7 @@ body {
   background-color: #fff;
   color: #111;
   font-family: 'Changa', sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   font-size-adjust: 0.5;
   font-weight: 300;
   height: 100%;
@@ -414,8 +414,12 @@ header {
   header .menu-right {
     display: flex;
     width: 70px;
-    justify-content: flex-end;
   }
+    header .menu-right button#button-settings {
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 0;
+    }
 
 /*
  * GAME

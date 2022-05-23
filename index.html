@@ -130,14 +130,15 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
   <section id="game">
     <div id="mode-container">
 
       <div id="gamemode-container" class="setting-row">
-        <a href="#" id="gamemode-0" class="disabled"
+        <a href="#" id="gamemode-0"
           data-active="false"
           date-gamemodeid="daily"
-          onclick="_changeSetting('gameMode', 'daily')"
+          onclick="_changeSetting('gameMode', 'daily', event)"
         >Daily</a>
 
         &nbsp;/&nbsp;
@@ -145,7 +146,7 @@
         <a href="#" id="gamemode-1"
           data-active="true"
           date-gamemodeid="free"
-          onclick="_changeSetting('gameMode', 'free')"
+          onclick="_changeSetting('gameMode', 'free', event)"
         >Free Play</a>
       </div>
 
@@ -153,7 +154,7 @@
         <a href="#" id="diff-kid"
           data-active="false"
           data-diffid="kid"
-          onclick="_changeSetting('difficulty', event)"
+          onclick="_changeSetting('difficulty', '', event)"
         >Kid</a>
 
         &nbsp;/&nbsp;
@@ -161,7 +162,7 @@
         <a href="#" id="diff-easy"
           data-active="false"
           data-diffid="easy"
-          onclick="_changeSetting('difficulty', event)"
+          onclick="_changeSetting('difficulty', '', event)"
         >Easy</a>
 
         &nbsp;/&nbsp;
@@ -169,7 +170,7 @@
         <a href="#" id="diff-medium"
           data-active="false"
           data-diffid="medium"
-          onclick="_changeSetting('difficulty', event)"
+          onclick="_changeSetting('difficulty', '', event)"
         >Medium</a>
 
         &nbsp;/&nbsp;
@@ -177,7 +178,7 @@
         <a href="#" id="diff-normal"
           data-active="true"
           data-diffid="normal"
-          onclick="_changeSetting('difficulty', event)"
+          onclick="_changeSetting('difficulty', '', event)"
         >Normal</a>
       </div>
 
@@ -251,13 +252,18 @@
   <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
-  <script src="./assets/js/lib/global.js"></script>
-  <script src="./assets/js/lib/dom.js"></script>
-  <script src="./assets/js/lib/animation.js"></script>
-  <script src="./assets/js/lib/audio.js"></script>
-  <!--<script src="./assets/js/lib/bogdle.js"></script>-->
-  <script src="./assets/js/lib/findle.js"></script>
-  <script src="./assets/js/lib/modal.js"></script>
-  <script src="./assets/js/main.js"></script>
+  <!-- JAVASCRIPTS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/app/constants.js"></script>
+  <script src="./assets/js/app/dom.js"></script>
+  <script src="./assets/js/app/modal.js"></script>
+  <!--
+  <script src="./assets/js/app/bogdle.js"></script>
+  -->
+  <script src="./assets/js/app/findle.js"></script>
+  <script src="./assets/js/app/fx/animation.js"></script>
+  <script src="./assets/js/app/fx/audio.js"></script>
+  <script src="./assets/js/app/main.js"></script>
 </body>
 </html>

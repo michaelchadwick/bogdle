@@ -52,7 +52,6 @@ async function useCache(url) {
 
   try {
     const audioBuffer = await getAudio(CACHE_AUDIO_KEY, url)
-    console.log('audioBuffer', audioBuffer)
 
     gainNode.gain.value = 0.3;
     source.buffer = await context.decodeAudioData(audioBuffer);
@@ -86,7 +85,7 @@ async function useFetch(url) {
 }
 
 const audioPlay = async sound => {
-  if (this.bogdle.settings.noisy) {
+  if (Bogdle.settings.noisy) {
     const path = '/assets/audio';
     const format = 'wav';
     const url = `${path}/${sound}.${format}`

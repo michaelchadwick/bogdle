@@ -1,3 +1,6 @@
+/* constants */
+/* set any global constants */
+
 const LS_STATE_DAILY_KEY = 'bogdle-state-daily'
 const LS_STATE_FREE_KEY = 'bogdle-state-free'
 
