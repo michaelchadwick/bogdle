@@ -1,3 +1,7 @@
+/* main */
+/* app entry point and main functions */
+/* global Bogdle */
+
 // settings: saved in LOCAL STORAGE
 Bogdle.settings = {
   "darkMode": false,
@@ -173,7 +177,7 @@ async function modalOpen(type) {
       )
 
 
-      _loadGlobalSettings()
+      _loadSettings()
 
       break
 
@@ -352,7 +356,7 @@ async function _loadGameState() {
   }
 
   // load global (gear icon) settings
-  _loadGlobalSettings()
+  _loadSettings()
 
   _saveGameState()
 
@@ -396,25 +400,8 @@ function _saveGameState() {
   }
 }
 
-// save a setting (gear icon) to localStorage
-function _saveGlobalSetting(setting, value) {
-  // console.log('saving setting to LS...', setting, value)
-
-  var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
-
-  // console.log('current settings', settings)
-
-  // set temp obj that will go to LS
-  settings[setting] = value
-  // set internal code model
-  Bogdle.settings[setting] = value
-
-  localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
-
-  // console.log('!global setting saved!', Bogdle.settings)
-}
 // load settings (gear icon) from localStorage
-function _loadGlobalSettings() {
+function _loadSettings() {
   // console.log('loading global settings from LS...')
 
   // STATE->GAMEMODE
@@ -473,6 +460,122 @@ function _loadGlobalSettings() {
 
   // console.log('loaded global settings from LS!', Bogdle.settings)
 }
+// change a setting (gear icon or difficulty) value
+async function _changeSetting(setting, value, event) {
+  switch (setting) {
+    case 'gameMode':
+      var target = value.target
+
+      console.log('event', event)
+
+      if (value == 'daily') {
+        try {
+          const response = await fetch('scripts/daily.php')
+          const responseWord = await response.text()
+
+          if (responseWord) {
+            console.log(`Word for ${_todaysDate()}:`, responseWord)
+          } else {
+            console.error('daily word bork', responseWord)
+          }
+        } catch (e) {
+          console.error('could not get daily word', e)
+        }
+      }
+
+      break
+    case 'difficulty':
+      var target = value.target
+      var gameMode = 'free'
+      var oldDiff = Bogdle.state[gameMode].difficulty
+      var newDiff = target.dataset.diffid
+
+      // don't prompt unless new difficulty
+      if (newDiff != oldDiff) {
+        // make sure user wants to change difficulty, as it loses all progress
+        var mySubConfirm = new Modal('confirm', 'Change Difficulty?',
+          'Changing the difficulty will start a new puzzle, and the current one will be lost. Are you sure you want to do this?',
+          'Yes, change the difficulty',
+          'No, never mind'
+        )
+
+        try {
+          // wait for modal confirmation
+          var confirmed = await mySubConfirm.question()
+
+          // if confirmed, set new difficulty and reset game
+          if (confirmed) {
+            // set internal code model
+            Bogdle.state[gameMode].difficulty = newDiff
+
+            // set dom status
+            document.getElementById(`diff-${oldDiff}`).dataset.active = false
+            document.getElementById(target.id).dataset.active = true
+
+            _clearHint()
+
+            // start a new game with newDiff (but using current seedWord)
+            _loadExistingSolutionSet(Bogdle.config[gameMode].seedWord, true)
+          }
+          else {
+            // document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
+          }
+        } catch (err) {
+          console.error('difficulty change failed', err)
+        }
+      }
+
+      break
+    case 'darkMode':
+      var st = document.getElementById('button-setting-dark-mode').dataset.status
+
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'true'
+        document.body.classList.add('dark-mode')
+
+        _saveSetting('darkMode', true)
+      } else {
+        document.getElementById('button-setting-dark-mode').dataset.status = 'false'
+        document.body.classList.remove('dark-mode')
+
+        _saveSetting('darkMode', false)
+      }
+
+      break
+    case 'noisy':
+      var st = document.getElementById('button-setting-noisy').dataset.status
+
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-noisy').dataset.status = 'true'
+
+        _saveSetting('noisy', true)
+      } else {
+        document.getElementById('button-setting-noisy').dataset.status = 'false'
+
+        _saveSetting('noisy', false)
+      }
+
+      break
+  }
+}
+// save a setting (gear icon) to localStorage
+function _saveSetting(setting, value) {
+  // console.log('saving setting to LS...', setting, value)
+
+  var settings = JSON.parse(localStorage.getItem(LS_SETTINGS_KEY))
+
+  // console.log('current settings', settings)
+
+  // set temp obj that will go to LS
+  settings[setting] = value
+  // set internal code model
+  Bogdle.settings[setting] = value
+
+  localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify(settings))
+
+  // console.log('!global setting saved!', Bogdle.settings)
+}
+
 
 // add debug stuff if local
 function _initDebug() {
@@ -802,105 +905,6 @@ async function _resetFreeProgress() {
 
   // open the help modal
   // modalOpen('start')
-}
-
-// change a setting (gear icon or difficulty) value
-async function _changeSetting(setting, value, event) {
-  switch (setting) {
-    case 'gameMode':
-      var target = value.target
-
-      console.log('event', event)
-
-      if (value == 'daily') {
-        try {
-          const response = await fetch('scripts/daily.php')
-          const responseWord = await response.text()
-
-          if (responseWord) {
-            console.log(`Word for ${_todaysDate()}:`, responseWord)
-          } else {
-            console.error('daily word bork', responseWord)
-          }
-        } catch (e) {
-          console.error('could not get daily word', e)
-        }
-      }
-
-      break
-    case 'difficulty':
-      var target = value.target
-      var gameMode = 'free'
-      var oldDiff = Bogdle.state[gameMode].difficulty
-      var newDiff = target.dataset.diffid
-
-      // don't prompt unless new difficulty
-      if (newDiff != oldDiff) {
-        // make sure user wants to change difficulty, as it loses all progress
-        var mySubConfirm = new Modal('confirm', 'Change Difficulty?',
-          'Changing the difficulty will start a new puzzle, and the current one will be lost. Are you sure you want to do this?',
-          'Yes, change the difficulty',
-          'No, never mind'
-        )
-
-        try {
-          // wait for modal confirmation
-          var confirmed = await mySubConfirm.question()
-
-          // if confirmed, set new difficulty and reset game
-          if (confirmed) {
-            // set internal code model
-            Bogdle.state[gameMode].difficulty = newDiff
-
-            // set dom status
-            document.getElementById(`diff-${oldDiff}`).dataset.active = false
-            document.getElementById(target.id).dataset.active = true
-
-            _clearHint()
-
-            // start a new game with newDiff (but using current seedWord)
-            _loadExistingSolutionSet(Bogdle.config[gameMode].seedWord, true)
-          }
-          else {
-            // document.querySelector(`#container-difficulty input[data-diffid="${oldDiff}"]`).checked = true
-          }
-        } catch (err) {
-          console.error('difficulty change failed', err)
-        }
-      }
-
-      break
-    case 'darkMode':
-      var st = document.getElementById('button-setting-dark-mode').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-dark-mode').dataset.status = 'true'
-        document.body.classList.add('dark-mode')
-
-        _saveGlobalSetting('darkMode', true)
-      } else {
-        document.getElementById('button-setting-dark-mode').dataset.status = 'false'
-        document.body.classList.remove('dark-mode')
-
-        _saveGlobalSetting('darkMode', false)
-      }
-
-      break
-    case 'noisy':
-      var st = document.getElementById('button-setting-noisy').dataset.status
-
-      if (st == '' || st == 'false') {
-        document.getElementById('button-setting-noisy').dataset.status = 'true'
-
-        _saveGlobalSetting('noisy', true)
-      } else {
-        document.getElementById('button-setting-noisy').dataset.status = 'false'
-
-        _saveGlobalSetting('noisy', false)
-      }
-
-      break
-  }
 }
 
 // submit a guess
