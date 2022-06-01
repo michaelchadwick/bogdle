@@ -136,7 +136,7 @@
 
       <div id="gamemode-container" class="setting-row">
         <a href="#" id="gamemode-0"
-          data-active="false"
+          data-active="true"
           date-gamemodeid="daily"
           onclick="_changeSetting('gameMode', 'daily', event)"
         >Daily</a>
@@ -144,7 +144,7 @@
         &nbsp;/&nbsp;
 
         <a href="#" id="gamemode-1"
-          data-active="true"
+          data-active="false"
           date-gamemodeid="free"
           onclick="_changeSetting('gameMode', 'free', event)"
         >Free Play</a>
@@ -242,7 +242,7 @@
         <button id="button-guess-lookup" title="Define valid word">
           <i class="fa-solid fa-book"></i>
         </button>
-        <button id="button-create-new" title="Create new puzzle">
+        <button id="button-create-new" title="Create new puzzle" disabled>
           <i class="fa-solid fa-circle-plus"></i>
         </button>
       </div>

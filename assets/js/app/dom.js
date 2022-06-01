@@ -17,6 +17,7 @@ Bogdle.dom.interactive = {
   "btnShuffle": document.getElementById('button-shuffle'),
   "btnShowProgress": document.getElementById('button-show-progress'),
   "btnGuessLookup": document.getElementById('button-guess-lookup'),
+  "btnCreateNew": document.getElementById('button-create-new'),
   "btnHint": document.getElementById('button-hint'),
   "btnHintReset": document.getElementById('button-hint-reset'),
   "tiles": document.getElementsByClassName('tile')
@@ -24,7 +25,6 @@ Bogdle.dom.interactive = {
 // DOM > interactive elements (debug)
 Bogdle.dom.interactive.debug = {
   "all": document.getElementById('debug-buttons'),
-  "btnCreateNew": document.getElementById('button-create-new'),
   "btnShowList": document.getElementById('button-show-solution'),
   "btnResetProgress": document.getElementById('button-reset-progress'),
   "btnShowConfig": document.getElementById('button-show-config'),

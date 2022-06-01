@@ -76,7 +76,7 @@ class Findle {
         cur['word'] = true
       })
 
-      // find all valid, unique words found in start word
+      // find all valid, unique words found in seed word
       var validWords = this.findWords(this.word)
         .filter((value, index, self) => self.indexOf(value) === index)
 
@@ -108,7 +108,7 @@ class Findle {
 }
 
 async function createFindle(word, dictionary, config) {
-  // console.log(`creating new Findle for '${word.toUpperCase()}'`)
+  // console.log(`creating new Findle for '${word.toUpperCase()}' with ${dictionary} file...`)
 
   // create new empty Findle instance
   var findleInstance = new Findle(word, dictionary, config)
