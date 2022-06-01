@@ -1,3 +1,7 @@
+/* audio */
+/* sound playing mechanisms */
+/* global Bogdle */
+
 // Try to get data from the cache, but fall back to fetching it live.
 async function getAudio(cacheName, url) {
   let cachedAudio = await getCachedAudio(cacheName, url);
@@ -34,7 +38,7 @@ async function deleteOldCaches(currentCache) {
   const keys = await caches.keys();
 
   for (const key of keys) {
-    const isOurCache = CACHE_AUDIO_KEY;
+    const isOurCache = BOGDLE_CACHE_AUDIO_KEY;
 
     if (currentCache === key || !isOurCache) {
       continue;
@@ -51,7 +55,7 @@ async function useCache(url) {
   const source = context.createBufferSource();
 
   try {
-    const audioBuffer = await getAudio(CACHE_AUDIO_KEY, url)
+    const audioBuffer = await getAudio(BOGDLE_CACHE_AUDIO_KEY, url)
 
     gainNode.gain.value = 0.3;
     source.buffer = await context.decodeAudioData(audioBuffer);
@@ -84,7 +88,7 @@ async function useFetch(url) {
     source.start();
 }
 
-const audioPlay = async sound => {
+Bogdle.audioPlay = async sound => {
   if (Bogdle.settings.noisy) {
     const path = '/assets/audio';
     const format = 'wav';

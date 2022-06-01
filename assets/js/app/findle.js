@@ -104,23 +104,5 @@ class Findle {
     // this.solution[this.getMaxWordLength()].toString()].push(this.word)
   }
 
-  getMaxWordLength = () => DIFF_TO_LENGTH[this.config.difficulty]
-}
-
-async function createFindle(word, dictionary, config) {
-  // console.log(`creating new Findle for '${word.toUpperCase()}' with ${dictionary} file...`)
-
-  // create new empty Findle instance
-  var findleInstance = new Findle(word, dictionary, config)
-
-  // console.log('findleInstance', findleInstance)
-
-  // create a new solution to return
-  try {
-    await findleInstance.createSolution()
-    // return solution
-    return findleInstance.solution
-  } catch (err) {
-    console.error('Findle.createSolution() failed', err)
-  }
+  getMaxWordLength = () => BOGDLE_DIFF_TO_LENGTH[this.config.BOGDLE_DIFFICULTY]
 }

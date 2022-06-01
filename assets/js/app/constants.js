@@ -1,28 +1,28 @@
 /* constants */
-/* set any global constants */
+/* set any global app constants */
 
-const LS_STATE_DAILY_KEY = 'bogdle-state-daily'
-const LS_STATE_FREE_KEY = 'bogdle-state-free'
+const BOGDLE_STATE_DAILY_KEY = 'bogdle-state-daily'
+const BOGDLE_STATE_FREE_KEY = 'bogdle-state-free'
 
-const LS_SETTINGS_KEY = 'bogdle-settings'
+const BOGDLE_SETTINGS_KEY = 'bogdle-settings'
 
-const CACHE_AUDIO_KEY = 'bogdle-audio-cache'
-const DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
+const BOGDLE_CACHE_AUDIO_KEY = 'bogdle-audio-cache'
+const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 
-const ENV_PROD_URL = 'bogdle.fun'
+const BOGDLE_ENV_PROD_URL = 'bogdle.fun'
 
-const DIFFICULTY = {
+const BOGDLE_DIFFICULTY = {
   'kid': 'small',
   'easy': 'small',
   'medium': 'small',
   'normal': 'small'
 }
-const WORD_SOURCES = {
+const BOGDLE_WORD_SOURCES = {
   'small': '01_sm',
   'medium': '02_md',
   'large': '03_lg'
 }
-const DIFF_TO_LENGTH = {
+const BOGDLE_DIFF_TO_LENGTH = {
   'kid': 3,
   'easy': 5,
   'medium': 7,
