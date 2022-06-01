@@ -1,5 +1,19 @@
-// DOM
-Bogdle.dom = {}
+/* dom */
+/* grab references to dom elements */
+/* global $, Bogdle */
+
+// DOM > main divs/elements
+Bogdle.dom = {
+  "navOverlay": document.getElementById('nav-overlay'),
+  "navContent": document.getElementById('nav-content'),
+  "guess": document.getElementById('guess'),
+  "score": document.getElementById('score-container'),
+  "scoreGuessed": document.getElementById('score-guessed'),
+  "scoreGuessedOf": document.getElementById('score-guessed-of'),
+  "scoreTotal": document.getElementById('score-total'),
+  "scoreTotalWords": document.getElementById('score-total-words'),
+}
+
 // DOM > interactive elements
 Bogdle.dom.interactive = {
   "btnNav": document.getElementById('button-nav'),
@@ -29,15 +43,4 @@ Bogdle.dom.interactive.debug = {
   "btnResetProgress": document.getElementById('button-reset-progress'),
   "btnShowConfig": document.getElementById('button-show-config'),
   "btnShowState": document.getElementById('button-show-state')
-}
-// DOM > status elements
-Bogdle.dom.status = {
-  "navOverlay": document.getElementById('nav-overlay'),
-  "navContent": document.getElementById('nav-content'),
-  "guess": document.getElementById('guess'),
-  "score": document.getElementById('score-container'),
-  "scoreGuessed": document.getElementById('score-guessed'),
-  "scoreGuessedOf": document.getElementById('score-guessed-of'),
-  "scoreTotal": document.getElementById('score-total'),
-  "scoreTotalWords": document.getElementById('score-total-words'),
 }

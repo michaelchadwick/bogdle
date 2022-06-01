@@ -91,7 +91,7 @@ async function modalOpen(type) {
       break
 
     case 'dictionary':
-      var word = Bogdle.dom.status.guess.innerHTML
+      var word = Bogdle.dom.guess.innerHTML
 
       try {
         const response = await fetch(`${BOGDLE_DEFINE_LOOKUP_URL}/${word}`)
@@ -1043,7 +1043,7 @@ Bogdle._submitWord = function(word) {
 
           Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][word] = 1
 
-          Bogdle.dom.status.guess.classList.remove('first-guess')
+          Bogdle.dom.guess.classList.remove('first-guess')
 
           // do a dance
           Bogdle.animateCSS('#guess', 'tada')
@@ -1079,43 +1079,43 @@ Bogdle._submitWord = function(word) {
 // increase score
 Bogdle._increaseScore = function() {
   // get current score as an integer
-  var curGuessed = parseInt(Bogdle.dom.status.scoreGuessed.innerHTML)
+  var curGuessed = parseInt(Bogdle.dom.scoreGuessed.innerHTML)
   // increase and convert back to string
-  Bogdle.dom.status.scoreGuessed.innerHTML = (curGuessed + 1).toString()
+  Bogdle.dom.scoreGuessed.innerHTML = (curGuessed + 1).toString()
 }
 // set score
 Bogdle._setScore = function(guessed = 0) {
   // console.log('setting score...')
 
   // set UI elements
-  Bogdle.dom.status.scoreGuessed.innerHTML = guessed.toString()
-  Bogdle.dom.status.scoreGuessedOf.innerHTML = ' of '
-  Bogdle.dom.status.scoreTotal.innerHTML = Bogdle.__getSolutionSize().toString()
-  Bogdle.dom.status.scoreTotalWords.innerHTML = ' words'
+  Bogdle.dom.scoreGuessed.innerHTML = guessed.toString()
+  Bogdle.dom.scoreGuessedOf.innerHTML = ' of '
+  Bogdle.dom.scoreTotal.innerHTML = Bogdle.__getSolutionSize().toString()
+  Bogdle.dom.scoreTotalWords.innerHTML = ' words'
 
-  // console.log('score set!', `${Bogdle.dom.status.score.innerHTML}`)
+  // console.log('score set!', `${Bogdle.dom.score.innerHTML}`)
 }
 
 // game state checking
 Bogdle._checkGuess = function() {
   // reset classes
-  Bogdle.dom.status.guess.classList.remove('valid', 'first-guess')
+  Bogdle.dom.guess.classList.remove('valid', 'first-guess')
   Bogdle.dom.interactive.btnGuessLookup.disabled = true
 
   // player entered valid word length
-  if (Bogdle.dom.status.guess.innerHTML.length > 2) {
-    var word = Bogdle.dom.status.guess.innerHTML.trim()
+  if (Bogdle.dom.guess.innerHTML.length > 2) {
+    var word = Bogdle.dom.guess.innerHTML.trim()
 
     // player guessed a valid word
     Object.keys(Bogdle.config[Bogdle.__getGameMode()].solutionSet).forEach(key => {
       if (parseInt(key) <= Bogdle.__getMaxWordLength()) {
         if (Object.keys(Bogdle.config[Bogdle.__getGameMode()].solutionSet[key]).includes(word)) {
-          Bogdle.dom.status.guess.classList.toggle('valid')
+          Bogdle.dom.guess.classList.toggle('valid')
           Bogdle.dom.interactive.btnGuessLookup.disabled = false
 
           // and it's the first time
           if (!Bogdle.config[Bogdle.__getGameMode()].solutionSet[key][word]) {
-            Bogdle.dom.status.guess.classList.add('first-guess')
+            Bogdle.dom.guess.classList.add('first-guess')
             Bogdle.animateCSS('#guess', 'pulse')
           }
         } else {
@@ -1178,8 +1178,8 @@ Bogdle._resetTiles = function() {
 }
 // blank out the current DOM guess div
 Bogdle._resetGuess = function() {
-  Bogdle.dom.status.guess.innerHTML = ''
-  Bogdle.dom.status.guess.classList.remove('valid')
+  Bogdle.dom.guess.innerHTML = ''
+  Bogdle.dom.guess.classList.remove('valid')
   Bogdle.dom.interactive.btnGuessLookup.disabled = true
 }
 
@@ -1229,8 +1229,8 @@ Bogdle._removeLastLetter = function() {
     }
 
     // remove last letter of active guess
-    if (Bogdle.dom.status.guess.innerHTML.length) {
-      Bogdle.dom.status.guess.innerHTML = Bogdle.dom.status.guess.innerHTML.slice(0, Bogdle.dom.status.guess.innerHTML.length - 1)
+    if (Bogdle.dom.guess.innerHTML.length) {
+      Bogdle.dom.guess.innerHTML = Bogdle.dom.guess.innerHTML.slice(0, Bogdle.dom.guess.innerHTML.length - 1)
 
       Bogdle.audioPlay('tile_delete')
 
@@ -1283,7 +1283,7 @@ Bogdle._onTileClick = function(tile) {
     Bogdle.config[Bogdle.__getGameMode()].tilesSelected.push(tile.target.dataset.pos)
 
     // add selected tile to guess
-    Bogdle.dom.status.guess.innerHTML += tile.target.innerHTML
+    Bogdle.dom.guess.innerHTML += tile.target.innerHTML
 
     Bogdle.audioPlay('tile_click')
 
@@ -1621,8 +1621,8 @@ Bogdle._handleClickTouch = function(event) {
     }
   }
 
-  if (event.target == Bogdle.dom.status.navOverlay) {
-    Bogdle.dom.status.navOverlay.classList.toggle('show')
+  if (event.target == Bogdle.dom.navOverlay) {
+    Bogdle.dom.navOverlay.classList.toggle('show')
   }
 }
 
@@ -1630,10 +1630,10 @@ Bogdle._handleClickTouch = function(event) {
 Bogdle._attachEventListeners = function() {
   // {} header icons to open modals
   Bogdle.dom.interactive.btnNav.addEventListener('click', () => {
-    Bogdle.dom.status.navOverlay.classList.toggle('show')
+    Bogdle.dom.navOverlay.classList.toggle('show')
   })
   Bogdle.dom.interactive.btnNavClose.addEventListener('click', () => {
-    Bogdle.dom.status.navOverlay.classList.toggle('show')
+    Bogdle.dom.navOverlay.classList.toggle('show')
   })
   Bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
   Bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
@@ -1658,7 +1658,7 @@ Bogdle._attachEventListeners = function() {
 
   // ✅ submit word
   Bogdle.dom.interactive.btnSubmit.addEventListener('click', () => {
-    Bogdle._submitWord(Bogdle.dom.status.guess.innerHTML)
+    Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
   })
 
   // ⌫ backspace
@@ -1688,7 +1688,7 @@ Bogdle._attachEventListeners = function() {
 
   // 📕 dictionary lookup
   Bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
-    if (Bogdle.dom.status.guess.classList.contains('valid')) {
+    if (Bogdle.dom.guess.classList.contains('valid')) {
       modalOpen('dictionary')
     }
   })
@@ -1716,7 +1716,7 @@ Bogdle._attachEventListeners = function() {
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
     if (event.code == 'Enter') {
-      Bogdle._submitWord(Bogdle.dom.status.guess.innerHTML)
+      Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
     } else if (event.code == 'Backspace' || event.code == 'Delete') {
       Bogdle._removeLastLetter()
     } else {
@@ -1747,7 +1747,7 @@ Bogdle._attachEventListeners = function() {
             Bogdle.config[Bogdle.__getGameMode()].tilesSelected.push(tileToPush.dataset.pos)
 
             // add selected tile to guess
-            Bogdle.dom.status.guess.innerHTML += tileToPush.innerHTML
+            Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
 
             Bogdle.audioPlay('tile_click')
 
