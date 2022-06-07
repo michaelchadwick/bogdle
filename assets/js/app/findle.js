@@ -1,9 +1,5 @@
 class Findle {
   trie = {}
-  solution = EMPTY_ARR_SET
-  word = ''
-  dictionary = {}
-  config = {}
 
   constructor(w, d, c) {
     this.word = w
@@ -43,7 +39,7 @@ class Findle {
     try {
       const response = await fetch(this.dictionary)
       const jsonWords = await response.json()
-      var words = []
+      let words = []
 
       switch (this.getMaxWordLength()) {
         case 3: this.solution = EMPTY_ARR_SET_3; break
@@ -60,7 +56,6 @@ class Findle {
           words.push(word)
         })
       })
-
 
       var cur = ''
       //for word in map(lambda w: w.strip(), words): // py
@@ -104,5 +99,11 @@ class Findle {
     // this.solution[this.getMaxWordLength()].toString()].push(this.word)
   }
 
-  getMaxWordLength = () => BOGDLE_DIFF_TO_LENGTH[this.config.BOGDLE_DIFFICULTY]
+  getMaxWordLength = () => {
+    if (this.config.difficulty) {
+      return BOGDLE_DIFF_TO_LENGTH[this.config.difficulty]
+    } else {
+      return 9
+    }
+  }
 }
