@@ -284,8 +284,6 @@ Bogdle.initApp = async () => {
     Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
   }
 
-  Bogdle._initAudio()
-
   // attach event listeners to DOM elements
   Bogdle._attachEventListeners()
 
@@ -468,6 +466,8 @@ Bogdle._loadSettings = function() {
       if (lsConfig.noisy) {
         Bogdle.settings.noisy = lsConfig.noisy
 
+        Bogdle._initAudio()
+
         var setting = document.getElementById('button-setting-noisy')
 
         if (setting) {
@@ -599,9 +599,13 @@ Bogdle._changeSetting = async function(setting, value, event) {
       if (st == '' || st == 'false') {
         document.getElementById('button-setting-noisy').dataset.status = 'true'
 
+        await Bogdle._initAudio()
+
         Bogdle._saveSetting('noisy', true)
       } else {
         document.getElementById('button-setting-noisy').dataset.status = 'false'
+
+        await deleteOldCaches()
 
         Bogdle._saveSetting('noisy', false)
       }
@@ -655,20 +659,6 @@ Bogdle._initDebug = function() {
     debugStyles.href = './assets/css/debug.css'
     document.head.appendChild(debugStyles)
   }
-}
-
-// add audio files to CacheStorage
-Bogdle._initAudio = async function() {
-  caches.open(BOGDLE_CACHE_AUDIO_KEY).then(cache => {
-    cache.addAll([
-      '/assets/audio/doo-dah-doo.wav',
-      '/assets/audio/haaahs1.wav',
-      '/assets/audio/haaahs2.wav',
-      '/assets/audio/haaahs3.wav',
-      '/assets/audio/tile_click.wav',
-      '/assets/audio/tile_delete.wav'
-    ]);
-  })
 }
 
 // initialize seedWordsFile to pull initial seedWord from
@@ -1036,11 +1026,11 @@ Bogdle._submitWord = function(word) {
         if (Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][word] !== 1) {
 
           if (word.length == Bogdle.__getMaxWordLength()) {
-            Bogdle.audioPlay(`doo-dah-doo`)
+            Bogdle._audioPlay(`doo-dah-doo`)
           } else {
             // choose haaahs[1-3] at random and play
             var num = Math.floor(Math.random() * 3) + 1
-            Bogdle.audioPlay(`haaahs${num}`)
+            Bogdle._audioPlay(`haaahs${num}`)
           }
 
           if (!Bogdle.state[Bogdle.__getGameMode()].guessedWords) {
@@ -1243,7 +1233,7 @@ Bogdle._removeLastLetter = function() {
     if (Bogdle.dom.guess.innerHTML.length) {
       Bogdle.dom.guess.innerHTML = Bogdle.dom.guess.innerHTML.slice(0, Bogdle.dom.guess.innerHTML.length - 1)
 
-      Bogdle.audioPlay('tile_delete')
+      Bogdle._audioPlay('tile_delete')
 
       Bogdle._checkGuess()
     }
@@ -1296,7 +1286,7 @@ Bogdle._onTileClick = function(tile) {
     // add selected tile to guess
     Bogdle.dom.guess.innerHTML += tile.target.innerHTML
 
-    Bogdle.audioPlay('tile_click')
+    Bogdle._audioPlay('tile_click')
 
     // check guess for validity
     Bogdle._checkGuess()
@@ -1769,7 +1759,7 @@ Bogdle._attachEventListeners = function() {
             // add selected tile to guess
             Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
 
-            Bogdle.audioPlay('tile_click')
+            Bogdle._audioPlay('tile_click')
 
             // check guess for validity
             Bogdle._checkGuess()

@@ -2,6 +2,9 @@
 /* sound playing mechanisms */
 /* global Bogdle */
 
+const BOGDLE_CACHE_AUDIO_KEY = 'bogdle-cache-audio'
+const BOGDLE_ASSET_DATA_PATH = '/assets/audio'
+
 // Try to get data from the cache, but fall back to fetching it live.
 async function getAudio(cacheName, url) {
   let cachedAudio = await getCachedAudio(cacheName, url);
@@ -88,16 +91,39 @@ async function useFetch(url) {
     source.start();
 }
 
-Bogdle.audioPlay = async sound => {
+Bogdle._initAudio = async function() {
+  const path = BOGDLE_ASSET_DATA_PATH
+
+  await caches.open(BOGDLE_CACHE_AUDIO_KEY).then(cache => {
+    cache.keys().then(function(keys) {
+      if (!keys.length) {
+        // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is empty. Adding files to it...`)
+
+        cache.addAll([
+          `${path}/doo-dah-doo.wav`,
+          `${path}/haaahs1.wav`,
+          `${path}/haaahs2.wav`,
+          `${path}/haaahs3.wav`,
+          `${path}/tile_click.wav`,
+          `${path}/tile_delete.wav`
+        ])
+      } else {
+        // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is full, so need to initialize.`)
+      }
+    })
+  })
+}
+
+Bogdle._audioPlay = async soundId => {
   if (Bogdle.settings.noisy) {
-    const path = '/assets/audio';
+    const path = BOGDLE_ASSET_DATA_PATH;
     const format = 'wav';
-    const url = `${path}/${sound}.${format}`
+    const url = `${path}/${soundId}.${format}`
 
-    // console.log('attempting audioPlay url', url);
-
-    useCache(url)
-
-    // useFetch(url)
+    if ('caches' in self) {
+      useCache(url)
+    } else {
+      useFetch(url)
+    }
   }
 };

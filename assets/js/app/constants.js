@@ -6,7 +6,6 @@ const BOGDLE_STATE_FREE_KEY = 'bogdle-state-free'
 
 const BOGDLE_SETTINGS_KEY = 'bogdle-settings'
 
-const BOGDLE_CACHE_AUDIO_KEY = 'bogdle-audio-cache'
 const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 
 const BOGDLE_ENV_PROD_URL = 'bogdle.fun'
