@@ -631,7 +631,6 @@ Bogdle._saveSetting = function(setting, value) {
   // console.log('localStorage setting saved!', Bogdle.settings)
 }
 
-
 // add debug stuff if local
 Bogdle._initDebug = function() {
   // if debug buttons are in template
@@ -680,6 +679,7 @@ Bogdle._initSeedWordsFile = function(gameMode) {
   // console.log(`Bogdle.config[${gameMode}].seedWordsFile`, Bogdle.config[gameMode].seedWordsFile)
 }
 
+// TODO: add to CacheStorage
 // initialize dictionary to find words for solutionSet
 Bogdle._initDictionaryFile = function(gameMode) {
   // console.log('initializing dictionary file:', gameMode)
