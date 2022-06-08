@@ -769,6 +769,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
   }
 
   // set gameMode's state seedWord
+  console.log(`_createNewSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
   Bogdle.state[gameMode].seedWord = newWord
 
   // create Findle/Bogdle solutionSet
@@ -877,7 +878,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
   }
 
   // set gameMode's state seedWord
-  console.log('_loadExistingSolutionSet seedWord', newWord.toUpperCase())
+  console.log(`_loadExistingSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
   Bogdle.state[gameMode].seedWord = newWord
 
   // load existing solutionSet
@@ -921,18 +922,24 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
       // set tile letter tracking
       Bogdle.config[gameMode].letters = newWord.split('')
 
-      // if just changing difficulty, clear guessedWords
+      // if just changing FREE difficulty, clear guessedWords
       if (isNewDiff) {
-        Bogdle.state[gameMode].guessedWords = []
+        Bogdle.state['free'].guessedWords = []
         Bogdle._setScore(0)
         Bogdle._saveGameState()
       } // else check for pre-guessed words
       else {
-        var lsConfig = JSON.parse(localStorage.getItem(BOGDLE_STATE_DAILY_KEY))
+        let lsConfig = null
+
+        if (Bogdle.__getGameMode() == 'daily') {
+          lsConfig = JSON.parse(localStorage.getItem(BOGDLE_STATE_DAILY_KEY))
+        } else {
+          lsConfig = JSON.parse(localStorage.getItem(BOGDLE_STATE_FREE_KEY))
+        }
 
         Bogdle.state[gameMode].guessedWords = []
 
-        // console.log('checking off pre-guessed words...', lsConfig)
+        // console.log(`checking for '${gameMode}' pre-guessed words...`, lsConfig.guessedWords)
 
         if (lsConfig.guessedWords && lsConfig.guessedWords.length) {
           // console.log('found some pre-guessed words, so adding to code')
