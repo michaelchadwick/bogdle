@@ -1096,7 +1096,7 @@ Bogdle._increaseScore = function() {
 }
 // set score
 Bogdle._setScore = function(guessed = 0) {
-  console.log('setting score...')
+  // console.log('setting score...')
 
   // set UI elements
   Bogdle.dom.scoreGuessed.innerHTML = guessed.toString()
@@ -1338,7 +1338,7 @@ Bogdle._displayGameProgress = function() {
   return html
 }
 
-// modal: debug: prettily display Bogdle.config
+// modal: debug: display Bogdle.config
 Bogdle._displayGameConfig = function() {
   let configs = Bogdle.config
 
@@ -1353,7 +1353,6 @@ Bogdle._displayGameConfig = function() {
     html += `<h4>CONFIG: ${config}</h4>`
 
     Object.keys(configs[config]).sort().forEach(key => {
-
       if (
         (typeof configs[config][key] == 'object'
           && !Array.isArray(configs[config][key])
@@ -1375,7 +1374,7 @@ Bogdle._displayGameConfig = function() {
             }
 
             if (Object.keys(value)) {
-              console.log('found another object', key, label, value)
+              // console.log('found another object', key, label, value)
             } else {
               html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
             }
@@ -1394,12 +1393,11 @@ Bogdle._displayGameConfig = function() {
           }
         }
 
-        if (label == 'guessedWords') {
-          if (value) {
-            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-          } else {
-            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-          }
+        // special cases
+        if (label == 'hintWord') {
+          html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value}</dt>`
+        } else if (label == 'hintObscuredWord' || label == 'letters') {
+          html += `<dd><code>${label}:</code></dd><dt>${value ? value.map(v => v.toUpperCase()).join(', ') : value}</dt>`
         } else {
           html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
         }
@@ -1411,7 +1409,7 @@ Bogdle._displayGameConfig = function() {
 
   return html
 }
-// modal: debug: prettily display Bogdle.state
+// modal: debug: display Bogdle.state
 Bogdle._displayGameState = function() {
   let states = Bogdle.state
 
@@ -1459,18 +1457,16 @@ Bogdle._displayGameState = function() {
         var label = key
         var value = states[state][key]
 
+        // special cases
         if (label == 'lastCompletedTime' || label == 'lastPlayedTime') {
           if (value) {
             value = Bogdle.__getFormattedDate(new Date(value))
           }
-        }
-
-        if (label == 'guessedWords') {
-          if (value) {
-            html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
-          } else {
-            html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
-          }
+        } else if (label == 'guessedWords') {
+          html += `<dd><code>${label}:</code></dd><dt>`
+          html += `${value ? value.map(v => v.toUpperCase()).join(', ') : value}</dt>`
+        } else if (label == 'seedWord') {
+          html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value}</dt>`
         } else {
           html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
         }
@@ -1482,7 +1478,7 @@ Bogdle._displayGameState = function() {
 
   return html
 }
-// modal: debug: pretty display of words in solution
+// modal: debug: display words in both gameMode solutions
 Bogdle._displayGameSolution = function() {
   let html = ''
 
@@ -1501,6 +1497,10 @@ Bogdle._displayGameSolution = function() {
 
     // go through each word in each category
     sortedArr.forEach(word => {
+      // mark guessed words
+      if (Bogdle.state[Bogdle.__getGameMode()].guessedWords.includes(word)) {
+        word = `<strong>${word}</strong>`
+      }
       dailyWords.push(word.toUpperCase())
     })
 
