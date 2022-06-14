@@ -509,7 +509,7 @@ section#game {
   }
     section#game #guess-container #guess {
       animation-duration: 700ms;
-      color: #364333;
+      color: #364333a7;
       font-size: 1em;
       line-height: 0.7em;
       letter-spacing: 0.03em;
@@ -521,7 +521,7 @@ section#game {
       width: 100%;
     }
       section#game #guess-container #guess.valid {
-        color: #46852b;
+        color: #305c1e;
         letter-spacing: 0e.04em;
       }
         section#game #guess-container #guess.valid.first-guess {
@@ -628,7 +628,6 @@ section#game {
       width: 100px;
     }
       section#game #keyboard-container button:last-of-type {
-        /* last button in row shouldn't have right-margin */
         margin: 0;
       }
       section#game #keyboard-container button:hover:not([disabled]) {
