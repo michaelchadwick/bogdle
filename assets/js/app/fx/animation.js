@@ -2,7 +2,7 @@
 /* using Animate.CSS to add and remove simple animations to things */
 /* global Bogdle */
 
-Bogdle.animateCSS = (element, animation, prefix = 'animate__') => {
+Bogdle._animateCSS = (element, animation, prefix = 'animate__') => {
   // We create a Promise and return it
   new Promise((resolve, reject) => {
     const animationName = `${prefix}${animation}`

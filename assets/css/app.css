@@ -622,6 +622,9 @@ section#game {
       section#game #keyboard-container .row.sub button {
         background-color: #d6cece;
       }
+        section#game #keyboard-container .row.sub button:disabled {
+          background-color: #eeeeee;
+        }
     section#game #keyboard-container button {
       border: 1px solid transparent;
       font-size: 20px;

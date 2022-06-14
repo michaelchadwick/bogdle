@@ -37,3 +37,50 @@ const EMPTY_ARR_SET = { "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9
 const EMPTY_ARR_SET_3 = { "3": [] }
 const EMPTY_ARR_SET_5 = { "3": [], "4": [], "5": [] }
 const EMPTY_ARR_SET_7 = { "3": [], "4": [], "5": [], "6": [], "7": [] }
+
+const BOGDLE_DEFAULTS = {
+  "config": {
+    "daily": {
+      "hintWord": null,
+      "hintObscuredWord": [],
+      "hintObscuredWordCounter": 0,
+      "solutionSet": EMPTY_OBJ_SET
+    },
+    "free": {
+      "hintWord": null,
+      "hintObscuredWord": [],
+      "hintObscuredWordCounter": 0,
+      "solutionSet": EMPTY_OBJ_SET
+    }
+  },
+  "state": {
+    "daily": {
+      "gameState": 'IN_PROGRESS',
+      "guessedWords": [],
+      "lastCompletedTime": null,
+      "lastPlayedTime": null,
+      "seedWord": null,
+      "statistics": {
+        "gamesPlayed": 0,
+        "wordsFound": 0
+      }
+    },
+    "free": {
+      "difficulty": "normal",
+      "gameState": 'IN_PROGRESS',
+      "guessedWords": [],
+      "lastCompletedTime": null,
+      "lastPlayedTime": null,
+      "seedWord": null,
+      "statistics": {
+        "gamesPlayed": 0,
+        "wordsFound": 0
+      }
+    }
+  },
+  "settings": {
+    "darkMode": false,
+    "gameMode": 'daily',
+    "noisy": false
+  }
+}
