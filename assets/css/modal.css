@@ -20,11 +20,11 @@
     background-color: transparent;
   }
   .modal-dialog.temp .modal-window {
-    background-color: #529952;
-    border: 2px solid #000;
+    background-color: #ffffff;
+    border: 2px solid #000000;
     border-radius: 8px;
     box-shadow: none;
-    color: #fff;
+    color: #000000;
     pointer-events: none;
     position: absolute;
     top: 25%;
@@ -205,7 +205,17 @@
 .statistic-header {
   align-items: center;
   display: flex;
-  font-size: 20px;
+  font-size: 1.4em;
+  font-variant-numeric: proportional-nums;
+  font-weight: 400;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.statistic-subheader {
+  align-items: center;
+  display: flex;
+  font-size: 0.9em;
   font-variant-numeric: proportional-nums;
   font-weight: 400;
   justify-content: center;

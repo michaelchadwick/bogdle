@@ -73,6 +73,10 @@ button {
     color: #ddd;
     cursor: not-allowed;
   }
+    button:disabled:hover {
+      background-color: inherit;
+      color: inherit;
+    }
 
   button.icon {
     background: none;
@@ -97,6 +101,16 @@ button {
     button.help i {
       bottom: 1px;
       position: relative;
+    }
+  button.share {
+    background-color: #529952;
+    color: #ffffff;
+    height: 30px;
+    padding: 5px;
+    width: 100px;
+  }
+    button.share i {
+      margin-left: 6px;
     }
 
 .container {
@@ -574,6 +588,12 @@ section#game {
           background-color: #888;
           border: 1px solid #111;
           color: #fff;
+        }
+        section#game #hint-container button:disabled,
+        section#game #hint-container button:disabled:hover {
+          background-color: #eeeeee;
+          border: none;
+          color: #ddd;
         }
         section#game #hint-container #hint-arena button#button-hint {
           float: left;

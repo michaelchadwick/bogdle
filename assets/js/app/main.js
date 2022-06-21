@@ -93,6 +93,9 @@ async function modalOpen(type) {
           <div class="container">
 
             <div class="statistic-header">Daily</div>
+            <div class="statistic-subheader">
+              (<small>New puzzle available at 12am PST</small>)
+            </div>
             <div class="statistics">
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
@@ -115,6 +118,10 @@ async function modalOpen(type) {
                 <div class="statistic-label">Words Found</div>
               </div>
 
+            </div>
+
+            <div class="share">
+              <button class="share" onclick="Bogdle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
             </div>
           </div>
         `,
@@ -227,6 +234,20 @@ async function modalOpen(type) {
         null
       )
       break
+    case 'shared':
+      this.myModal = new Modal('temp', null,
+        'Results copied to clipboard',
+        null,
+        null
+      )
+      break
+    case 'no-clipboard-access':
+      this.myModal = new Modal('temp', null,
+        'Sorry, but access to clipboard not available',
+        null,
+        null
+      )
+      break
   }
 }
 
@@ -294,7 +315,7 @@ Bogdle._loadGame = async function() {
     dailyCreateOrLoad = 'create'
   }
 
-  if (Bogdle.state.daily.lastPlayedTime == null) {
+  if (Bogdle.__getGameMode() == 'daily' && Bogdle.state.daily.lastPlayedTime == null) {
     if (Bogdle.showStartModal) {
       modalOpen('start')
       Bogdle.showStartModal = false
@@ -319,7 +340,7 @@ Bogdle._loadGame = async function() {
     Bogdle.state.free.seedWord = lsStateFree.seedWord
     Bogdle.state.free.statistics = {
       "gamesPlayed": lsStateFree.statistics.gamesPlayed,
-      "wordsFound": lsStateFree.statistics.gamesPlayed
+      "wordsFound": lsStateFree.statistics.wordsFound
     }
 
     console.log('FREE localStorage state key loaded; solution to be created with previous seedWord')
@@ -935,6 +956,9 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
       // shuffle tiles randomly
       Bogdle._shuffleTiles()
 
+      // see if we've already won
+      Bogdle._checkWinState()
+
       console.log(`**** loadED existing '${gameMode}' solutionSet ****`)
     }
   } catch (err) {
@@ -956,7 +980,7 @@ Bogdle._confirmFreeCreateNew = async function() {
 
     if (confirmed) {
       Bogdle._resetFreeProgress()
-      Bogdle._createNewSolutionSet('free')
+      await Bogdle._createNewSolutionSet('free')
     }
   } catch (err) {
     console.error('progress reset failed', err)
@@ -967,9 +991,19 @@ Bogdle._confirmFreeCreateNew = async function() {
 Bogdle._resetFreeProgress = async function() {
   // console.log('resetting free play progress...')
 
+  // save previous stats
+  const prevGamesPlayed = Bogdle.state.free.statistics.gamesPlayed
+  const prevWordsFound = Bogdle.state.free.statistics.wordsFound
+
   // set config and state to defaults
   Bogdle.config.free = BOGDLE_DEFAULTS.config.free
   Bogdle.state.free = BOGDLE_DEFAULTS.state.free
+
+  // re-add previous stats
+  Bogdle.state.free.statistics = {
+    "gamesPlayed": prevGamesPlayed,
+    "wordsFound": prevWordsFound
+  }
 
   // set dictionary to default
   Bogdle._initDictionaryFile('free')
@@ -1074,7 +1108,7 @@ Bogdle._setScore = function(guessed = 0) {
 
 // game state checking
 Bogdle._checkGuess = function() {
-  console.log('checking current guess...')
+  // console.log('checking current guess...')
 
   // reset classes
   Bogdle.dom.guess.classList.remove('valid', 'first-guess')
@@ -1106,37 +1140,55 @@ Bogdle._checkGuess = function() {
   }
 }
 Bogdle._checkWinState = function() {
-  // console.log('checking for win state...')
+  // console.log('checking for win state...', Bogdle.__getGameMode())
 
-  if (Bogdle.config[Bogdle.__getGameMode()].solutionSet) {
-    if (Object.values(Bogdle.config[Bogdle.__getGameMode()].solutionSet).every((val) => val == 1)) {
-      // console.log('Bogdle._checkWinState(): game won!', Bogdle.config[Bogdle.__getGameMode()].solutionSet)
+  const solutionSet = Bogdle.config[Bogdle.__getGameMode()].solutionSet
 
-      if (Bogdle.state[Bogdle.__getGameMode()].gameState == 'IN_PROGRESS') {
+  if (solutionSet) {
+    const solutionSetValues = []
+
+    Object.values(solutionSet).forEach(cat => {
+      Object.values(cat).forEach(val => {
+        solutionSetValues.push(val)
+      })
+    })
+
+    // console.log('solutionSetValues', solutionSetValues)
+
+    if (solutionSetValues.every((val) => val)) {
+      // console.log('Bogdle._checkWinState(): game won!', solutionSet)
+
+      // set state stuff
+      const gameState = Bogdle.state[Bogdle.__getGameMode()].gameState
+
+      if (gameState == 'IN_PROGRESS') {
+        // make sure to only increment wins if we are going from
+        // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
         Bogdle.state[Bogdle.__getGameMode()].statistics.gamesPlayed += 1
+        Bogdle.state[Bogdle.__getGameMode()].gameState = 'GAME_OVER'
+        Bogdle.state[Bogdle.__getGameMode()].lastCompletedTime = new Date().getTime()
+
+        Bogdle._saveGame()
       }
+
+      // disable inputs (until future re-enabling)
+      Bogdle._disableTiles()
+
+      // disable hint (until future re-enabling)
+      Bogdle._disableHint()
 
       // display modal win thingy
       modalOpen('win')
 
-      // set config stuff
-      Bogdle.state[Bogdle.__getGameMode()].gameState = 'GAME_OVER'
-
-      if (Bogdle.state[Bogdle.__getGameMode()].lastCompletedTime == null) {
-        Bogdle.state[Bogdle.__getGameMode()].lastCompletedTime = new Date().getTime()
-      }
-
-      Bogdle._saveGame()
-
-      // disable inputs (until future daily re-enabling)
-      Bogdle._disableTiles()
-
       return true
     } else {
-      // console.log('Bogdle._checkWinState(): game still in progress')
+      // console.log('Bogdle._checkWinState(): game not yet won')
+
       return false
     }
   } else {
+    console.error('solutionSet not found')
+
     return false
   }
 }
@@ -1144,6 +1196,8 @@ Bogdle._checkWinState = function() {
 // reset UI tiles to default state
 Bogdle._resetInput = function() {
   Bogdle._resetTiles()
+
+  Bogdle._enableHint()
 
   Bogdle._resetGuess()
 }
@@ -1166,6 +1220,14 @@ Bogdle._disableTiles = function() {
     tile.setAttribute('disabled', '')
     tile.dataset.state = 'disabled'
   })
+}
+// disable hint system
+Bogdle._disableHint = function() {
+  Bogdle.dom.interactive.btnHint.disabled = true
+}
+// enable hint system
+Bogdle._enableHint = function() {
+  Bogdle.dom.interactive.btnHint.disabled = false
 }
 // randomize the order of tiles
 Bogdle._shuffleTiles = function() {
@@ -1308,7 +1370,7 @@ Bogdle._displayGameProgress = function() {
 Bogdle._displayGameConfig = function() {
   let configs = Bogdle.config
 
-  console.log('configs', configs)
+  // console.log('configs', configs)
 
   var html = ''
 
@@ -1373,7 +1435,7 @@ Bogdle._displayGameConfig = function() {
       }
     })
 
-    console.log(`Bogdle.config[${config}].solutionSet`, Bogdle.config[config].solutionSet)
+    // console.log(`Bogdle.config[${config}].solutionSet`, Bogdle.config[config].solutionSet)
   })
 
   html += '</dl>'
@@ -1625,6 +1687,46 @@ Bogdle._handleClickTouch = function(event) {
   }
 }
 
+// debug: beat game to check win state
+Bogdle._winGame = function() {
+  console.log('HAX! Winning game immediately...')
+
+  const solutionSet = Bogdle.config[Bogdle.__getGameMode()].solutionSet
+
+  Object.keys(solutionSet).forEach(category => {
+    Object.keys(solutionSet[category]).forEach(word => {
+      if (solutionSet[category][word] == 0) {
+        Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
+        Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
+        Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
+      }
+    })
+  })
+
+  Bogdle._setScore(Bogdle.__getSolutionSize())
+
+  Bogdle._checkWinState()
+}
+
+// copy results to clipboard for sharing
+Bogdle._shareResults = async function() {
+  let result = null
+
+  if (navigator.canShare) {
+    result = { text: "Bogdle" }
+    navigator.share(result)
+    modalOpen('shared')
+  } else {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(result)
+      modalOpen('shared')
+    } else {
+      modalOpen('no-clipboard-access')
+      return
+    }
+  }
+}
+
 // add event listeners to DOM
 Bogdle._attachEventListeners = function() {
   // {} header icons to open modals
@@ -1695,12 +1797,12 @@ Bogdle._attachEventListeners = function() {
   // local debug buttons
   if (Bogdle.env == 'local') {
     if (Bogdle.dom.interactive.debug.all) {
-      // := show list of words
+      // 🪣 show list of words
       Bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
         modalOpen('show-solution')
       })
 
-      // ⚙ show current bogdle config
+      // ⚙️ show current bogdle config
       Bogdle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
         modalOpen('show-config')
       })
@@ -1708,6 +1810,11 @@ Bogdle._attachEventListeners = function() {
       // 🎚️ show current bogdle state
       Bogdle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
         modalOpen('show-state')
+      })
+
+      // 🏆 win game immediately
+      Bogdle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
+        Bogdle._winGame()
       })
     }
   }

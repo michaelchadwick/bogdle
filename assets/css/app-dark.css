@@ -48,6 +48,10 @@ body.dark-mode {
     background-color: #111;
     border-color: #529952;
   }
+  body.dark-mode .modal-dialog.temp .modal-window {
+    background-color: #111111;
+    color: #ffffff
+  }
   body.dark-mode .modal-text {
     background-color: #111;
     color: #fff;
