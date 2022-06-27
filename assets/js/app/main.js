@@ -1536,72 +1536,36 @@ Bogdle._displayGameState = function() {
 
   return html
 }
-// modal: debug: display words in both gameMode solutions
+// modal: debug: display current gameMode solution
 Bogdle._displayGameSolution = function() {
   let html = ''
+  const gameMode = Bogdle.__getGameMode()
 
-  // display DAILY solution
-  html += `<h3>Game Mode: DAILY</h3>`
+  html += `<h3>Game Mode: ${gameMode.toUpperCase()}</h3>`
   html += '<ul>'
-
-  console.log('Bogdle.config.daily.solutionSet', Bogdle.config.daily.solutionSet)
 
   // check each length category (max...3, etc.)
   Object.keys(Bogdle.config.daily.solutionSet).reverse().forEach(key => {
-    var dailyWords = []
+    var solutionWords = []
 
     html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
 
     // create sorted array of each length category's words
-    var sortedArr = Array.from(Object.keys(Bogdle.config.daily.solutionSet[key])).sort()
+    var sortedArr = Array.from(Object.keys(Bogdle.config[gameMode].solutionSet[key])).sort()
 
     // go through each word in each category
     sortedArr.forEach(word => {
       // mark guessed words
-      if (Bogdle.state.daily.guessedWords.includes(word)) {
+      if (Bogdle.state[gameMode].guessedWords.includes(word)) {
         word = `<strong>${word}</strong>`
       }
-      dailyWords.push(word.toUpperCase())
+
+      solutionWords.push(word.toUpperCase())
     })
 
     // add all the words to the markup
-    html += dailyWords.join(', ')
+    html += solutionWords.join(', ')
     html += `</li></ul></li>`
-  })
-
-  html += '</ul>'
-
-  // display FREE solution
-  html += `<h3>Game Mode: FREE</h3>`
-  html += `<h5>difficulty: ${Bogdle.state.free.difficulty}</h5>`
-
-  html += '<ul>'
-
-  console.log('Bogdle.config.free.solutionSet', Bogdle.config.free.solutionSet)
-
-  // check each length category (max...3, etc.)
-  Object.keys(Bogdle.config.free.solutionSet).reverse().forEach(key => {
-    if (key <= Bogdle.__getMaxWordLength()) {
-      var freeWords = []
-
-      html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
-
-      // create sorted array of each length category's words
-      var sortedArr = Array.from(Object.keys(Bogdle.config.free.solutionSet[key])).sort()
-
-      // go through each word in each category
-      sortedArr.forEach(word => {
-        // mark guessed words
-        if (Bogdle.state.free.guessedWords.includes(word)) {
-          word = `<strong>${word}</strong>`
-        }
-        freeWords.push(word.toUpperCase())
-      })
-
-      // add all the words to the markup
-      html += freeWords.join(', ')
-      html += `</li></ul></li>`
-    }
   })
 
   html += '</ul>'
