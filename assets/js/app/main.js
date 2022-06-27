@@ -293,11 +293,8 @@ Bogdle._loadGame = async function() {
   if (lsStateDaily) {
     console.log('DAILY localStorage state key found and loading...', lsStateDaily)
 
-    Bogdle.state.daily.gameState = lsStateDaily.gameState
-    Bogdle.state.daily.guessedWords = lsStateDaily.guessedWords
     Bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime
     Bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime
-    Bogdle.state.daily.seedWord = lsStateDaily.seedWord
     Bogdle.state.daily.statistics = {
       "gamesPlayed": lsStateDaily.statistics.gamesPlayed,
       "wordsFound": lsStateDaily.statistics.wordsFound
@@ -305,7 +302,35 @@ Bogdle._loadGame = async function() {
 
     console.log('DAILY localStorage state key loaded; solution to be created with previous seedWord')
 
-    dailyCreateOrLoad = 'load'
+    // special case for daily word: need to check to make sure time hasn't elapsed
+    // on saved progress
+    try {
+      const response = await fetch('scripts/daily.php')
+      const dailyWord = await response.text()
+
+      // saved word and daily word are the same? still working on it
+      if (dailyWord == lsStateDaily.seedWord) {
+        Bogdle.state.daily.gameState = lsStateDaily.gameState
+        Bogdle.state.daily.seedWord = lsStateDaily.seedWord
+
+        console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, dailyWord.toUpperCase())
+
+        dailyCreateOrLoad = 'load'
+      }
+      // time has elapsed on daily puzzle, and new one is needed
+      else {
+        console.log('LS seedWord and dailyWord do not match, so create new puzzle')
+
+        Bogdle.state.daily.gameState = 'IN_PROGRESS'
+        Bogdle.state.daily.guessedWords = []
+
+        Bogdle._saveGame()
+
+        dailyCreateOrLoad = 'create'
+      }
+    } catch (e) {
+      console.error('could not get daily seed word', e)
+    }
   } else {
     Bogdle.state.daily = BOGDLE_DEFAULTS.state.daily
 
