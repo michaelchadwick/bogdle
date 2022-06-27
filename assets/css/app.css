@@ -485,10 +485,11 @@ section#game {
           margin-right: 5px;
         }
     section#game #mode-container #difficulty-container {
-      display: none;
+      display: block;
+      transform: scale(0);
     }
       section#game #mode-container #difficulty-container.show {
-        display: block;
+        transform: scale(1);
       }
 
   /* GUESS-CONTAINER */
