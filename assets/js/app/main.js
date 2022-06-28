@@ -1704,22 +1704,39 @@ Bogdle._winGame = function() {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  const result = { text: `I beat Bogdle on ${Bogdle.__getTodaysDate}` }
+  const shareText = `I beat Bogdle on ${Bogdle.__getTodaysDate()}. Have you tried? https://bogdle.fun`
 
   if (navigator.canShare) {
-    navigator.share(result)
+    navigator.share({ text: shareText })
+
     modalOpen('shared')
   } else {
     if (navigator.clipboard) {
-      const clipboardWrite = await navigator.clipboard.writeText(result)
+      navigator.clipboard.writeText(shareText).then(() => {
+        modalOpen('shared')
+      }).catch(() => {
+        console.error('could not copy text to clipboard')
 
-      console.log('clipboardWrite', clipboardWrite)
+        modalOpen('no-clipboard-access')
 
-      modalOpen('shared')
+        return
+      })
+
+      // const canWrite = await navigator.permissions.query({ name: 'clipboard-write' })
+
+      // if (canWrite.state == 'granted') {
+      //   navigator.clipboard.writeText(shareText).then(() => {
+      //     modalOpen('shared')
+      //   }).catch(() => console.error('could not copy text to clipboard'))
+      // } else {
+      //   console.warn('clipboard access was denied')
+
+      //   modalOpen('no-clipboard-access')
+      // }
     } else {
-      modalOpen('no-clipboard-access')
+      console.warn('no sharing or clipboard access available')
 
-      console.warn('no sharing or clipboard access :\'(')
+      modalOpen('no-clipboard-access')
 
       return
     }
