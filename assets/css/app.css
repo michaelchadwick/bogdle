@@ -126,7 +126,6 @@ button {
 }
 
 .tile {
-  --animate-duration: 100ms;
   align-items: center;
   border: 2px solid transparent;
   box-sizing: border-box;
@@ -277,7 +276,6 @@ header {
         display: flex;
       }
         header .menu-left #nav-overlay #nav-content {
-          animation: SlideRight 200ms;
           background-color: #fff;
           border-radius: 0;
           box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
@@ -523,7 +521,6 @@ section#game {
     }
   }
     section#game #guess-container #guess {
-      animation-duration: 700ms;
       color: #364333a7;
       font-size: 1em;
       line-height: 0.7em;
@@ -668,29 +665,4 @@ section#game {
 .disabled {
   color: #888 !important;
   cursor: default;
-}
-
-/* animation */
-@keyFrames SlideRight {
-  0% {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-}
-@keyFrames SlideLeft {
-  0% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-  90% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-200px);
-  }
 }

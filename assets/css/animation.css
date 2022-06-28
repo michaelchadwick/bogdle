@@ -1,0 +1,35 @@
+.tile {
+  --animate-duration: 100ms;
+}
+
+header .menu-left #nav-overlay #nav-content {
+  animation: SlideRight 200ms;
+}
+
+section#game #guess-container #guess {
+  animation-duration: 700ms;
+}
+
+@keyFrames SlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+@keyFrames SlideLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+}
