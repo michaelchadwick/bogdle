@@ -291,8 +291,9 @@ Bogdle._loadGame = async function() {
 
   // if we have previous LS values, sync them to code model
   if (lsStateDaily) {
-    console.log('DAILY localStorage state key found and loading...', lsStateDaily)
+    // console.log('DAILY localStorage state key found and loading...', lsStateDaily)
 
+    Bogdle.state.daily.gameState = lsStateDaily.gameState
     Bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime
     Bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime
     Bogdle.state.daily.statistics = {
@@ -300,10 +301,10 @@ Bogdle._loadGame = async function() {
       "wordsFound": lsStateDaily.statistics.wordsFound
     }
 
-    console.log('DAILY localStorage state key loaded; solution to be created with previous seedWord')
+    // console.log('DAILY localStorage state key loaded')
 
-    // special case for daily word: need to check to make sure time hasn't elapsed
-    // on saved progress
+    // special case for daily word: need to check
+    // to make sure time hasn't elapsed on saved progress
     try {
       const response = await fetch('scripts/daily.php')
       const dailyWord = await response.text()
@@ -311,15 +312,16 @@ Bogdle._loadGame = async function() {
       // saved word and daily word are the same? still working on it
       if (dailyWord == lsStateDaily.seedWord) {
         Bogdle.state.daily.gameState = lsStateDaily.gameState
+        Bogdle.state.daily.guessedWords = lsStateDaily.guessedWords
         Bogdle.state.daily.seedWord = lsStateDaily.seedWord
 
-        console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, dailyWord.toUpperCase())
+        // console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, dailyWord.toUpperCase())
 
         dailyCreateOrLoad = 'load'
       }
       // time has elapsed on daily puzzle, and new one is needed
       else {
-        console.log('LS seedWord and dailyWord do not match, so create new puzzle')
+        // console.log('LS seedWord and dailyWord do not match, so create new puzzle')
 
         Bogdle.state.daily.gameState = 'IN_PROGRESS'
         Bogdle.state.daily.guessedWords = []
@@ -334,8 +336,8 @@ Bogdle._loadGame = async function() {
   } else {
     Bogdle.state.daily = BOGDLE_DEFAULTS.state.daily
 
-    console.log('DAILY localStorage state key NOT found; defaults set')
-    console.log('DAILY solution to be created with daily word hash')
+    // console.log('DAILY localStorage state key NOT found; defaults set')
+    // console.log('DAILY solution to be created with daily word hash')
 
     dailyCreateOrLoad = 'create'
   }
@@ -355,7 +357,7 @@ Bogdle._loadGame = async function() {
 
   // if we have previous LS values, sync them to code model
   if (lsStateFree) {
-    console.log('FREE localStorage state key found and loading...', lsStateFree)
+    // console.log('FREE localStorage state key found and loading...', lsStateFree)
 
     Bogdle.state.free.difficulty = lsStateFree.difficulty
     Bogdle.state.free.gameState = lsStateFree.gameState
@@ -368,14 +370,14 @@ Bogdle._loadGame = async function() {
       "wordsFound": lsStateFree.statistics.wordsFound
     }
 
-    console.log('FREE localStorage state key loaded; solution to be created with previous seedWord')
+    // console.log('FREE localStorage state key loaded; solution to be created with previous seedWord')
 
     freeCreateOrLoad = 'load'
   } else {
     Bogdle.state.free = BOGDLE_DEFAULTS.state.free
 
-    console.log('FREE localStorage state key NOT found; defaults set')
-    console.log('FREE solution to be created with randomly-chosen word')
+    // console.log('FREE localStorage state key NOT found; defaults set')
+    // console.log('FREE solution to be created with randomly-chosen word')
 
     freeCreateOrLoad = 'create'
   }
@@ -399,7 +401,7 @@ Bogdle._loadGame = async function() {
       await Bogdle._createNewSolutionSet('daily')
     }
 
-    console.log('DAILY solutionSet loaded!', Bogdle.state.daily.seedWord.toUpperCase())
+    // console.log('DAILY solutionSet loaded!', Bogdle.state.daily.seedWord.toUpperCase())
   } else { // free
     if (freeCreateOrLoad == 'load') {
       await Bogdle._loadExistingSolutionSet('free', Bogdle.state.free.seedWord)
@@ -407,7 +409,7 @@ Bogdle._loadGame = async function() {
       await Bogdle._createNewSolutionSet('free')
     }
 
-    console.log('FREE solutionSet loaded!', Bogdle.state.free.seedWord.toUpperCase())
+    // console.log('FREE solutionSet loaded!', Bogdle.state.free.seedWord.toUpperCase())
   }
 }
 
@@ -510,7 +512,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
     case 'gameMode':
       switch (value) {
         case 'daily':
-          console.log('**** switchING game mode to DAILY ****')
+          // console.log('**** switchING game mode to DAILY ****')
 
           // get seedWord for today
           if (!Bogdle.state.daily.seedWord) {
@@ -541,7 +543,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
           break
 
         case 'free':
-          console.log('**** switchING game mode to FREE ****')
+          // console.log('**** switchING game mode to FREE ****')
 
           Bogdle._saveSetting('gameMode', 'free')
           Bogdle._clearHint()
@@ -557,7 +559,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
 
           Bogdle._saveGame()
 
-          console.log('**** switched game mode to FREE ****')
+          // console.log('**** switched game mode to FREE ****')
 
           break
       }
@@ -722,7 +724,7 @@ Bogdle._initDictionaryFile = function(gameMode) {
 
 // create new solutionSet, which resets progress
 Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
-  console.log(`**** creatING new '${gameMode}' solutionSet ****`)
+  // console.log(`**** creatING new '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
@@ -764,7 +766,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
       try {
         newWord = await Bogdle.__getNewSeedWord()
 
-        console.log(`_createNewSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
+        // console.log(`_createNewSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
       } catch (err) {
         console.error('could not get new seed word', err)
       }
@@ -775,7 +777,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
       newWord = await response.text()
 
       if (newWord) {
-        console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
+        // console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
       } else {
         console.error('daily word went bork', newWord)
       }
@@ -787,7 +789,8 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
   // set gameMode's state seedWord
   Bogdle.state[gameMode].seedWord = newWord
   Bogdle._saveGame()
-  console.log(`_createNewSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
+
+  // console.log(`_createNewSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
 
   // create Findle/Bogdle solutionSet
   try {
@@ -835,7 +838,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
       // choose letters randomly from solutionSet
       Bogdle._shuffleTiles()
 
-      console.log(`**** creatED new '${gameMode}' solutionSet ****`)
+      // console.log(`**** creatED new '${gameMode}' solutionSet ****`)
     }
   } catch (err) {
     console.error('could not create new solution', err)
@@ -844,7 +847,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
 
 // load existing solutionSet, which retains past progress
 Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNewDiff = false) {
-  console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
+  // console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
@@ -874,7 +877,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
       try {
         newWord = await Bogdle.__getNewSeedWord()
 
-        console.log(`_loadExistingSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
+        // console.log(`_loadExistingSolutionSet with 'random' seed word '${newWord.toUpperCase()}'...`)
       } catch (err) {
         console.error('could not get new seed word', err)
       }
@@ -885,7 +888,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
       newWord = await response.text()
 
       if (newWord) {
-        console.log(`DAILY seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
+        // console.log(`DAILY seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
       } else {
         console.error('daily word went bork', newWord)
       }
@@ -897,7 +900,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
   // set gameMode's state seedWord
   Bogdle.state[gameMode].seedWord = newWord
   Bogdle._saveGame()
-  console.log(`_loadExistingSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
+  // console.log(`_loadExistingSolutionSet '${gameMode}' seedWord`, newWord.toUpperCase())
 
   // load existing solutionSet
   try {
@@ -984,7 +987,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
       // see if we've already won
       Bogdle._checkWinState()
 
-      console.log(`**** loadED existing '${gameMode}' solutionSet ****`)
+      // console.log(`**** loadED existing '${gameMode}' solutionSet ****`)
     }
   } catch (err) {
     console.error('could not create new solution', err)
@@ -1181,7 +1184,7 @@ Bogdle._checkWinState = function() {
     // console.log('solutionSetValues', solutionSetValues)
 
     if (solutionSetValues.every((val) => val)) {
-      // console.log('Bogdle._checkWinState(): game won!', solutionSet)
+     //  console.log('Bogdle._checkWinState(): game won!', solutionSet)
 
       // set state stuff
       const gameState = Bogdle.state[Bogdle.__getGameMode()].gameState
@@ -1694,23 +1697,30 @@ Bogdle._winGame = function() {
 
   Bogdle._setScore(Bogdle.__getSolutionSize())
 
+  Bogdle._saveGame()
+
   Bogdle._checkWinState()
 }
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  let result = null
+  const result = { text: `I beat Bogdle on ${Bogdle.__getTodaysDate}` }
 
   if (navigator.canShare) {
-    result = { text: "Bogdle" }
     navigator.share(result)
     modalOpen('shared')
   } else {
     if (navigator.clipboard) {
-      await navigator.clipboard.writeText(result)
+      const clipboardWrite = await navigator.clipboard.writeText(result)
+
+      console.log('clipboardWrite', clipboardWrite)
+
       modalOpen('shared')
     } else {
       modalOpen('no-clipboard-access')
+
+      console.warn('no sharing or clipboard access :\'(')
+
       return
     }
   }
