@@ -306,7 +306,7 @@ Bogdle._loadGame = async function() {
     // special case for daily word: need to check
     // to make sure time hasn't elapsed on saved progress
     try {
-      const response = await fetch('scripts/daily.php')
+      const response = await fetch(BOGDLE_DAILY_SCRIPT)
       const dailyWord = await response.text()
 
       // saved word and daily word are the same? still working on it
@@ -517,7 +517,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
           // get seedWord for today
           if (!Bogdle.state.daily.seedWord) {
             try {
-              const response = await fetch('scripts/daily.php')
+              const response = await fetch(BOGDLE_DAILY_SCRIPT)
               Bogdle.state.daily.seedWord = await response.text()
             } catch (e) {
               console.error('could not get daily word', e)
@@ -773,7 +773,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
     }
   } else { // 'daily' always uses day hash
     try {
-      const response = await fetch('scripts/daily.php')
+      const response = await fetch(BOGDLE_DAILY_SCRIPT)
       newWord = await response.text()
 
       if (newWord) {
@@ -884,7 +884,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
     }
   } else { // 'daily' always uses day hash
     try {
-      const response = await fetch('scripts/daily.php')
+      const response = await fetch(BOGDLE_DAILY_SCRIPT)
       newWord = await response.text()
 
       if (newWord) {
