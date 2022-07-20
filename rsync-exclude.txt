@@ -1,8 +1,13 @@
+.eslintrc.js
+.eslintrc.json
+.eslintrc.yaml
+.jshintrc
 .git
 .gitignore
+assets/ruby
 bower.json
 LICENSE.md
 README.md
 Rakefile
 rsync-exclude.txt
-assets/ruby
+TODO.md
