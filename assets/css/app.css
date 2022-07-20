@@ -450,8 +450,9 @@ section#game {
   width: 100%;
 }
 
-  /* MODE-CONTAINER */
+  /* GAME->MODE-CONTAINER */
   section#game #mode-container {
+    height: 80px;
     margin: 0 auto;
     text-transform: uppercase;
     text-underline-offset: 2px;
@@ -482,6 +483,21 @@ section#game {
         section#game #mode-container .setting-row button#button-create-new i {
           margin-right: 5px;
         }
+    /* GAME->MODE-CONTAINER->DAILY-DETAILS */
+    section#game #mode-container #daily-details {
+      color: #222222;
+      display: none;
+      font-size: 0.9rem;
+      transform: scale(0);
+    }
+      section#game #mode-container #daily-details.show {
+        display: block;
+        transform: scale(1);
+      }
+        section#game #mode-container #daily-details .day {
+          font-weight: 600;
+        }
+    /* GAME->MODE-CONTAINER->DIFFICULTY-CONTAINER */
     section#game #mode-container #difficulty-container {
       display: block;
       transform: scale(0);

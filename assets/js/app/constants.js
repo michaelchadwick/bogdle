@@ -8,7 +8,7 @@ const BOGDLE_SETTINGS_KEY = 'bogdle-settings'
 
 const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 const BOGDLE_ENV_PROD_URL = 'bogdle.fun'
-const BOGDLE_DAILY_SCRIPT = 'scripts/daily.php'
+const BOGDLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 
 const BOGDLE_DIFFICULTY = {
   'kid': 'small',

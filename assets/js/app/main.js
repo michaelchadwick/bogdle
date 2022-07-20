@@ -306,8 +306,11 @@ Bogdle._loadGame = async function() {
     // special case for daily word: need to check
     // to make sure time hasn't elapsed on saved progress
     try {
+      console.log('_loadGame->fetching BOGDLE_DAILY_SCRIPT')
+
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
-      const dailyWord = await response.text()
+      const data = await response.json()
+      const dailyWord = data['word']
 
       // saved word and daily word are the same? still working on it
       if (dailyWord == lsStateDaily.seedWord) {
@@ -330,6 +333,8 @@ Bogdle._loadGame = async function() {
 
         dailyCreateOrLoad = 'create'
       }
+
+      Bogdle.__updateDailyDetails(data['index'])
     } catch (e) {
       console.error('could not get daily seed word', e)
     }
@@ -394,6 +399,7 @@ Bogdle._loadGame = async function() {
 
   if (Bogdle.__getGameMode() == 'daily') { // daily
     Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
+    Bogdle.dom.dailyDetails.classList.add('show')
 
     if (dailyCreateOrLoad == 'load') {
       await Bogdle._loadExistingSolutionSet('daily', Bogdle.state.daily.seedWord)
@@ -486,6 +492,7 @@ Bogdle._loadSettings = function() {
     Bogdle.dom.interactive.gameModeDailyLink.dataset.active = false
     Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
     Bogdle.dom.interactive.difficultyContainer.classList.add('show')
+    Bogdle.dom.dailyDetails.classList.remove('show')
     Bogdle.dom.interactive.btnCreateNew.disabled = false
   }
 
@@ -512,13 +519,18 @@ Bogdle._changeSetting = async function(setting, value, event) {
     case 'gameMode':
       switch (value) {
         case 'daily':
-          // console.log('**** switchING game mode to DAILY ****')
+          console.log('**** switchING game mode to DAILY ****')
 
           // get seedWord for today
           if (!Bogdle.state.daily.seedWord) {
             try {
+              console.log('_changeSetting->fetching BOGDLE_DAILY_SCRIPT')
+
               const response = await fetch(BOGDLE_DAILY_SCRIPT)
-              Bogdle.state.daily.seedWord = await response.text()
+              const data = await response.json()
+              Bogdle.state.daily.seedWord = data['word']
+
+              Bogdle.__updateDailyDetails(data['index'])
             } catch (e) {
               console.error('could not get daily word', e)
             }
@@ -533,17 +545,18 @@ Bogdle._changeSetting = async function(setting, value, event) {
           Bogdle.dom.interactive.gameModeDailyLink.dataset.active = true
           Bogdle.dom.interactive.gameModeFreeLink.dataset.active = false
           Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
+          Bogdle.dom.dailyDetails.classList.add('show')
 
           await Bogdle._loadExistingSolutionSet('daily', Bogdle.state.daily.seedWord)
 
           Bogdle._saveGame()
 
-          console.log('**** switchED game mode to DAILY ****')
+         //  console.log('**** switchED game mode to DAILY ****')
 
           break
 
         case 'free':
-          // console.log('**** switchING game mode to FREE ****')
+          console.log('**** switchING game mode to FREE ****')
 
           Bogdle._saveSetting('gameMode', 'free')
           Bogdle._clearHint()
@@ -554,6 +567,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
           Bogdle.dom.interactive.gameModeDailyLink.dataset.active = false
           Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
           Bogdle.dom.interactive.difficultyContainer.classList.add('show')
+          Bogdle.dom.dailyDetails.classList.remove('show')
 
           await Bogdle._loadExistingSolutionSet('free', Bogdle.state.free.seedWord)
 
@@ -724,7 +738,7 @@ Bogdle._initDictionaryFile = function(gameMode) {
 
 // create new solutionSet, which resets progress
 Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
-  // console.log(`**** creatING new '${gameMode}' solutionSet ****`)
+  console.log(`**** creatING new '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
@@ -773,8 +787,13 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
     }
   } else { // 'daily' always uses day hash
     try {
+      console.log('_createNewSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
+
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
-      newWord = await response.text()
+      const data = await response.json()
+      newWord = data['word']
+
+      Bogdle.__updateDailyDetails(data['index'])
 
       if (newWord) {
         // console.log(`Seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
@@ -847,7 +866,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
 
 // load existing solutionSet, which retains past progress
 Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNewDiff = false) {
-  // console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
+  console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
@@ -884,8 +903,13 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
     }
   } else { // 'daily' always uses day hash
     try {
+      console.log('_loadExistingSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
+
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
-      newWord = await response.text()
+      const data = await response.json()
+      newWord = data['word']
+
+      Bogdle.__updateDailyDetails(data['index'])
 
       if (newWord) {
         // console.log(`DAILY seed word for ${Bogdle.__getTodaysDate()}:`, newWord.toUpperCase())
@@ -2010,6 +2034,11 @@ Bogdle.__getTodaysDate = function() {
 // shorter gameMode deducer
 Bogdle.__getGameMode = function() {
   return Bogdle.settings.gameMode
+}
+
+Bogdle.__updateDailyDetails = function(index) {
+  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = index
+  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
 }
 
 /************************************************************************

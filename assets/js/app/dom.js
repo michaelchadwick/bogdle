@@ -6,6 +6,7 @@
 Bogdle.dom = {
   "navOverlay": document.getElementById('nav-overlay'),
   "navContent": document.getElementById('nav-content'),
+  "dailyDetails": document.getElementById('daily-details'),
   "guess": document.getElementById('guess'),
   "score": document.getElementById('score-container'),
   "scoreGuessed": document.getElementById('score-guessed'),

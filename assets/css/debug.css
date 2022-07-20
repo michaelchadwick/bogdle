@@ -7,8 +7,11 @@ section#game {
     section#game #mode-container #gamemode-container {
       background-color: #ffdcaa;
     }
-    section#game #mode-container #difficulty-container {
+    section#game #mode-container #daily-details {
       background-color: #ffd3aa;
+    }
+    section#game #mode-container #difficulty-container {
+      background-color: #ffe4ca;
     }
 
   section#game #board-container {
