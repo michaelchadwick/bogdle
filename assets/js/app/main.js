@@ -293,13 +293,12 @@ Bogdle._loadGame = async function() {
   if (lsStateDaily) {
     // console.log('DAILY localStorage state key found and loading...', lsStateDaily)
 
-    Bogdle.state.daily.gameState = lsStateDaily.gameState
-    Bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime
-    Bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime
-    Bogdle.state.daily.statistics = {
-      "gamesPlayed": lsStateDaily.statistics.gamesPlayed,
-      "wordsFound": lsStateDaily.statistics.wordsFound
-    }
+    const dailyDefaults = BOGDLE_DEFAULTS.state.daily
+
+    Bogdle.state.daily.gameState = lsStateDaily.gameState || dailyDefaults.gameState
+    Bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime || null
+    Bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime || null
+    Bogdle.state.daily.statistics = lsStateDaily.statistics || dailyDefaults.statistics
 
     // console.log('DAILY localStorage state key loaded')
 
@@ -364,16 +363,15 @@ Bogdle._loadGame = async function() {
   if (lsStateFree) {
     // console.log('FREE localStorage state key found and loading...', lsStateFree)
 
-    Bogdle.state.free.difficulty = lsStateFree.difficulty
-    Bogdle.state.free.gameState = lsStateFree.gameState
-    Bogdle.state.free.guessedWords = lsStateFree.guessedWords
-    Bogdle.state.free.lastCompletedTime = lsStateFree.lastCompletedTime
-    Bogdle.state.free.lastPlayedTime = lsStateFree.lastPlayedTime
-    Bogdle.state.free.seedWord = lsStateFree.seedWord
-    Bogdle.state.free.statistics = {
-      "gamesPlayed": lsStateFree.statistics.gamesPlayed,
-      "wordsFound": lsStateFree.statistics.wordsFound
-    }
+    const freeDefaults = BOGDLE_DEFAULTS.state.free
+
+    Bogdle.state.free.difficulty = lsStateFree.difficulty || freeDefaults.difficulty
+    Bogdle.state.free.gameState = lsStateFree.gameState || freeDefaults.gameState
+    Bogdle.state.free.guessedWords = lsStateFree.guessedWords || freeDefaults.guessedWords
+    Bogdle.state.free.lastCompletedTime = lsStateFree.lastCompletedTime || freeDefaults.lastCompletedTime
+    Bogdle.state.free.lastPlayedTime = lsStateFree.lastPlayedTime || freeDefaults.lastPlayedTime
+    Bogdle.state.free.seedWord = lsStateFree.seedWord || freeDefaults.seedWord
+    Bogdle.state.free.statistics = lsStateFree.statistics || freeDefaults.statistics
 
     // console.log('FREE localStorage state key loaded; solution to be created with previous seedWord')
 
@@ -470,9 +468,9 @@ Bogdle._loadSettings = function() {
       }
     }
 
-    Bogdle.settings.gameMode = lsSettings.gameMode
+    Bogdle.settings.gameMode = lsSettings.gameMode || 'daily'
 
-    Bogdle.settings.noisy = lsSettings.noisy
+    Bogdle.settings.noisy = lsSettings.noisy || false
 
     if (Bogdle.settings.noisy) {
       Bogdle._initAudio()
@@ -2037,7 +2035,7 @@ Bogdle.__getGameMode = function() {
 }
 
 Bogdle.__updateDailyDetails = function(index) {
-  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = index
+  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
   Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
 }
 
