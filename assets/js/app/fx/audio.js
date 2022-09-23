@@ -108,7 +108,7 @@ Bogdle._initAudio = async function() {
           `${path}/tile_delete.wav`
         ])
       } else {
-        // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is full, so need to initialize.`)
+        // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is full, so no need to initialize.`)
       }
     })
   })
