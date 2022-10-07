@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 class Modal {
 
   constructor(modalType, modalTitle, modalText, acceptText, cancelText) {
