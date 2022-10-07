@@ -65,7 +65,8 @@ async function modalOpen(type) {
         const response = await fetch(`${BOGDLE_DEFINE_LOOKUP_URL}/${word}`)
         const responseJson = await response.json()
 
-        if (responseJson) {
+        // found word
+        if (responseJson[0]) {
           const entry = responseJson[0]
 
           this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
@@ -74,6 +75,17 @@ async function modalOpen(type) {
                 <strong>${entry.word}</strong> ${entry.phonetic}
                 <hr />
                 <em>${entry.meanings[0].partOfSpeech}</em>: ${entry.meanings[0].definitions[0].definition}
+              </div>
+            `,
+            null,
+            null,
+            false
+          )
+        } else {
+          this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
+            `
+              <div class="dictionary">
+                <strong>${word}</strong> not found!
               </div>
             `,
             null,
