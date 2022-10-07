@@ -82,7 +82,7 @@ async function useFetch(url) {
     .then(response => response.arrayBuffer())
     .then(ArrayBuffer => context.decodeAudioData(ArrayBuffer));
 
-    gainNode.gain.value = 0.3;
+    gainNode.gain.value = 0.5;
     source.buffer = audioBuffer;
 
     source.connect(gainNode);
