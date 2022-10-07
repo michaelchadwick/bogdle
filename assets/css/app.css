@@ -611,8 +611,9 @@ section#game {
         }
         section#game #hint-container #hint-arena button#button-hint {
           float: left;
-          font-size: 1.5em;
+          font-size: 1.25em;
           font-weight: normal;
+          letter-spacing: 0.25rem;
           margin-right: 0;
           min-width: 50px;
           padding: 5px 10px;
