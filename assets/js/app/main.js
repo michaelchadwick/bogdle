@@ -1640,12 +1640,7 @@ Bogdle._cycleHint = function() {
   const hintWord = Bogdle.config[Bogdle.__getGameMode()].hintWord
 
   // set maximum number of letters to show before forcing a new hint
-  var maxLetters = Math.floor(hintWord.length / 2)
-
-  // if word is short, add more potential hint letters
-  if (hintWord.length < 4) {
-    maxLetters += 1
-  }
+  var maxLetters = Math.ceil(hintWord.length / 2)
 
   // console.log(`length: ${hintWord.length}, maxLetters: ${maxLetters}, count: ${Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter}`)
 
