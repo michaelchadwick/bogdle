@@ -4,6 +4,7 @@
 .jshintrc
 .git
 .gitignore
+*.icloud
 assets/ruby
 bower.json
 LICENSE.md
