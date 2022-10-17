@@ -85,6 +85,7 @@
 }
   .modal-text ul,
   .modal-text {
+    line-height: 1.2;
     list-style-type: none;
     margin: 0;
     padding: 10px;

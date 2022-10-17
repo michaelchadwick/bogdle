@@ -31,13 +31,13 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Bogdle',
         `
-          <p>Find all the words in the jumble of letters! Select each letter in order and then hit the <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent (unlike actual Boggle).</p>
+          <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Valid submitted words will remain for easily-played variations (BAR, BARE, BARES, etc.)</p>
 
           <h4>Daily</h4>
-          <p>Each word is 3 to 9 letters long. Come back every day for a new puzzle!</p>
+          <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day for a new one!</p>
 
           <h4>Free</h4>
-          <p>Each word is at least 3 letters, and as many as the difficulty (KID: 3, EASY: 5, MEDIUM: 7, NORMAL: 9) allows. Play as many puzzles as you'd like. Tap on <button class="help"><i class="fa-solid fa-circle-plus"></i></button> to load a new one.
+          <p>Words are at least 3 letters, with max length being equal to difficulty (KID: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want.
 
           <ul class="help">
             <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word</li>
