@@ -317,7 +317,7 @@ Bogdle._loadGame = async function() {
     // special case for daily word: need to check
     // to make sure time hasn't elapsed on saved progress
     try {
-      console.log('_loadGame->fetching BOGDLE_DAILY_SCRIPT')
+      // console.log('_loadGame->fetching BOGDLE_DAILY_SCRIPT')
 
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
       const data = await response.json()
@@ -534,7 +534,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
           // get seedWord for today
           if (!Bogdle.state.daily.seedWord) {
             try {
-              console.log('_changeSetting->fetching BOGDLE_DAILY_SCRIPT')
+              // console.log('_changeSetting->fetching BOGDLE_DAILY_SCRIPT')
 
               const response = await fetch(BOGDLE_DAILY_SCRIPT)
               const data = await response.json()
@@ -748,7 +748,7 @@ Bogdle._initDictionaryFile = function(gameMode) {
 
 // create new solutionSet, which resets progress
 Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
-  console.log(`**** creatING new '${gameMode}' solutionSet ****`)
+  // console.log(`**** creatING new '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
@@ -797,7 +797,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
     }
   } else { // 'daily' always uses day hash
     try {
-      console.log('_createNewSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
+      // console.log('_createNewSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
 
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
       const data = await response.json()
@@ -913,7 +913,7 @@ Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNew
     }
   } else { // 'daily' always uses day hash
     try {
-      console.log('_loadExistingSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
+      // console.log('_loadExistingSolutionSet->fetching BOGDLE_DAILY_SCRIPT')
 
       const response = await fetch(BOGDLE_DAILY_SCRIPT)
       const data = await response.json()
