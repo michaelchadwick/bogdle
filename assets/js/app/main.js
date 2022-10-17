@@ -358,13 +358,6 @@ Bogdle._loadGame = async function() {
     dailyCreateOrLoad = 'create'
   }
 
-  if (Bogdle.__getGameMode() == 'daily' && Bogdle.state.daily.lastPlayedTime == null) {
-    if (Bogdle.showStartModal) {
-      modalOpen('start')
-      Bogdle.showStartModal = false
-    }
-  }
-
   /* ************************* */
   /* free state LS -> code     */
   /* ************************* */
@@ -426,6 +419,15 @@ Bogdle._loadGame = async function() {
     }
 
     // console.log('FREE solutionSet loaded!', Bogdle.state.free.seedWord.toUpperCase())
+  }
+
+  if (Bogdle.__getGameMode() == 'daily' && Bogdle.state.daily.lastPlayedTime == null) {
+    console.log('daily gameMode + no lastPlayedTime')
+
+    if (Bogdle.showStartModal) {
+      modalOpen('start')
+      Bogdle.showStartModal = false
+    }
   }
 }
 
@@ -529,7 +531,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
     case 'gameMode':
       switch (value) {
         case 'daily':
-          console.log('**** switchING game mode to DAILY ****')
+          // console.log('**** switchING game mode to DAILY ****')
 
           // get seedWord for today
           if (!Bogdle.state.daily.seedWord) {
@@ -566,7 +568,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
           break
 
         case 'free':
-          console.log('**** switchING game mode to FREE ****')
+          // console.log('**** switchING game mode to FREE ****')
 
           Bogdle._saveSetting('gameMode', 'free')
           Bogdle._clearHint()
@@ -876,7 +878,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
 
 // load existing solutionSet, which retains past progress
 Bogdle._loadExistingSolutionSet = async function(gameMode, newWord = null, isNewDiff = false) {
-  console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
+  // console.log(`**** loadING existing '${gameMode}' solutionSet ****`)
 
   // set config to defaults
   Bogdle.config[gameMode].letters = []
