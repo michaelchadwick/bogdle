@@ -111,7 +111,7 @@ async function modalOpen(type) {
             <div class="statistics">
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Games Played</div>
+                <div class="statistic-label">Games Finished</div>
               </div>
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.daily.statistics.wordsFound}</div>
