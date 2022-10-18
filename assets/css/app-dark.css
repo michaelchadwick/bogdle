@@ -5,10 +5,30 @@ body.dark-mode {
   body.dark-mode a {
     color: #fff;
   }
+
+  body.dark-mode code {
+    background-color: #777777;
+  }
+
   body.dark-mode header,
   body.dark-mode button {
     color: #fff;
   }
+
+  body.dark-mode button.help {
+    background-color: #111111;
+    border: 1px solid #fff;
+  }
+
+  body.dark-mode header .menu-left #nav-overlay #nav-content {
+    background-color: #000;
+  }
+    body.dark-mode header .menu-left #nav-overlay #nav-content a {
+      color: #fff;
+    }
+      body.dark-mode header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
+        background-color: #529952;
+      }
 
   body.dark-mode .tile[data-state='tbd'] {
     border: 2px solid #fff;
@@ -17,6 +37,10 @@ body.dark-mode {
 
   body.dark-mode section#game #mode-container .setting-row a {
     color: #fff;
+  }
+
+  body.dark-mode section#game #mode-container #daily-details {
+    color: #ffffff;
   }
 
   body.dark-mode section#game #guess-container #guess {
@@ -29,12 +53,34 @@ body.dark-mode {
       color: #3f9f1f;
     }
 
-  body.dark-mode #keyboard-container button {
-    background-color: #888;
+  body.dark-mode section#game #hint-container #hint-arena button#button-hint.not-a-button {
+    color: #fff;
   }
 
+  body.dark-mode section#game #keyboard-container button {
+    background-color: #000;
+    border: 1px solid #fff;
+    color: #fff;
+  }
+
+  body.dark-mode section#game #keyboard-container .row:last-of-type button {
+    background-color: #3a3a3a;
+    border: 1px solid #eaeaea;
+    color: #fff;
+  }
+    body.dark-mode section#game #keyboard-container .row:last-of-type button:disabled {
+      background-color: #7a7575;
+      border: 1px solid #b4b4b4;
+      color: #acacac;
+    }
+      body.dark-mode section#game #keyboard-container .row.sub button:hover:not([disabled]) {
+        background-color: #535353;
+        border: none;
+        color: #fff;
+      }
+
   body.dark-mode #settings .setting-row .text .description {
-    color: #aaa;
+    color: #d2d2d2;
   }
 
   body.dark-mode .switch {
@@ -46,7 +92,6 @@ body.dark-mode {
 
   body.dark-mode .modal-window {
     background-color: #111;
-    border-color: #529952;
   }
   body.dark-mode .modal-dialog.temp .modal-window {
     background-color: #111111;
@@ -56,6 +101,10 @@ body.dark-mode {
     background-color: #111;
     color: #fff;
   }
+    body.dark-mode .modal-text ul li span.solution-category + ul {
+      background-color: #222;
+      color: #fff;
+    }
   body.dark-mode .modal-button-group {
     background-color: #111;
   }

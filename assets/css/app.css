@@ -36,7 +36,7 @@ code {
   border: 1px solid #e1e1e1;
   border-radius: 4px;
   display: inline-block;
-  padding: 0 3px;
+  padding: 2px 4px 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -92,11 +92,11 @@ button {
     background-color: #d1d1d1;
     border-radius: 4px;
     display: inline-block;
-    height: 20px;
+    height: 21px;
     margin-right: 2px;
     position: relative;
     top: 1px;
-    width: 20px;
+    width: 21px;
   }
     button.help i {
       bottom: 1px;
@@ -323,9 +323,10 @@ header {
             }
           header .menu-left #nav-overlay #nav-content #button-nav-close {
             font-size: 20px;
+            font-weight: 600;
             height: 24px;
             position: absolute;
-            right: 16px;
+            right: 10px;
             top: 16px;
             width: 24px;
           }
