@@ -1386,6 +1386,8 @@ Bogdle._removeLastLetter = function() {
       Array.from(Bogdle.dom.interactive.tiles).forEach(tile => {
         if (tile.dataset.pos == last) {
           tile.dataset.state = 'tbd'
+
+          Bogdle._animateCSS(`#${tile.id}`, 'pulse')
         }
       })
     }
