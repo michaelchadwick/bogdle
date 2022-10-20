@@ -147,6 +147,24 @@ async function modalOpen(type) {
       this.myModal = new Modal('perm', 'Settings',
         `
           <div id="settings">
+            <!-- clear word -->
+            <div class="setting-row">
+              <div class="text">
+                <div class="title">Clear Word</div>
+                <div class="description">Clear word on valid submission</div>
+              </div>
+              <div class="control">
+                <div class="container">
+                  <div id="button-setting-clear-word"
+                    data-status=""
+                    class="switch"
+                    onclick="Bogdle._changeSetting('clearWord')"
+                  >
+                    <span class="knob"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- dark mode -->
             <div class="setting-row">
               <div class="text">
@@ -155,7 +173,11 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-dark-mode" data-status="" class="switch" onclick="Bogdle._changeSetting('darkMode')">
+                  <div id="button-setting-dark-mode"
+                    data-status=""
+                    class="switch"
+                    onclick="Bogdle._changeSetting('darkMode')"
+                  >
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -169,7 +191,11 @@ async function modalOpen(type) {
               </div>
               <div class="control">
                 <div class="container">
-                  <div id="button-setting-noisy" data-status="" class="switch" onclick="Bogdle._changeSetting('noisy')">
+                  <div id="button-setting-noisy"
+                    data-status=""
+                    class="switch"
+                    onclick="Bogdle._changeSetting('noisy')"
+                  >
                     <span class="knob"></span>
                   </div>
                 </div>
@@ -470,6 +496,16 @@ Bogdle._loadSettings = function() {
   var lsSettings = JSON.parse(localStorage.getItem(BOGDLE_SETTINGS_KEY))
 
   if (lsSettings) {
+    Bogdle.settings.clearWord = lsSettings.clearWord
+
+    if (Bogdle.settings.clearWord) {
+      var setting = document.getElementById('button-setting-clear-word')
+
+      if (setting) {
+        setting.dataset.status = 'true'
+      }
+    }
+
     Bogdle.settings.darkMode = lsSettings.darkMode
 
     if (Bogdle.settings.darkMode) {
@@ -591,6 +627,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
       }
 
       break
+
     case 'difficulty':
       var gameMode = 'free'
       var oldDiff = Bogdle.state[gameMode].difficulty
@@ -632,6 +669,22 @@ Bogdle._changeSetting = async function(setting, value, event) {
       }
 
       break
+
+    case 'clearWord':
+      var st = document.getElementById('button-setting-clear-word').dataset.status
+
+      if (st == '' || st == 'false') {
+        document.getElementById('button-setting-clear-word').dataset.status = 'true'
+
+        Bogdle._saveSetting('clearWord', true)
+      } else {
+        document.getElementById('button-setting-clear-word').dataset.status = 'false'
+
+        Bogdle._saveSetting('clearWord', false)
+      }
+
+      break
+
     case 'darkMode':
       var st = document.getElementById('button-setting-dark-mode').dataset.status
 
@@ -648,6 +701,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
       }
 
       break
+
     case 'noisy':
       var st = document.getElementById('button-setting-noisy').dataset.status
 
@@ -1121,7 +1175,12 @@ Bogdle._submitWord = function(word) {
           }
 
           // do a little dance
-          Bogdle._animateCSS('#guess', 'tada')
+          Bogdle._animateCSS('#guess', 'tada').then(() => {
+            if (Bogdle.settings.clearWord) {
+              Bogdle._resetTiles()
+              Bogdle._resetGuess()
+            }
+          })
 
           // make a little love
           Bogdle._increaseScore()

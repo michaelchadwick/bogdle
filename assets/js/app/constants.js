@@ -17,11 +17,13 @@ const BOGDLE_DIFFICULTY = {
   'medium': 'small',
   'normal': 'small'
 }
+
 const BOGDLE_WORD_SOURCES = {
   'small': '01_sm',
   'medium': '02_md',
   'large': '03_lg'
 }
+
 const BOGDLE_DIFF_TO_LENGTH = {
   'kid': 3,
   'easy': 5,
@@ -80,6 +82,7 @@ const BOGDLE_DEFAULTS = {
     }
   },
   'settings': {
+    'clearWord': true,
     'darkMode': false,
     'gameMode': 'daily',
     'noisy': false
