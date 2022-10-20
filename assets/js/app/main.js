@@ -1352,7 +1352,6 @@ Bogdle._disableTiles = function() {
 }
 Bogdle._disableUIButtons = function() {
   Object.values(Bogdle.dom.mainUI).forEach(btn => {
-    console.log('_disableUIButtons btn', btn)
     if (btn.id !== 'button-show-progress') {
       btn.setAttribute('disabled', '')
     }
