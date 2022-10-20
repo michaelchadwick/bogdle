@@ -1963,6 +1963,8 @@ Bogdle._attachEventListeners = function() {
             // add selected tile to guess
             Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
 
+            // do a little dance
+            Bogdle._animateCSS(`#${tileToPush.id}`, 'pulse')
             Bogdle._audioPlay('tile_click')
 
             // check guess for validity
