@@ -111,11 +111,11 @@ async function modalOpen(type) {
             <div class="statistics">
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Games Finished</div>
+                <div class="statistic-label">Game(s) Finished</div>
               </div>
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.daily.statistics.wordsFound}</div>
-                <div class="statistic-label">Words Found</div>
+                <div class="statistic-label">Word(s) Found</div>
               </div>
             </div>
 
@@ -123,11 +123,11 @@ async function modalOpen(type) {
             <div class="statistics">
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.free.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Games Finished</div>
+                <div class="statistic-label">Game(s) Finished</div>
               </div>
               <div class="statistic-container">
                 <div class="statistic">${Bogdle.state.free.statistics.wordsFound}</div>
-                <div class="statistic-label">Words Found</div>
+                <div class="statistic-label">Word(s) Found</div>
               </div>
 
             </div>
@@ -448,7 +448,7 @@ Bogdle._loadGame = async function() {
   }
 
   if (Bogdle.__getGameMode() == 'daily' && Bogdle.state.daily.lastPlayedTime == null) {
-    console.log('daily gameMode + no lastPlayedTime')
+    // console.log('daily gameMode + no lastPlayedTime')
 
     if (Bogdle.showStartModal) {
       modalOpen('start')
@@ -1289,7 +1289,10 @@ Bogdle._checkWinState = function() {
         // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
         Bogdle.state[Bogdle.__getGameMode()].statistics.gamesPlayed += 1
         Bogdle.state[Bogdle.__getGameMode()].gameState = 'GAME_OVER'
-        Bogdle.state[Bogdle.__getGameMode()].lastCompletedTime = new Date().getTime()
+
+        const now = new Date().getTime()
+        Bogdle.state[Bogdle.__getGameMode()].lastCompletedTime = now
+        Bogdle.state[Bogdle.__getGameMode()].lastPlayedTime = now
 
         Bogdle._saveGame()
       }
@@ -1299,6 +1302,9 @@ Bogdle._checkWinState = function() {
 
       // disable hint (until future re-enabling)
       Bogdle._disableHint()
+
+      // disable main UI (until future re-enabling)
+      Bogdle._disableUIButtons()
 
       // display modal win thingy
       modalOpen('win')
@@ -1342,6 +1348,14 @@ Bogdle._disableTiles = function() {
   Array.from(Bogdle.dom.interactive.tiles).forEach(tile => {
     tile.setAttribute('disabled', '')
     tile.dataset.state = 'disabled'
+  })
+}
+Bogdle._disableUIButtons = function() {
+  Object.values(Bogdle.dom.mainUI).forEach(btn => {
+    console.log('_disableUIButtons btn', btn)
+    if (btn.id !== 'button-show-progress') {
+      btn.setAttribute('disabled', '')
+    }
   })
 }
 // disable hint system
