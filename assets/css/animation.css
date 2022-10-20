@@ -7,7 +7,7 @@ header .menu-left #nav-overlay #nav-content {
 }
 
 section#game #guess-container #guess {
-  animation-duration: 700ms;
+  animation-duration: 400ms;
 }
 
 @keyFrames SlideRight {

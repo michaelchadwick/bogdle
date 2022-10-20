@@ -538,7 +538,7 @@ section#game {
     }
   }
     section#game #guess-container #guess {
-      color: #364333a7;
+      color: #000;
       font-size: 1em;
       line-height: 0.7em;
       letter-spacing: 0.03em;
@@ -550,11 +550,13 @@ section#game {
       width: 100%;
     }
       section#game #guess-container #guess.valid {
-        color: #305c1e;
+        color: #364333a7;
+        /* color: #305c1e; */
         letter-spacing: 0e.04em;
       }
         section#game #guess-container #guess.valid.first-guess {
           color: #23b62d;
+          font-size: 1.1em;
         }
 
   /* BOARD-CONTAINER */

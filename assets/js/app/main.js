@@ -1167,8 +1167,6 @@ Bogdle._submitWord = function(word) {
 
           Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][word] = 1
 
-          Bogdle.dom.guess.classList.remove('first-guess')
-
           // clear hint if it's the same word
           if (word == Bogdle.config[Bogdle.__getGameMode()].hintWord) {
             Bogdle._clearHint()
@@ -1176,6 +1174,8 @@ Bogdle._submitWord = function(word) {
 
           // do a little dance
           Bogdle._animateCSS('#guess', 'tada').then(() => {
+            Bogdle.dom.guess.classList.remove('first-guess')
+
             if (Bogdle.settings.clearWord) {
               Bogdle._resetTiles()
               Bogdle._resetGuess()
