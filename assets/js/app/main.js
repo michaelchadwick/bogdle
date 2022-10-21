@@ -286,6 +286,22 @@ async function modalOpen(type) {
         null
       )
       break
+
+    case 'win-game':
+      this.myModal = new Modal('temp', null,
+        'Congratulations!',
+        null,
+        null
+      )
+      break
+
+    case 'win-game-hax':
+      this.myModal = new Modal('temp', null,
+        'Hacking the game, I see',
+        null,
+        null
+      )
+      break
   }
 }
 
@@ -1297,19 +1313,25 @@ Bogdle._checkWinState = function() {
         Bogdle._saveGame()
       }
 
-      // disable inputs (until future re-enabling)
-      Bogdle._disableTiles()
+      modalOpen('win-game')
 
-      // disable hint (until future re-enabling)
-      Bogdle._disableHint()
+      Bogdle.__winAnimation().then(() => {
+        Bogdle.__resetTilesDuration()
 
-      // disable main UI (until future re-enabling)
-      Bogdle._disableUIButtons()
+        // disable inputs (until future re-enabling)
+        Bogdle._disableTiles()
 
-      // display modal win thingy
-      modalOpen('win')
+        // disable hint (until future re-enabling)
+        Bogdle._disableHint()
 
-      return true
+        // disable main UI (until future re-enabling)
+        Bogdle._disableUIButtons()
+
+        // display modal win thingy
+        modalOpen('win')
+
+        return true
+      })
     } else {
       // console.log('Bogdle._checkWinState(): game not yet won')
 
@@ -1785,24 +1807,57 @@ Bogdle._handleClickTouch = function(event) {
 }
 
 // debug: beat game to check win state
-Bogdle._winGame = function() {
-  console.log('HAX! Winning game immediately...')
-
+Bogdle._winGame = function(state = null) {
   const solutionSet = Bogdle.config[Bogdle.__getGameMode()].solutionSet
+  const solutionSetSize = Bogdle.__getSolutionSize()
 
-  Object.keys(solutionSet).forEach(category => {
-    Object.keys(solutionSet[category]).forEach(word => {
-      if (solutionSet[category][word] == 0) {
-        Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
-        Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
-        Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
-      }
+  modalOpen('win-game-hax')
+
+  if (state == 'almost') {
+    console.log('HAX! Setting game to one word left...')
+
+    let count = 0
+
+    // set to winning, but stop one short
+    Object.keys(solutionSet).forEach(category => {
+      if (count == solutionSetSize - 1) return
+
+      Object.keys(solutionSet[category]).forEach(word => {
+        if (solutionSet[category][word] == 0) {
+          Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
+          Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
+          Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
+        }
+
+        count += 1
+
+        if (count == solutionSetSize - 1) return
+      })
     })
-  })
 
-  Bogdle._setScore(Bogdle.__getSolutionSize())
+    Bogdle._setScore(count)
 
-  Bogdle._saveGame()
+    Bogdle.state[Bogdle.__getGameMode()].lastPlayedTime = new Date().getTime()
+
+    Bogdle._saveGame()
+  } else {
+    console.log('HAX! Winning game immediately...')
+
+    // set to winning
+    Object.keys(solutionSet).forEach(category => {
+      Object.keys(solutionSet[category]).forEach(word => {
+        if (solutionSet[category][word] == 0) {
+          Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
+          Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
+          Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
+        }
+      })
+    })
+
+    Bogdle._setScore(Bogdle.__getSolutionSize())
+
+    Bogdle._saveGame()
+  }
 
   Bogdle._checkWinState()
 }
@@ -1918,7 +1973,7 @@ Bogdle._attachEventListeners = function() {
   // local debug buttons
   if (Bogdle.env == 'local') {
     if (Bogdle.dom.interactive.debug.all) {
-      // 🪣 show list of words
+      // 🪣 show master word list
       Bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
         modalOpen('show-solution')
       })
@@ -1936,6 +1991,14 @@ Bogdle._attachEventListeners = function() {
       // 🏆 win game immediately
       Bogdle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
         Bogdle._winGame()
+      })
+      // 🏅 almost win game (post-penultimate move)
+      Bogdle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
+        Bogdle._winGame('almost')
+      })
+      // 🏁 display win tile animation
+      Bogdle.dom.interactive.debug.btnWinAnimation.addEventListener('click', () => {
+        Bogdle.__winAnimation().then(() => Bogdle.__resetTilesDuration())
       })
     }
   }
@@ -2122,6 +2185,28 @@ Bogdle.__getGameMode = function() {
 Bogdle.__updateDailyDetails = function(index) {
   Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
   Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
+}
+
+Bogdle.__winAnimation = async function() {
+  return new Promise((resolve, reject) => {
+    Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1s'))
+
+    setTimeout(() => Bogdle._animateCSS('#tile1', 'bounce'), 0)
+    setTimeout(() => Bogdle._animateCSS('#tile2', 'bounce'), 100)
+    setTimeout(() => Bogdle._animateCSS('#tile3', 'bounce'), 200)
+    setTimeout(() => Bogdle._animateCSS('#tile4', 'bounce'), 300)
+    setTimeout(() => Bogdle._animateCSS('#tile5', 'bounce'), 400)
+    setTimeout(() => Bogdle._animateCSS('#tile6', 'bounce'), 500)
+    setTimeout(() => Bogdle._animateCSS('#tile7', 'bounce'), 600)
+    setTimeout(() => Bogdle._animateCSS('#tile8', 'bounce'), 700)
+    setTimeout(() => Bogdle._animateCSS('#tile9', 'bounce'), 800)
+
+    setTimeout(() => resolve('__winAnimation ended'), 2000)
+  })
+}
+
+Bogdle.__resetTilesDuration = function() {
+  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '0.1s'), 0)
 }
 
 /************************************************************************

@@ -54,5 +54,7 @@ Bogdle.dom.interactive.debug = {
   'btnResetProgress': document.getElementById('button-reset-progress'),
   'btnShowConfig': document.getElementById('button-show-config'),
   'btnShowState': document.getElementById('button-show-state'),
-  'btnWinGame': document.getElementById('button-win-game')
+  'btnWinGame': document.getElementById('button-win-game'),
+  'btnWinGameAlmost': document.getElementById('button-win-game-almost'),
+  'btnWinAnimation': document.getElementById('button-win-animation')
 }
