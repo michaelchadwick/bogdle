@@ -100,43 +100,51 @@ async function modalOpen(type) {
 
     case 'stats':
     case 'win':
-      this.myModal = new Modal('perm', 'Statistics',
-        `
-          <div class="container">
+      let modalText = `
+        <div class="container">
 
-            <div class="statistic-header">Daily</div>
-            <div class="statistic-subheader">
-              (<small>New puzzle available at 12am PST</small>)
+          <div class="statistic-header">Daily</div>
+          <div class="statistic-subheader">
+            (<small>New puzzle available at 12am PST</small>)
+          </div>
+          <div class="statistics">
+            <div class="statistic-container">
+              <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
+              <div class="statistic-label">Game(s) Finished</div>
             </div>
-            <div class="statistics">
-              <div class="statistic-container">
-                <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Game(s) Finished</div>
-              </div>
-              <div class="statistic-container">
-                <div class="statistic">${Bogdle.state.daily.statistics.wordsFound}</div>
-                <div class="statistic-label">Word(s) Found</div>
-              </div>
-            </div>
-
-            <div class="statistic-header">Free Play</div>
-            <div class="statistics">
-              <div class="statistic-container">
-                <div class="statistic">${Bogdle.state.free.statistics.gamesPlayed}</div>
-                <div class="statistic-label">Game(s) Finished</div>
-              </div>
-              <div class="statistic-container">
-                <div class="statistic">${Bogdle.state.free.statistics.wordsFound}</div>
-                <div class="statistic-label">Word(s) Found</div>
-              </div>
-
-            </div>
-
-            <div class="share">
-              <button class="share" onclick="Bogdle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
+            <div class="statistic-container">
+              <div class="statistic">${Bogdle.state.daily.statistics.wordsFound}</div>
+              <div class="statistic-label">Word(s) Found</div>
             </div>
           </div>
-        `,
+
+          <div class="statistic-header">Free Play</div>
+          <div class="statistics">
+            <div class="statistic-container">
+              <div class="statistic">${Bogdle.state.free.statistics.gamesPlayed}</div>
+              <div class="statistic-label">Game(s) Finished</div>
+            </div>
+            <div class="statistic-container">
+              <div class="statistic">${Bogdle.state.free.statistics.wordsFound}</div>
+              <div class="statistic-label">Word(s) Found</div>
+            </div>
+
+          </div>
+      `
+
+      if (Bogdle.state[Bogdle.__getGameMode()].gameState == 'GAME_OVER') {
+        modalText += `
+          <div class="share">
+            <button class="share" onclick="Bogdle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
+          </div>
+        `
+      }
+
+      modalText += `
+        </div>
+      `
+      this.myModal = new Modal('perm', 'Statistics',
+        modalText,
         null,
         null,
         false
@@ -1864,7 +1872,9 @@ Bogdle._winGame = function(state = null) {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  const shareText = `I beat Bogdle on ${Bogdle.__getTodaysDate()}. Have you tried? https://bogdle.fun`
+  const shareText = `
+    I beat Bogdle on ${Bogdle.__getTodaysDate()}. Have you tried? https://bogdle.fun
+  `
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
