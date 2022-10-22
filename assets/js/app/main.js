@@ -1689,26 +1689,28 @@ Bogdle._displayGameSolution = function() {
 
   // check each length category (max...3, etc.)
   Object.keys(Bogdle.config.daily.solutionSet).reverse().forEach(key => {
-    var solutionWords = []
+    if (Object.keys(Bogdle.config[gameMode].solutionSet).includes(key)) {
+      var solutionWords = []
 
-    html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
+      html += `<li><span class="solution-category">${key}-LETTER</span><ul><li>`
 
-    // create sorted array of each length category's words
-    var sortedArr = Array.from(Object.keys(Bogdle.config[gameMode].solutionSet[key])).sort()
+      // create sorted array of each length category's words
+      var sortedArr = Array.from(Object.keys(Bogdle.config[gameMode].solutionSet[key])).sort()
 
-    // go through each word in each category
-    sortedArr.forEach(word => {
-      // mark guessed words
-      if (Bogdle.state[gameMode].guessedWords.includes(word)) {
-        word = `<strong>${word}</strong>`
-      }
+      // go through each word in each category
+      sortedArr.forEach(word => {
+        // mark guessed words
+        if (Bogdle.state[gameMode].guessedWords.includes(word)) {
+          word = `<strong>${word}</strong>`
+        }
 
-      solutionWords.push(word.toUpperCase())
-    })
+        solutionWords.push(word.toUpperCase())
+      })
 
-    // add all the words to the markup
-    html += solutionWords.join(', ')
-    html += `</li></ul></li>`
+      // add all the words to the markup
+      html += solutionWords.join(', ')
+      html += `</li></ul></li>`
+    }
   })
 
   html += '</ul>'
