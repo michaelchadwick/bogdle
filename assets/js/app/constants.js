@@ -12,7 +12,7 @@ const BOGDLE_ENV_PROD_URL = 'bogdle.fun'
 const BOGDLE_DAILY_SCRIPT = './assets/scripts/daily.php'
 
 const BOGDLE_DIFFICULTY = {
-  'kid': 'small',
+  'simple': 'small',
   'easy': 'small',
   'medium': 'small',
   'normal': 'small'
@@ -25,7 +25,7 @@ const BOGDLE_WORD_SOURCES = {
 }
 
 const BOGDLE_DIFF_TO_LENGTH = {
-  'kid': 3,
+  'simple': 3,
   'easy': 5,
   'medium': 7,
   'normal': 9

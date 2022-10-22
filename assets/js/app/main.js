@@ -37,7 +37,7 @@ async function modalOpen(type) {
           <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day for a new one!</p>
 
           <h4>Free</h4>
-          <p>Words are at least 3 letters, with max length being equal to difficulty (KID: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want.
+          <p>Words are at least 3 letters, with max length being equal to difficulty (SIMPLE: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want.
 
           <ul class="help">
             <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word</li>
