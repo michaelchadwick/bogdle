@@ -131,7 +131,7 @@ button {
   box-sizing: border-box;
   color: #364333;
   display: inline-flex;
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   justify-content: center;
   line-height: 2rem;
@@ -141,6 +141,11 @@ button {
   width: 100%;
 }
 @media (max-height: 600px) {
+  .tile {
+    font-size: 3rem;
+  }
+}
+@media (max-height: 540px) {
   .tile {
     font-size: 2rem;
   }
