@@ -131,7 +131,7 @@ button {
   box-sizing: border-box;
   color: #364333;
   display: inline-flex;
-  font-size: 4rem;
+  font-size: 2em;
   font-weight: bold;
   justify-content: center;
   line-height: 2rem;
@@ -140,14 +140,9 @@ button {
   user-select: none;
   width: 100%;
 }
-@media (max-height: 600px) {
+@media (min-height: 600px) {
   .tile {
-    font-size: 3rem;
-  }
-}
-@media (max-height: 540px) {
-  .tile {
-    font-size: 2rem;
+    font-size: 3em;
   }
 }
   .tile[data-state='tbd'] {
@@ -452,9 +447,14 @@ section#game {
   flex-direction: column;
   height: calc(100% - 40px); /* whole screen except for header */
   margin: 0 auto;
-  max-width: 500px;
+  max-width: auto;
   width: 100%;
 }
+  @media (min-height: 500px) {
+    section#game {
+      max-width: 500px;
+    }
+  }
 
   /* GAME->MODE-CONTAINER */
   section#game #mode-container {
@@ -489,11 +489,17 @@ section#game {
         section#game #mode-container .setting-row button#button-create-new i {
           margin-right: 5px;
         }
+    /* GAME->MODE-CONTAINER->GAMEMODE-CONTAINER */
+    section#game #mode-container #gamemode-container {
+      height: 20px;
+    }
+
     /* GAME->MODE-CONTAINER->DAILY-DETAILS */
     section#game #mode-container #daily-details {
       color: #222222;
       display: none;
       font-size: 0.9rem;
+      height: 20px;
       transform: scale(0);
     }
       section#game #mode-container #daily-details.show {
@@ -506,6 +512,7 @@ section#game {
     /* GAME->MODE-CONTAINER->DIFFICULTY-CONTAINER */
     section#game #mode-container #difficulty-container {
       display: block;
+      height: 20px;
       transform: scale(0);
     }
       section#game #mode-container #difficulty-container.show {
@@ -518,7 +525,7 @@ section#game {
     align-items: center;
     display: flex;
     font-family: 'Changa', sans-serif;
-    font-size: 3.1em;
+    font-size: 2.75em;
     font-weight: 700;
     height: 60px;
     margin: 0 auto;
@@ -534,7 +541,7 @@ section#game {
 
   @media (min-width: 350px) {
     section#game #guess-container {
-      font-size: 4em;
+      font-size: 3.5em;
     }
   }
   @media (min-width: 768px) {
@@ -654,14 +661,24 @@ section#game {
   }
     section#game #keyboard-container .row {
       display: flex;
-      margin: 0 auto 8px;
+      margin: 0 auto 4px;
       /* Enable panning, pinch zoom, but not double-tap zoom */
       touch-action: manipulation;
       width: 100%;
     }
       section#game #keyboard-container .row:last-of-type {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
       }
+
+      @media (min-height: 500px) {
+        section#game #keyboard-container .row {
+          margin: 0 auto 8px;
+        }
+          section#game #keyboard-container .row:last-of-type {
+            margin-bottom: 20px;
+          }
+      }
+
       section#game #keyboard-container .row.sub button {
         background-color: #d6cece;
       }
@@ -670,9 +687,17 @@ section#game {
         }
     section#game #keyboard-container button {
       border: 1px solid transparent;
-      font-size: 20px;
-      width: 100px;
+      font-size: 1rem;
+      height: 25px;
+      width: 50px;
     }
+      @media (min-height: 500px) {
+        section#game #keyboard-container button {
+          font-size: 1.25rem;
+          height: 50px;
+          width: 100px;
+        }
+      }
       section#game #keyboard-container button:last-of-type {
         margin: 0;
       }
