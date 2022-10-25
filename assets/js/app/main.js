@@ -33,6 +33,12 @@ async function modalOpen(type) {
         `
           <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use the "HINT?" button for help if you're stuck.</p>
 
+          <ul class="help">
+            <li><span class="invalid">WORD</span> - invalid word</li>
+            <li><span class="valid">WORD</span> - valid, unsubmitted word</li>
+            <li><span class="valid first-guess">WORD</span> - valid, submitted word</li>
+          </ul>
+
           <h4>Daily</h4>
           <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day for a new one!</p>
 

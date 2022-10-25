@@ -10,6 +10,16 @@ body.dark-mode {
     background-color: #777777;
   }
 
+  body.dark-mode .invalid {
+    color: #fff;
+  }
+  body.dark-mode .valid {
+    color: #818181;
+  }
+    body.dark-mode .valid.first-guess {
+      color: #3f9f1f;
+    }
+
   body.dark-mode header,
   body.dark-mode button {
     color: #fff;
@@ -46,12 +56,6 @@ body.dark-mode {
   body.dark-mode section#game #guess-container #guess {
     color: #fff;
   }
-  body.dark-mode section#game #guess-container #guess.valid {
-    color: #818181;
-  }
-    body.dark-mode section#game #guess-container #guess.valid.first-guess {
-      color: #3f9f1f;
-    }
 
   body.dark-mode section#game #hint-container #hint-arena button#button-hint.not-a-button {
     color: #fff;

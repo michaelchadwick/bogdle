@@ -239,6 +239,20 @@ button {
       width: 50%;
     }
 
+.invalid {
+  color: #000;
+}
+.valid {
+  color: #364333a7;
+}
+.valid.first-guess {
+  color: #23b62d;
+}
+.help .invalid,
+.help .valid {
+  font-weight: 600;
+}
+
 /*
  * HEADER
  */
@@ -550,7 +564,6 @@ section#game {
     }
   }
     section#game #guess-container #guess {
-      color: #000;
       font-size: 1em;
       line-height: 0.7em;
       letter-spacing: 0.03em;
@@ -562,12 +575,9 @@ section#game {
       width: 100%;
     }
       section#game #guess-container #guess.valid {
-        color: #364333a7;
-        /* color: #305c1e; */
-        letter-spacing: 0e.04em;
+        letter-spacing: 0.04em;
       }
         section#game #guess-container #guess.valid.first-guess {
-          color: #23b62d;
           font-size: 1.1em;
         }
 
