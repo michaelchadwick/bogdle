@@ -638,6 +638,7 @@ Bogdle._changeSetting = async function(setting, value, event) {
 
           Bogdle._saveSetting('gameMode', 'free')
           Bogdle._clearHint()
+          Bogdle._enableUIButtons()
 
           Bogdle.dom.interactive.btnCreateNew.disabled = false
 
@@ -1390,6 +1391,13 @@ Bogdle._disableUIButtons = function() {
   Object.values(Bogdle.dom.mainUI).forEach(btn => {
     if (btn.id !== 'button-show-progress') {
       btn.setAttribute('disabled', '')
+    }
+  })
+}
+Bogdle._enableUIButtons = function() {
+  Object.values(Bogdle.dom.mainUI).forEach(btn => {
+    if (btn.id !== 'button-show-progress') {
+      btn.removeAttribute('disabled')
     }
   })
 }
