@@ -1884,8 +1884,6 @@ Bogdle._shareResults = async function() {
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
-
-    modalOpen('shared')
   } else {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText).then(() => {
