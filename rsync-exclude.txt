@@ -7,7 +7,6 @@
 .gitignore
 *.icloud
 assets/ruby
-assets/text/dailyWords.txt
 bower.json
 LICENSE.md
 README.md
