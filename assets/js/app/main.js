@@ -1888,7 +1888,7 @@ Bogdle._winGame = function(state = null) {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  const shareText = `I beat Bogdle on ${Bogdle.__getTodaysDate()} by finding all ${Bogdle.__getSolutionSize()} words. Have you tried? https://bogdle.fun`
+  const shareText = `I beat Bogdle #${Bogdle.dailyNumber} on ${Bogdle.__getTodaysDate()} by finding all ${Bogdle.__getSolutionSize()} words. Have you tried? https://bogdle.fun`
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
@@ -2205,6 +2205,7 @@ Bogdle.__getGameMode = function() {
 }
 
 Bogdle.__updateDailyDetails = function(index) {
+  Bogdle.dailyNumber = parseInt(index) + 1
   Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
   Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
 }
