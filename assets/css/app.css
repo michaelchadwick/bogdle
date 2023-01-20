@@ -740,7 +740,8 @@ section#game {
         margin: 0;
       }
       @media (hover: hover) {
-        section#game #keyboard-container button:not([disabled]):hover {
+        section#game #keyboard-container button:hover:not(.disabled),
+        section#game #keyboard-container button:hover:not([disabled]) {
           background-color: #888;
           border: 1px solid #111;
           color: #fff;
