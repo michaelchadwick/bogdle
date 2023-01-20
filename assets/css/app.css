@@ -66,6 +66,8 @@ button {
   padding: 0;
   text-transform: uppercase;
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
 }
   button:disabled {
@@ -73,9 +75,11 @@ button {
     color: #ddd;
     cursor: not-allowed;
   }
-    button:disabled:hover {
-      background-color: inherit;
-      color: inherit;
+    @media (hover: hover) {
+      button:disabled:hover {
+        background-color: inherit;
+        color: inherit;
+      }
     }
 
   button.icon {
@@ -85,8 +89,10 @@ button {
     font-size: 24px;
     padding: 0 4px;
   }
-    button.icon:hover {
-      color: #529952;
+    @media (hover: hover) {
+      button.icon:hover {
+        color: #529952;
+      }
     }
   button.help {
     background-color: #d1d1d1;
@@ -138,6 +144,8 @@ button {
   vertical-align: middle;
   text-transform: uppercase;
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   width: 100%;
 }
 @media (min-height: 600px) {
@@ -149,11 +157,13 @@ button {
     border: 2px solid #7b986f;
     cursor: pointer;
   }
-  .tile[data-state='tbd']:hover {
-    background-color: #6dc96d;
-    border: 2px solid #333;
-    color: #fff;
-  }
+    @media (hover: hover) {
+      .tile[data-state='tbd']:hover {
+        background-color: #6dc96d;
+        border: 2px solid #333;
+        color: #fff;
+      }
+    }
   .tile:disabled,
   .tile[data-state="disabled"] {
     background-color: #eee;
@@ -332,8 +342,10 @@ header {
               justify-content: left;
               padding: 4px 0 4px 18px;
             }
-            header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-              background-color: #91c791;
+            @media (hover: hover) {
+              header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
+                background-color: #91c791;
+              }
             }
           header .menu-left #nav-overlay #nav-content #button-nav-close {
             font-size: 20px;
@@ -386,10 +398,12 @@ header {
       header #debug-buttons .ddmenu .ddgroup button {
         margin-right: 0;
       }
-      header #debug-buttons .ddmenu .ddgroup:hover {
-        background: #d8d2f5;
-        border: 1px solid #8c85ae;
-        cursor: pointer;
+      @media (hover: hover) {
+        header #debug-buttons .ddmenu .ddgroup:hover {
+          background: #d8d2f5;
+          border: 1px solid #8c85ae;
+          cursor: pointer;
+        }
       }
         header #debug-buttons .ddmenu .ddgroup .ddsub {
           display: none;
@@ -410,13 +424,15 @@ header {
             padding: 5px;
             width: 26px;
           }
-          header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
-            background: #e1ddf7;
-            border: 1px solid #8c85ae;
-          }
-          header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
-            display: flex;
-            flex-direction: column;
+          @media (hover: hover) {
+            header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
+              background: #e1ddf7;
+              border: 1px solid #8c85ae;
+            }
+            header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
+              display: flex;
+              flex-direction: column;
+            }
           }
         @media screen and (max-width: 640px) {
           .ddmenu {
@@ -488,7 +504,11 @@ section#game {
         color: #111;
         text-decoration: none;
       }
-      section#game #mode-container .setting-row a:hover:not(.disabled),
+      @media (hover: hover) {
+        section#game #mode-container .setting-row a:hover:not(.disabled) {
+          text-decoration: underline;
+        }
+      }
       section#game #mode-container .setting-row a[data-active=true] {
         text-decoration: underline;
       }
@@ -623,16 +643,24 @@ section#game {
         border: 1px solid #888;
         height: 30px;
       }
-        section#game #hint-container button:hover {
-          background-color: #888;
-          border: 1px solid #111;
-          color: #fff;
+        @media (hover: hover) {
+          section#game #hint-container button:hover {
+            background-color: #888;
+            border: 1px solid #111;
+            color: #fff;
+          }
         }
-        section#game #hint-container button:disabled,
-        section#game #hint-container button:disabled:hover {
+        section#game #hint-container button:disabled {
           background-color: #eeeeee;
           border: none;
           color: #ddd;
+        }
+        @media (hover: hover) {
+          section#game #hint-container button:disabled:hover {
+            background-color: #eeeeee;
+            border: none;
+            color: #ddd;
+          }
         }
         section#game #hint-container #hint-arena button#button-hint {
           float: left;
@@ -711,10 +739,12 @@ section#game {
       section#game #keyboard-container button:last-of-type {
         margin: 0;
       }
-      section#game #keyboard-container button:hover:not([disabled]) {
-        background-color: #888;
-        border: 1px solid #111;
-        color: #fff;
+      @media (hover: hover) {
+        section#game #keyboard-container button:not([disabled]):hover {
+          background-color: #888;
+          border: 1px solid #111;
+          color: #fff;
+        }
       }
 
 /* utility classes */
