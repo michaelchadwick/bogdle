@@ -292,7 +292,7 @@ header {
       justify-content: left;
       left: 0;
       position: absolute;
-      top: 0;
+      top: 50px;
       width: 100%;
       z-index: 10;
     }
@@ -304,12 +304,12 @@ header {
           border-radius: 0;
           box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
           box-sizing: border-box;
-          margin-top: 51px;
           max-height: calc(100% - 41px);
           max-width: 500px;
           overflow-y: auto;
           padding: 0px;
           position: relative;
+          top: 0;
           width: 100%;
         }
         @media (min-width: 415px) {
@@ -349,13 +349,17 @@ header {
             }
           header .menu-left #nav-overlay #nav-content #button-nav-close {
             font-size: 20px;
-            font-weight: 600;
             height: 24px;
             position: absolute;
-            right: 10px;
+            right: 16px;
             top: 16px;
             width: 24px;
           }
+            @media (hover: hover) {
+              header .menu-left #nav-overlay #nav-content #button-nav-close a:hover {
+                color: #2c652c;
+              }
+            }
           header .menu-left #nav-overlay #nav-content .nav-footer {
             display: flex;
           }
