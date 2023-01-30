@@ -88,3 +88,5 @@ const BOGDLE_DEFAULTS = {
     'noisy': false
   }
 }
+
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
