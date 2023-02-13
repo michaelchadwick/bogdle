@@ -6,7 +6,10 @@
 .git
 .gitignore
 *.icloud
-assets/ruby
+assets/scripts/*.java
+assets/scripts/*.py
+assets/scripts/*.rb
+assets/text
 bower.json
 LICENSE.md
 README.md
