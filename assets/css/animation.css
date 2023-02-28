@@ -1,5 +1,5 @@
 .tile {
-  --animate-duration: 100ms;
+  --animate-duration: 75ms;
 }
 
 header .menu-left #nav-overlay #nav-content {
