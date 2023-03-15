@@ -324,7 +324,7 @@ Bogdle.initApp = async () => {
   // console.log('Bogdle init started')
 
   // set env
-  Bogdle.env = document.location.hostname == BOGDLE_ENV_PROD_URL ? 'prod' : 'local'
+  Bogdle.env = BOGDLE_ENV_PROD_URL.includes(document.location.hostname) ? 'prod' : 'local'
 
   // if local dev, show debug stuff
   if (Bogdle.env == 'local') {
@@ -1890,7 +1890,7 @@ Bogdle._winGame = function(state = null) {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  const shareText = `I beat Bogdle #${Bogdle.dailyNumber} on ${Bogdle.__getTodaysDate()} by finding all ${Bogdle.__getSolutionSize()} words. Have you tried? https://bogdle.fun`
+  const shareText = `I beat Bogdle #${Bogdle.dailyNumber} on ${Bogdle.__getTodaysDate()} by finding all ${Bogdle.__getSolutionSize()} words. Have you tried? https://bogdle.neb.host`
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })

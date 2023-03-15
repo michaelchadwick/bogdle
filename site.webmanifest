@@ -16,6 +16,6 @@
     "background_color": "#ffffff",
     "description": "Daily word search game",
     "display": "standalone",
-    "start_url": "https://bogdle.fun",
+    "start_url": "https://bogdle.neb.host",
     "theme_color": "#ffffff"
 }
