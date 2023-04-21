@@ -92,4 +92,6 @@ const BOGDLE_DEFAULTS = {
   }
 }
 
+const BOGDLE_SHARE_URL = 'https://bogdle.neb.host/?r=share'
+
 const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'

@@ -1890,7 +1890,12 @@ Bogdle._winGame = function(state = null) {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function() {
-  const shareText = `I beat Bogdle #${Bogdle.dailyNumber} on ${Bogdle.__getTodaysDate()} by finding all ${Bogdle.__getSolutionSize()} words. Have you tried? https://bogdle.neb.host`
+  const size = Bogdle.__getSolutionSize()
+
+  let shareText = ''
+  shareText += `Bogdle #${Bogdle.dailyNumber}\n`
+  shareText += `${size}/${size} words\n`
+  shareText += BOGDLE_SHARE_URL
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
