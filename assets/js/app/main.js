@@ -2,23 +2,18 @@
 /* app entry point and main functions */
 /* global Bogdle */
 
-// global check to see if we've shown this already
-// once we show it, we toggle this until the next
-// time that the app is loaded
-Bogdle.showStartModal = true
-
 // settings: saved in LOCAL STORAGE
 Bogdle.settings = {}
-
-// state: saved between sessions LOCAL STORAGE
-Bogdle.state = {}
-Bogdle.state.daily = {}
-Bogdle.state.free = {}
 
 // config: only saved while game is loaded
 Bogdle.config = {}
 Bogdle.config.daily = BOGDLE_DEFAULTS.config.daily
 Bogdle.config.free = BOGDLE_DEFAULTS.config.free
+
+// state: saved between sessions LOCAL STORAGE
+Bogdle.state = {}
+Bogdle.state.daily = {}
+Bogdle.state.free = {}
 
 /*************************************************************************
  * public methods *
@@ -482,9 +477,10 @@ Bogdle._loadGame = async function() {
   if (Bogdle.__getGameMode() == 'daily' && Bogdle.state.daily.lastPlayedTime == null) {
     // console.log('daily gameMode + no lastPlayedTime')
 
-    if (Bogdle.showStartModal) {
+    if (Bogdle.firstTime) {
       modalOpen('start')
-      Bogdle.showStartModal = false
+
+      Bogdle._saveSetting('firstTime', false)
     }
   }
 }
@@ -528,43 +524,63 @@ Bogdle._loadSettings = function() {
   var lsSettings = JSON.parse(localStorage.getItem(BOGDLE_SETTINGS_KEY))
 
   if (lsSettings) {
-    Bogdle.settings.clearWord = lsSettings.clearWord
+    if (lsSettings.clearWord !== undefined) {
+      Bogdle.settings.clearWord = lsSettings.clearWord
 
-    if (Bogdle.settings.clearWord) {
-      var setting = document.getElementById('button-setting-clear-word')
+      if (Bogdle.settings.clearWord) {
+        var setting = document.getElementById('button-setting-clear-word')
 
-      if (setting) {
-        setting.dataset.status = 'true'
+        if (setting) {
+          setting.dataset.status = 'true'
+        }
       }
     }
 
-    Bogdle.settings.darkMode = lsSettings.darkMode
+    if (lsSettings.darkMode !== undefined) {
+      Bogdle.settings.darkMode = lsSettings.darkMode
 
-    if (Bogdle.settings.darkMode) {
-      document.body.classList.add('dark-mode')
+      if (Bogdle.settings.darkMode) {
+        document.body.classList.add('dark-mode')
 
-      var setting = document.getElementById('button-setting-dark-mode')
+        var setting = document.getElementById('button-setting-dark-mode')
 
-      if (setting) {
-        setting.dataset.status = 'true'
+        if (setting) {
+          setting.dataset.status = 'true'
+        }
       }
     }
 
-    Bogdle.settings.gameMode = lsSettings.gameMode || 'daily'
+    if (lsSettings.firstTime !== undefined) {
+      Bogdle.settings.firstTime = lsSettings.firstTime
 
-    Bogdle.settings.noisy = lsSettings.noisy || false
+      if (!Bogdle.settings.firstTime) {
+        modalOpen('start')
 
-    if (Bogdle.settings.noisy) {
-      Bogdle._initAudio()
+        Bogdle._saveSetting('firstTime', false)
+      }
+    }
 
-      var setting = document.getElementById('button-setting-noisy')
+    if (lsSettings.gameMode !== undefined) {
+      Bogdle.settings.gameMode = lsSettings.gameMode || 'daily'
+    }
 
-      if (setting) {
-        setting.dataset.status = 'true'
+    if (lsSettings.noisy !== undefined) {
+      Bogdle.settings.noisy = lsSettings.noisy || false
+
+      if (Bogdle.settings.noisy) {
+        Bogdle._initAudio()
+
+        var setting = document.getElementById('button-setting-noisy')
+
+        if (setting) {
+          setting.dataset.status = 'true'
+        }
       }
     }
   } else {
     Bogdle.settings = BOGDLE_DEFAULTS.settings
+
+    modalOpen('start')
   }
 
   // STATE->GAMEMODE

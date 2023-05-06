@@ -87,6 +87,7 @@ const BOGDLE_DEFAULTS = {
   'settings': {
     'clearWord': true,
     'darkMode': false,
+    'firstTime': true,
     'gameMode': 'daily',
     'noisy': false
   }
