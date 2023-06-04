@@ -1,114 +1,114 @@
 body.dark-mode {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--black);
+  color: var(--white);
 }
   body.dark-mode a {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode code {
-    background-color: #777777;
+    background-color: var(--gray-dark);
   }
 
   body.dark-mode .invalid {
-    color: #fff;
+    color: var(--white);
   }
   body.dark-mode .valid {
-    color: #818181;
+    color: var(--gray-dark);
   }
     body.dark-mode .valid.first-guess {
-      color: #3f9f1f;
+      color: var(--base-color2);
     }
 
   body.dark-mode header,
   body.dark-mode button {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode button.help {
-    background-color: #111111;
-    border: 1px solid #fff;
+    background-color: var(--black);
+    border: 1px solid var(--white);
   }
 
   body.dark-mode header .menu-left #nav-overlay #nav-content {
-    background-color: #000;
+    background-color: var(--black);
   }
     body.dark-mode header .menu-left #nav-overlay #nav-content a {
-      color: #fff;
+      color: var(--white);
     }
       body.dark-mode header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
-        background-color: #529952;
+        background-color: var(--base-color);
       }
 
   body.dark-mode .tile[data-state='tbd'] {
-    border: 2px solid #fff;
-    color: #fff
+    border: 2px solid var(--white);
+    color: var(--white);
   }
 
   body.dark-mode section#game #mode-container .setting-row a {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode section#game #mode-container #daily-details {
-    color: #ffffff;
+    color: var(--white);
   }
 
   body.dark-mode section#game #guess-container #guess {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode section#game #hint-container #hint-arena button#button-hint.not-a-button {
-    color: #fff;
+    color: var(--white);
   }
 
   body.dark-mode section#game #keyboard-container button {
-    background-color: #000;
-    border: 1px solid #fff;
-    color: #fff;
+    background-color: var(--black);
+    border: 1px solid var(--white);
+    color: var(--white);
   }
 
   body.dark-mode section#game #keyboard-container .row:last-of-type button {
-    background-color: #3a3a3a;
-    border: 1px solid #eaeaea;
-    color: #fff;
+    background-color: var(--black-light);
+    border: 1px solid var(--gray);
+    color: var(--white);
   }
     body.dark-mode section#game #keyboard-container .row:last-of-type button:disabled {
-      background-color: #7a7575;
-      border: 1px solid #b4b4b4;
-      color: #acacac;
+      background-color: var(--gray-dark);
+      border: 1px solid var(--gray-medium);
+      color: var(--gray-medium);
     }
       body.dark-mode section#game #keyboard-container .row.sub button:hover:not([disabled]) {
-        background-color: #535353;
+        background-color: var(--gray-dark2);
         border: none;
-        color: #fff;
+        color: var(--white);
       }
 
   body.dark-mode #settings .setting-row .text .description {
-    color: #d2d2d2;
+    color: var(--gray);
   }
 
   body.dark-mode .switch {
-    background-color: #888;
+    background-color: var(--gray-dark);
   }
     body.dark-mode .switch[data-status='true'] {
-      background-color: #529952;
+      background-color: var(--base-color);
     }
 
   body.dark-mode .modal-window {
-    background-color: #111;
+    background-color: var(--black);
   }
   body.dark-mode .modal-dialog.temp .modal-window {
-    background-color: #111111;
-    color: #ffffff
+    background-color: var(--black);
+    color: var(--white);
   }
   body.dark-mode .modal-text {
-    background-color: #111;
-    color: #fff;
+    background-color: var(--black);
+    color: var(--white);
   }
     body.dark-mode .modal-text ul li span.solution-category + ul {
-      background-color: #222;
-      color: #fff;
+      background-color: var(--marker-color);
+      color: var(--white);
     }
   body.dark-mode .modal-button-group {
-    background-color: #111;
+    background-color: var(--black);
   }
