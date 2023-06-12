@@ -355,7 +355,7 @@ Bogdle._loadGame = async function() {
   const lsStateDaily = JSON.parse(localStorage.getItem(BOGDLE_STATE_DAILY_KEY))
 
   // if we have previous LS values, sync them to code model
-  if (lsStateDaily) {
+  if (Object.keys(lsStateDaily)) {
     // console.log('DAILY localStorage state key found and loading...', lsStateDaily)
 
     const dailyDefaults = BOGDLE_DEFAULTS.state.daily
@@ -418,7 +418,7 @@ Bogdle._loadGame = async function() {
   const lsStateFree = JSON.parse(localStorage.getItem(BOGDLE_STATE_FREE_KEY))
 
   // if we have previous LS values, sync them to code model
-  if (lsStateFree) {
+  if (Object.keys(lsStateFree)) {
     // console.log('FREE localStorage state key found and loading...', lsStateFree)
 
     const freeDefaults = BOGDLE_DEFAULTS.state.free
