@@ -453,6 +453,10 @@ Bogdle._loadGame = async function() {
   /* create/load solutionSet   */
   /* ************************* */
 
+  if (!Bogdle.settings.gameMode) {
+    Bogdle.settings.gameMode = 'daily'
+  }
+
   if (Bogdle.__getGameMode() == 'daily') { // daily
     Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
     Bogdle.dom.dailyDetails.classList.add('show')
