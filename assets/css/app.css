@@ -507,7 +507,7 @@ section#game {
 }
   @media (min-height: 500px) {
     section#game {
-      max-width: 500px;
+      max-width: 515px;
     }
   }
 
