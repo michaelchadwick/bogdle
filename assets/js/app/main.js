@@ -2058,6 +2058,8 @@ Bogdle._attachEventListeners = function() {
       Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
     } else if (event.code == 'Backspace' || event.code == 'Delete') {
       Bogdle._removeLastLetter()
+    } else if (event.code == 'Space') {
+      Bogdle._shuffleTiles()
     } else {
       var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
       var validLetters = Bogdle.config[Bogdle.__getGameMode()].letters.map(l => l.toUpperCase())
