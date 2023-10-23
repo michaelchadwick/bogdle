@@ -30,8 +30,8 @@ async function modalOpen(type) {
 
           <ul class="help">
             <li><span class="invalid">WORD</span> - invalid word</li>
-            <li><span class="valid">WORD</span> - valid, unsubmitted word</li>
-            <li><span class="valid first-guess">WORD</span> - valid, submitted word</li>
+            <li><span class="valid">WORD</span> - valid, submitted word</li>
+            <li><span class="valid first-guess">WORD</span> - valid, unsubmitted word</li>
           </ul>
 
           <h4>Daily</h4>
