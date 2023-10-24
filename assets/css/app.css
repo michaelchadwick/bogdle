@@ -126,6 +126,9 @@ button {
     top: 1px;
     width: 21px;
   }
+    button.help.wide {
+      width: 60px;
+    }
     button.help i {
       bottom: 1px;
       position: relative;
@@ -284,6 +287,26 @@ button {
 .help .valid {
   font-weight: 600;
 }
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 0.5em 0;
+}
+  @media (min-width: 550px) {
+    .flex {
+      flex-direction: row;
+    }
+  }
+  .flex > div {
+    width: 100%;
+  }
+    @media (min-width: 550px) {
+      .flex > div {
+        width: 50%;
+      }
+    }
 
 /*
  * HEADER
@@ -665,7 +688,6 @@ section#game {
     padding: 10px;
   }
       section#game #hint-container button {
-        background-color: transparent;
         border: 1px solid var(--gray-dark);
         height: 30px;
       }

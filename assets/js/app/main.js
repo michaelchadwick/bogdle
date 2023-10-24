@@ -26,7 +26,19 @@ async function modalOpen(type) {
     case 'help':
       this.myModal = new Modal('perm', 'How to Play Bogdle',
         `
-          <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use the "HINT?" button for help if you're stuck.</p>
+          <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
+
+          <div class="flex">
+            <div>
+              <h4>Daily</h4>
+              <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day (at 12 am PST) for a new one!</p>
+            </div>
+
+            <div>
+              <h4>Free</h4>
+              <p>Words are <em>at least</em> 3 letters, w/ max length equal to difficulty (SIMPLE: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want!
+            </div>
+          </div>
 
           <ul class="help">
             <li><span class="invalid">WORD</span> - invalid word</li>
@@ -34,17 +46,11 @@ async function modalOpen(type) {
             <li><span class="valid first-guess">WORD</span> - valid, unsubmitted word</li>
           </ul>
 
-          <h4>Daily</h4>
-          <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day for a new one!</p>
-
-          <h4>Free</h4>
-          <p>Words are at least 3 letters, with max length being equal to difficulty (SIMPLE: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want.
-
           <ul class="help">
-            <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word</li>
-            <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess</li>
+            <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
+            <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Backspace/Delete)</li>
             <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
-            <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles</li>
+            <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
             <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
             <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
             <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle (Free mode)</li>
@@ -1781,6 +1787,11 @@ Bogdle._initHint = function() {
 Bogdle._cycleHint = function() {
   // console.log('cycling hintWord status...')
 
+  // if pressing the '/' key to cycle through hints
+  if (Bogdle.dom.interactive.btnHint.classList.contains('not-a-button')) {
+    return Bogdle._clearHint()
+  }
+
   const hintWord = Bogdle.config[Bogdle.__getGameMode()].hintWord
 
   // set maximum number of letters to show before forcing a new hint
@@ -2060,6 +2071,8 @@ Bogdle._attachEventListeners = function() {
       Bogdle._removeLastLetter()
     } else if (event.code == 'Space') {
       Bogdle._shuffleTiles()
+    } else if (event.code == 'Slash') {
+      Bogdle._initHint()
     } else {
       var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
       var validLetters = Bogdle.config[Bogdle.__getGameMode()].letters.map(l => l.toUpperCase())
