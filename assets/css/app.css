@@ -143,6 +143,12 @@ button {
     button.share i {
       margin-left: 6px;
     }
+    button.share.tiny {
+      font-size: 0.8em;
+      height: 16px;
+      margin-left: 1em;
+      width: 75px;
+    }
 
 .container {
   align-items: center;

@@ -21,52 +21,56 @@ Bogdle.state.free = {}
 
 // modal methods
 async function modalOpen(type) {
+  let modalText
+
   switch(type) {
     case 'start':
     case 'help':
-      this.myModal = new Modal('perm', 'How to Play Bogdle',
-        `
-          <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
+      modalText = `
+        <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
 
-          <div class="flex">
-            <div>
-              <h4>Daily</h4>
-              <p>Words are 3 to 8 letters, except for one 9-letter. Come back every day (at 12 am PST) for a new one!</p>
-            </div>
-
-            <div>
-              <h4>Free</h4>
-              <p>Words are <em>at least</em> 3 letters, w/ max length equal to difficulty (SIMPLE: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play as many puzzles as you want!
-            </div>
+        <div class="flex">
+          <div>
+            <h4>Daily</h4>
+            <p>Words are 3 to 8 letters, except for one 9-letter pangram. Come back every day (at 12 am PST) for a new one!</p>
           </div>
 
-          <ul class="help">
-            <li><span class="invalid">WORD</span> - invalid word</li>
-            <li><span class="valid">WORD</span> - valid, submitted word</li>
-            <li><span class="valid first-guess">WORD</span> - valid, unsubmitted word</li>
-          </ul>
+          <div>
+            <h4>Free</h4>
+            <p>Words are <em>at least</em> 3 letters, w/ max length equal to difficulty (SIMPLE: 3, EASY: 5, MEDIUM: 7, NORMAL: 9). Play endlessly!
+          </div>
+        </div>
 
-          <ul class="help">
-            <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
-            <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Backspace/Delete)</li>
-            <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
-            <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
-            <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
-            <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
-            <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle (Free mode)</li>
-          </ul>
+        <ul class="help">
+          <li><span class="invalid">WORD</span> - invalid word</li>
+          <li><span class="valid">WORD</span> - valid, submitted word</li>
+          <li><span class="valid first-guess">WORD</span> - valid, unsubmitted word</li>
+        </ul>
 
-          <hr />
+        <ul class="help">
+          <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
+          <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Backspace/Delete)</li>
+          <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
+          <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
+          <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
+          <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
+          <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle (Free mode)</li>
+        </ul>
 
-          <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. <strong>Sound</strong>: Fliss.</p>
-        `,
+        <hr />
+
+        <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. <strong>Sound</strong>: Fliss.</p>
+      `
+
+      this.myModal = new Modal('perm', 'How to Play Bogdle',
+        modalText,
         null,
         null
       )
       break
 
     case 'dictionary':
-      var word = Bogdle.dom.guess.innerHTML
+      const word = Bogdle.dom.guess.innerHTML
 
       try {
         const response = await fetch(`${BOGDLE_DEFINE_LOOKUP_URL}/${word}`)
@@ -76,25 +80,29 @@ async function modalOpen(type) {
         if (responseJson[0]) {
           const entry = responseJson[0]
 
+          modalText = `
+            <div class="dictionary">
+              <strong>${entry.word}</strong> ${entry.phonetic}
+              <hr />
+              <em>${entry.meanings[0].partOfSpeech}</em>: ${entry.meanings[0].definitions[0].definition}
+            </div>
+          `
+
           this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
-            `
-              <div class="dictionary">
-                <strong>${entry.word}</strong> ${entry.phonetic}
-                <hr />
-                <em>${entry.meanings[0].partOfSpeech}</em>: ${entry.meanings[0].definitions[0].definition}
-              </div>
-            `,
+            modalText,
             null,
             null,
             false
           )
         } else {
+          modalText = `
+            <div class="dictionary">
+              <strong>${word}</strong> not found!
+            </div>
+          `
+
           this.myModal = new Modal('perm', 'Dictionary (via Free Dictionary API)',
-            `
-              <div class="dictionary">
-                <strong>${word}</strong> not found!
-              </div>
-            `,
+            modalText,
             null,
             null,
             false
@@ -107,13 +115,14 @@ async function modalOpen(type) {
 
     case 'stats':
     case 'win':
-      let modalText = `
+      modalText = `
         <div class="container">
 
           <div class="statistic-header">Daily</div>
           <div class="statistic-subheader">
             (<small>New puzzle available at 12am PST</small>)
           </div>
+
           <div class="statistics">
             <div class="statistic-container">
               <div class="statistic">${Bogdle.state.daily.statistics.gamesPlayed}</div>
@@ -124,7 +133,21 @@ async function modalOpen(type) {
               <div class="statistic-label">Word(s) Found</div>
             </div>
           </div>
+        `
 
+        if (Bogdle.state.daily.pangramFound) {
+          modalText += `
+            <div class="statistic-additional">
+              <div class="flex">
+                Today's Pangram Found!<button class="share tiny" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+
+            <p>&nbsp;</p>
+          `
+        }
+
+        modalText += `
           <div class="statistic-header">Free Play</div>
           <div class="statistics">
             <div class="statistic-container">
@@ -150,6 +173,7 @@ async function modalOpen(type) {
       modalText += `
         </div>
       `
+
       this.myModal = new Modal('perm', 'Statistics',
         modalText,
         null,
@@ -159,65 +183,67 @@ async function modalOpen(type) {
       break
 
     case 'settings':
-      this.myModal = new Modal('perm', 'Settings',
-        `
-          <div id="settings">
-            <!-- clear word -->
-            <div class="setting-row">
-              <div class="text">
-                <div class="title">Clear Word</div>
-                <div class="description">Clear word on valid submission</div>
-              </div>
-              <div class="control">
-                <div class="container">
-                  <div id="button-setting-clear-word"
-                    data-status=""
-                    class="switch"
-                    onclick="Bogdle._changeSetting('clearWord')"
-                  >
-                    <span class="knob"></span>
-                  </div>
-                </div>
-              </div>
+      modalText = `
+        <div id="settings">
+          <!-- clear word -->
+          <div class="setting-row">
+            <div class="text">
+              <div class="title">Clear Word</div>
+              <div class="description">Clear word on valid submission</div>
             </div>
-            <!-- dark mode -->
-            <div class="setting-row">
-              <div class="text">
-                <div class="title">Dark Mode</div>
-                <div class="description">Change colors to better suit low light</div>
-              </div>
-              <div class="control">
-                <div class="container">
-                  <div id="button-setting-dark-mode"
-                    data-status=""
-                    class="switch"
-                    onclick="Bogdle._changeSetting('darkMode')"
-                  >
-                    <span class="knob"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- noisy -->
-            <div class="setting-row">
-              <div class="text">
-                <div class="title">Sounds</div>
-                <div class="description">Enable some cute sound effects</div>
-              </div>
-              <div class="control">
-                <div class="container">
-                  <div id="button-setting-noisy"
-                    data-status=""
-                    class="switch"
-                    onclick="Bogdle._changeSetting('noisy')"
-                  >
-                    <span class="knob"></span>
-                  </div>
+            <div class="control">
+              <div class="container">
+                <div id="button-setting-clear-word"
+                  data-status=""
+                  class="switch"
+                  onclick="Bogdle._changeSetting('clearWord')"
+                >
+                  <span class="knob"></span>
                 </div>
               </div>
             </div>
           </div>
-        `,
+          <!-- dark mode -->
+          <div class="setting-row">
+            <div class="text">
+              <div class="title">Dark Mode</div>
+              <div class="description">Change colors to better suit low light</div>
+            </div>
+            <div class="control">
+              <div class="container">
+                <div id="button-setting-dark-mode"
+                  data-status=""
+                  class="switch"
+                  onclick="Bogdle._changeSetting('darkMode')"
+                >
+                  <span class="knob"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- noisy -->
+          <div class="setting-row">
+            <div class="text">
+              <div class="title">Sounds</div>
+              <div class="description">Enable some cute sound effects</div>
+            </div>
+            <div class="control">
+              <div class="container">
+                <div id="button-setting-noisy"
+                  data-status=""
+                  class="switch"
+                  onclick="Bogdle._changeSetting('noisy')"
+                >
+                  <span class="knob"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+
+      this.myModal = new Modal('perm', 'Settings',
+        modalText,
         null,
         null
       )
@@ -302,6 +328,38 @@ async function modalOpen(type) {
       )
       break
 
+    case 'win-pangram':
+      modalText = `
+        <div class="container">
+
+          <div class="flex">
+            <p><strong>You found the 9-letter pangram</strong>!</p>
+          </div>
+
+          <div class="flex">
+            <p>You <em>could</em> stop now, share your accomplishment, and go on about your day.</p>
+          </div>
+
+          <div class="share">
+            <button class="share" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
+          </div>
+
+          <p>&nbsp;</p>
+
+          <div class="flex">
+            <p>Or...you could find the rest of the words!</p>
+          </div>
+        </div>
+      `
+
+      this.myModal = new Modal('perm', 'Pangram Found!',
+        modalText,
+        null,
+        null,
+        false
+      )
+      break
+
     case 'win-game':
       this.myModal = new Modal('temp', null,
         'Congratulations!',
@@ -369,6 +427,7 @@ Bogdle._loadGame = async function() {
     Bogdle.state.daily.gameState = lsStateDaily.gameState || dailyDefaults.gameState
     Bogdle.state.daily.lastCompletedTime = lsStateDaily.lastCompletedTime || null
     Bogdle.state.daily.lastPlayedTime = lsStateDaily.lastPlayedTime || null
+    Bogdle.state.daily.pangramFound = lsStateDaily.pangramFound || false
     Bogdle.state.daily.statistics = lsStateDaily.statistics || dailyDefaults.statistics
 
     // console.log('DAILY localStorage state key loaded')
@@ -417,6 +476,10 @@ Bogdle._loadGame = async function() {
     dailyCreateOrLoad = 'create'
   }
 
+  // if (Bogdle.state.daily.pangramFound) {
+  //   modalOpen('win-pangram')
+  // }
+
   /* ************************* */
   /* free state LS -> code     */
   /* ************************* */
@@ -434,6 +497,7 @@ Bogdle._loadGame = async function() {
     Bogdle.state.free.guessedWords = lsStateFree.guessedWords || freeDefaults.guessedWords
     Bogdle.state.free.lastCompletedTime = lsStateFree.lastCompletedTime || freeDefaults.lastCompletedTime
     Bogdle.state.free.lastPlayedTime = lsStateFree.lastPlayedTime || freeDefaults.lastPlayedTime
+    Bogdle.state.free.pangramFound = lsStateFree.pangramFound || freeDefaults.pangramFound
     Bogdle.state.free.seedWord = lsStateFree.seedWord || freeDefaults.seedWord
     Bogdle.state.free.statistics = lsStateFree.statistics || freeDefaults.statistics
 
@@ -887,6 +951,7 @@ Bogdle._createNewSolutionSet = async function(gameMode, newWord = null) {
   Bogdle.state[gameMode].guessedWords = []
   Bogdle.state[gameMode].lastCompletedTime = null
   Bogdle.state[gameMode].lastPlayedTime = null
+  Bogdle.state[gameMode].pangramFound = false
 
   // set default FREE difficulty if none
   if (gameMode == 'free') {
@@ -1198,7 +1263,7 @@ Bogdle._resetFreeProgress = async function() {
   Bogdle._saveGame()
 }
 
-// submit a guess
+// submit a word guess
 Bogdle._submitWord = function(word) {
   // console.log('submitting word...', word)
 
@@ -1236,9 +1301,13 @@ Bogdle._submitWord = function(word) {
           // do a little dance
           if (Bogdle.dom.guess.classList.contains('pangram')) {
             Bogdle.dom.guess.style.setProperty('--animate-duration', '1.2s')
+            Bogdle.state[Bogdle.__getGameMode()].pangramFound = true
+
             Bogdle._animateCSS('#guess', 'rubberBand').then(() => {
               Bogdle.dom.guess.classList.remove('first-guess', 'pangram')
               Bogdle.dom.guess.style.setProperty('--animate-duration', '400ms')
+
+              modalOpen('win-pangram')
 
               if (Bogdle.settings.clearWord) {
                 Bogdle._resetTiles()
@@ -1599,7 +1668,6 @@ Bogdle._displayGameProgress = function() {
 
   return html
 }
-
 // modal: debug: display Bogdle.config
 Bogdle._displayGameConfig = function() {
   let configs = Bogdle.config
@@ -1888,7 +1956,7 @@ Bogdle._handleClickTouch = function(event) {
 }
 
 // debug: beat game to check win state
-Bogdle._winGame = function(state = null) {
+Bogdle._winGameHax = function(state = null) {
   const solutionSet = Bogdle.config[Bogdle.__getGameMode()].solutionSet
   const solutionSetSize = Bogdle.__getSolutionSize()
 
@@ -1944,13 +2012,17 @@ Bogdle._winGame = function(state = null) {
 }
 
 // copy results to clipboard for sharing
-Bogdle._shareResults = async function() {
+Bogdle._shareResults = async function(type = 'completion') {
+  let shareText = ''
   const size = Bogdle.__getSolutionSize()
 
-  let shareText = ''
-  shareText += `Bogdle #${Bogdle.dailyNumber}\n`
-  shareText += `${size}/${size} words\n`
-  shareText += BOGDLE_SHARE_URL
+  if (type == 'completion') {
+    shareText += `Bogdle #${Bogdle.dailyNumber} ${size}/${size} words\n`
+    shareText += BOGDLE_SHARE_URL
+  } else if (type == 'pangram') {
+    shareText += `Bogdle #${Bogdle.dailyNumber}: Pangram found!\n`
+    shareText += BOGDLE_SHARE_URL
+  }
 
   if (navigator.canShare) {
     navigator.share({ text: shareText })
@@ -2074,11 +2146,11 @@ Bogdle._attachEventListeners = function() {
 
       // 🏆 win game immediately
       Bogdle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
-        Bogdle._winGame()
+        Bogdle._winGameHax()
       })
       // 🏅 almost win game (post-penultimate move)
       Bogdle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
-        Bogdle._winGame('almost')
+        Bogdle._winGameHax('almost')
       })
       // 🏁 display win tile animation
       Bogdle.dom.interactive.debug.btnWinAnimation.addEventListener('click', () => {

@@ -65,6 +65,7 @@ const BOGDLE_DEFAULTS = {
       'guessedWords': [],
       'lastCompletedTime': null,
       'lastPlayedTime': null,
+      'pangramFound': false,
       'seedWord': null,
       'statistics': {
         'gamesPlayed': 0,
@@ -77,6 +78,7 @@ const BOGDLE_DEFAULTS = {
       'guessedWords': [],
       'lastCompletedTime': null,
       'lastPlayedTime': null,
+      'pangramFound': false,
       'seedWord': null,
       'statistics': {
         'gamesPlayed': 0,
