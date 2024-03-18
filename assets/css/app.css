@@ -672,13 +672,13 @@ section#game {
         grid-template-columns: repeat(3, 1fr);
       }
         section#game #board-container #board .row:nth-of-type(1) {
-          z-index: 20;
+          z-index: 10;
         }
         section#game #board-container #board .row:nth-of-type(2) {
-          z-index: 19;
+          z-index: 9;
         }
         section#game #board-container #board .row:nth-of-type(3) {
-          z-index: 18;
+          z-index: 8;
         }
       section#game #board-container #board .row .tile.animate__animated {
         box-shadow: 1px 1px 5px #c5c5c5;
