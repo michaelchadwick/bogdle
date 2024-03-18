@@ -1235,7 +1235,7 @@ Bogdle._submitWord = function(word) {
 
           // do a little dance
           Bogdle._animateCSS('#guess', 'tada').then(() => {
-            Bogdle.dom.guess.classList.remove('first-guess', 'nine-letter')
+            Bogdle.dom.guess.classList.remove('first-guess', 'pangram')
 
             if (Bogdle.settings.clearWord) {
               Bogdle._resetTiles()
@@ -1295,7 +1295,7 @@ Bogdle._checkGuess = function() {
   // console.log('checking current guess...')
 
   // reset classes
-  Bogdle.dom.guess.classList.remove('valid', 'first-guess', 'nine-letter', 'animate__infinite')
+  Bogdle.dom.guess.classList.remove('valid', 'first-guess', 'pangram', 'animate__infinite')
   Bogdle.dom.interactive.btnGuessLookup.disabled = true
 
   // guess valid length?
@@ -1316,9 +1316,9 @@ Bogdle._checkGuess = function() {
           if (!solutionSet[key][word]) {
             Bogdle.dom.guess.classList.add('first-guess')
 
-            // and it's the nine-letter word?!
+            // and it's the pangram word?!
             if (word.length == 9) {
-              Bogdle.dom.guess.classList.add('nine-letter')
+              Bogdle.dom.guess.classList.add('pangram')
               Bogdle._animateCSS('#guess', 'pulse', true)
             } else {
               Bogdle._animateCSS('#guess', 'pulse')
