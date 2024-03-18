@@ -639,6 +639,7 @@ section#game {
     }
   }
     section#game #guess-container #guess {
+      background-color: transparent;
       font-size: 1em;
       line-height: 0.7em;
       letter-spacing: 0.03em;

@@ -1234,14 +1234,29 @@ Bogdle._submitWord = function(word) {
           Bogdle.dom.guess.classList.remove('animate__infinite')
 
           // do a little dance
-          Bogdle._animateCSS('#guess', 'tada').then(() => {
-            Bogdle.dom.guess.classList.remove('first-guess', 'pangram')
+          if (Bogdle.dom.guess.classList.contains('pangram')) {
+            Bogdle.dom.guess.style.setProperty('--animate-duration', '1.2s')
+            Bogdle._animateCSS('#guess', 'rubberBand').then(() => {
+              Bogdle.dom.guess.classList.remove('first-guess', 'pangram')
+              Bogdle.dom.guess.style.setProperty('--animate-duration', '400ms')
 
-            if (Bogdle.settings.clearWord) {
-              Bogdle._resetTiles()
-              Bogdle._resetGuess()
-            }
-          })
+              if (Bogdle.settings.clearWord) {
+                Bogdle._resetTiles()
+                Bogdle._resetGuess()
+              }
+            })
+          } else {
+            Bogdle.dom.guess.style.setProperty('--animate-duration', '600ms')
+            Bogdle._animateCSS('#guess', 'tada').then(() => {
+              Bogdle.dom.guess.classList.remove('first-guess')
+              Bogdle.dom.guess.style.setProperty('--animate-duration', '400ms')
+
+              if (Bogdle.settings.clearWord) {
+                Bogdle._resetTiles()
+                Bogdle._resetGuess()
+              }
+            })
+          }
 
           // make a little love
           Bogdle._increaseScore()
