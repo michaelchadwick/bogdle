@@ -281,9 +281,14 @@ button {
 .valid {
   color: #364333a7;
 }
-.valid.first-guess {
-  color: #23b62d;
-}
+  .valid.first-guess {
+    color: #23b62d;
+  }
+    .valid.first-guess.nine-letter {
+      color: #1bc126;
+      text-shadow: 1px 1px 1px #005e06;
+    }
+
 .help .invalid,
 .help .valid {
   font-weight: 600;

@@ -2,7 +2,7 @@
 /* using Animate.CSS to add and remove simple animations to things */
 /* global Bogdle */
 
-Bogdle._animateCSS = (element, animation, prefix = 'animate__') => {
+Bogdle._animateCSS = (element, animation, loop, prefix = 'animate__') => {
   // We create a Promise and return it
   return new Promise((resolve, reject) => {
     const animationName = `${prefix}${animation}`
@@ -10,10 +10,14 @@ Bogdle._animateCSS = (element, animation, prefix = 'animate__') => {
 
     node.classList.add(`${prefix}animated`, animationName)
 
+    if (loop) {
+      node.classList.add(`${prefix}infinite`)
+    }
+
     // When the animation ends, we clean the classes and resolve the Promise
     function handleAnimationEnd(event) {
       event.stopPropagation()
-      node.classList.remove(`${prefix}animated`, animationName)
+      node.classList.remove(`${prefix}animated`, `${prefix}infinite`, animationName)
       resolve('Animation ended')
     }
 
