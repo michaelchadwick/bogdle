@@ -2017,10 +2017,10 @@ Bogdle._shareResults = async function(type = 'completion') {
   const size = Bogdle.__getSolutionSize()
 
   if (type == 'completion') {
-    shareText += `Bogdle #${Bogdle.dailyNumber} ${size}/${size} words\n`
+    shareText += `🧩 Bogdle #${Bogdle.dailyNumber} ${size}/${size} words\n`
     shareText += BOGDLE_SHARE_URL
   } else if (type == 'pangram') {
-    shareText += `Bogdle #${Bogdle.dailyNumber}: Pangram found!\n`
+    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}: Pangram found!\n`
     shareText += BOGDLE_SHARE_URL
   }
 
