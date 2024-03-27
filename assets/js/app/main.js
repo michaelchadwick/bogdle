@@ -1273,11 +1273,11 @@ Bogdle._submitWord = function(word) {
         if (Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][word] !== 1) {
 
           if (word.length == Bogdle.__getMaxWordLength()) {
-            Bogdle._audioPlay(`doo-dah-doo`)
+            Bogdle._audioPlay(`pangram`)
           } else {
             // choose haaahs[1-3] at random and play
             var num = Math.floor(Math.random() * 3) + 1
-            Bogdle._audioPlay(`haaahs${num}`)
+            Bogdle._audioPlay(`correct${num}`)
           }
 
           if (!Bogdle.state[Bogdle.__getGameMode()].guessedWords) {
@@ -1338,10 +1338,17 @@ Bogdle._submitWord = function(word) {
         } else {
           modalOpen('repeated-word', true, true)
 
+          var num = Math.floor(Math.random() * 3) + 1
+          Bogdle._audioPlay(`repeat${num}`)
+
           Bogdle._animateCSS('#guess', 'headShake')
         }
       } else {
         modalOpen('invalid-word', true, true)
+
+        var num = Math.floor(Math.random() * 3) + 1
+        Bogdle._audioPlay(`wrong${num}`)
+
         Bogdle._animateCSS('#guess', 'headShake')
       }
     } else {

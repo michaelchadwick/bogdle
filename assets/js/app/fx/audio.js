@@ -100,12 +100,18 @@ Bogdle._initAudio = async function() {
         // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is empty. Adding files to it...`)
 
         cache.addAll([
-          `${path}/doo-dah-doo.wav`,
-          `${path}/haaahs1.wav`,
-          `${path}/haaahs2.wav`,
-          `${path}/haaahs3.wav`,
+          `${path}/correct1.wav`,
+          `${path}/correct2.wav`,
+          `${path}/correct3.wav`,
+          `${path}/pangram.wav`,
+          `${path}/repeat1.wav`,
+          `${path}/repeat2.wav`,
+          `${path}/repeat3.wav`,
           `${path}/tile_click.wav`,
-          `${path}/tile_delete.wav`
+          `${path}/tile_delete.wav`,
+          `${path}/wrong1.wav`,
+          `${path}/wrong2.wav`,
+          `${path}/wrong3.wav`
         ])
       } else {
         // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is full, so no need to initialize.`)
