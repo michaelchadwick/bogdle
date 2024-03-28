@@ -1275,7 +1275,7 @@ Bogdle._submitWord = function(word) {
           if (word.length == Bogdle.__getMaxWordLength()) {
             Bogdle._audioPlay(`pangram`)
           } else {
-            // choose haaahs[1-3] at random and play
+            // choose correct[1-3] at random and play
             var num = Math.floor(Math.random() * 3) + 1
             Bogdle._audioPlay(`correct${num}`)
           }
@@ -1300,12 +1300,12 @@ Bogdle._submitWord = function(word) {
 
           // do a little dance
           if (Bogdle.dom.guess.classList.contains('pangram')) {
-            Bogdle.dom.guess.style.setProperty('--animate-duration', '1.2s')
+            Bogdle.dom.guess.style.setProperty('--animate-duration', '1200ms')
             Bogdle.state[Bogdle.__getGameMode()].pangramFound = true
 
             Bogdle._animateCSS('#guess', 'rubberBand').then(() => {
               Bogdle.dom.guess.classList.remove('first-guess', 'pangram')
-              Bogdle.dom.guess.style.setProperty('--animate-duration', '400ms')
+              Bogdle.dom.guess.style.setProperty('--animate-duration', '150ms')
 
               modalOpen('win-pangram')
 
@@ -1315,10 +1315,8 @@ Bogdle._submitWord = function(word) {
               }
             })
           } else {
-            Bogdle.dom.guess.style.setProperty('--animate-duration', '600ms')
-            Bogdle._animateCSS('#guess', 'tada').then(() => {
+            Bogdle._animateCSS('#guess', 'pulse').then(() => {
               Bogdle.dom.guess.classList.remove('first-guess')
-              Bogdle.dom.guess.style.setProperty('--animate-duration', '400ms')
 
               if (Bogdle.settings.clearWord) {
                 Bogdle._resetTiles()
@@ -1338,6 +1336,7 @@ Bogdle._submitWord = function(word) {
         } else {
           modalOpen('repeated-word', true, true)
 
+          // choose repeat[1-3] at random and play
           var num = Math.floor(Math.random() * 3) + 1
           Bogdle._audioPlay(`repeat${num}`)
 
@@ -1346,6 +1345,7 @@ Bogdle._submitWord = function(word) {
       } else {
         modalOpen('invalid-word', true, true)
 
+        // choose wrong[1-3] at random and play
         var num = Math.floor(Math.random() * 3) + 1
         Bogdle._audioPlay(`wrong${num}`)
 
@@ -2372,7 +2372,7 @@ Bogdle.__updateDailyDetails = function(index) {
 
 Bogdle.__winAnimation = async function() {
   return new Promise((resolve, reject) => {
-    Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1s'))
+    Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1000ms'))
 
     setTimeout(() => Bogdle._animateCSS('#tile1', 'bounce'), 0)
     setTimeout(() => Bogdle._animateCSS('#tile2', 'bounce'), 100)
@@ -2389,7 +2389,7 @@ Bogdle.__winAnimation = async function() {
 }
 
 Bogdle.__resetTilesDuration = function() {
-  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '0.1s'), 0)
+  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '75ms'), 0)
 }
 
 /************************************************************************

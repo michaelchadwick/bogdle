@@ -1,5 +1,5 @@
 :root {
-  --animate-duration: 400ms;
+  --animate-duration: 150ms;
   --animate-delay: 0s;
   --animate-repeat: 1
 }
@@ -13,7 +13,7 @@ header .menu-left #nav-overlay #nav-content {
 }
 
 section#game #guess-container #guess {
-  --animate-duration: 400ms;
+  --animate-duration: 150ms;
 }
 
 @keyFrames SlideRight {
