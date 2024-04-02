@@ -2177,7 +2177,7 @@ Bogdle._attachEventListeners = function() {
     } else if (event.code == 'Slash') {
       Bogdle._initHint()
     } else {
-      var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift']
+      var excludedKeys = ['Alt', 'Control', 'Meta', 'Shift', 'ShiftLeft', 'ShiftRight']
       var validLetters = Bogdle.config[Bogdle.__getGameMode()].letters.map(l => l.toUpperCase())
       var pressedLetter = event.code.charAt(event.code.length - 1)
 
