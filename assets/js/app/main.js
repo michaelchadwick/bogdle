@@ -1409,9 +1409,11 @@ Bogdle._checkGuess = function() {
 
             // and it's the pangram word?!
             if (word.length == 9) {
+              Bogdle.dom.guess.style.setProperty('--animate-duration', '600ms')
               Bogdle.dom.guess.classList.add('pangram')
               Bogdle._animateCSS('#guess', 'pulse', true)
             } else {
+              Bogdle.dom.guess.style.setProperty('--animate-duration', '150ms')
               Bogdle._animateCSS('#guess', 'pulse')
             }
           }
