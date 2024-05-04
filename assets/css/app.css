@@ -183,7 +183,11 @@ button {
   @media (min-height: 415px) {
     .tile {
       font-size: 2em;
-      line-height: 2em;
+    }
+  }
+  @media (min-height: 500px) {
+    .tile {
+      font-size: 2.5em;
     }
   }
   @media (min-height: 600px) {
@@ -543,7 +547,6 @@ section#game {
   flex-direction: column;
   height: calc(100% - 40px); /* whole screen except for header */
   margin: 0 auto;
-  max-width: auto;
   width: 100%;
 }
   @media (min-height: 500px) {
