@@ -1,10 +1,10 @@
 class Findle {
   trie = {}
 
-  constructor(w, d, c) {
+  constructor(w, dict, diff) {
     this.word = w
-    this.dictionary = d
-    this.config = c
+    this.dictionary = dict
+    this.difficulty = diff
     this.solution = EMPTY_ARR_SET
   }
 
@@ -40,6 +40,8 @@ class Findle {
       const response = await fetch(this.dictionary)
       const jsonWords = await response.json()
       let words = []
+
+      console.log('Findle createSolution', this.getMaxWordLength())
 
       switch (this.getMaxWordLength()) {
         case 5:
@@ -87,7 +89,9 @@ class Findle {
   }
 
   setSolution = (set) => {
-    var categories = Array.from({length: this.getMaxWordLength() - 2}, (x, i) => (i + 3).toString());
+    var categories = Array.from({length: this.getMaxWordLength() - 3}, (x, i) => (i + 4).toString());
+
+    console.log('Findle categories', categories)
 
     // zero them all out because setting it to the EMPTY_ARR_SET does not work :'(
     categories.forEach(category => {
@@ -104,8 +108,8 @@ class Findle {
   }
 
   getMaxWordLength = () => {
-    if (this.config.difficulty) {
-      return BOGDLE_DIFF_TO_LENGTH[this.config.difficulty]
+    if (this.difficulty) {
+      return BOGDLE_DIFF_TO_LENGTH[this.difficulty]
     } else {
       return 9
     }

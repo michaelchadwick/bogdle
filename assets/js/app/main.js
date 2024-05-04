@@ -1055,7 +1055,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
     const findle = await Bogdle.__createFindle(
       Bogdle.state[gameMode].seedWord,
       Bogdle.config[gameMode].dictionary,
-      Bogdle.state[gameMode]
+      Bogdle.state[gameMode].difficulty
     );
 
     if (findle) {
@@ -1089,6 +1089,8 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
           }
         });
       });
+
+      console.log('new solution set', Bogdle.config[gameMode].solutionSet)
 
       // set tile letter tracking
       Bogdle.config[gameMode].letters = newWord.split("");
@@ -1182,7 +1184,7 @@ Bogdle._loadExistingSolutionSet = async function (
     const findle = await Bogdle.__createFindle(
       Bogdle.state[gameMode].seedWord,
       Bogdle.config[gameMode].dictionary,
-      Bogdle.state[gameMode]
+      Bogdle.state[gameMode].difficulty
     );
 
     if (findle) {
@@ -2221,11 +2223,11 @@ Bogdle._getNebyooApps = async function() {
  * _private __helper methods *
  ************************************************************************/
 
-Bogdle.__createFindle = async (word, dictionary, config) => {
+Bogdle.__createFindle = async (word, dictionary, difficulty) => {
   // console.log(`creating new Findle for '${word.toUpperCase()}' with ${dictionary} file...`)
 
   // create new empty Findle instance
-  const findleInstance = new Findle(word, dictionary, config)
+  const findleInstance = new Findle(word, dictionary, difficulty)
 
   // console.log('findleInstance', findleInstance)
 
