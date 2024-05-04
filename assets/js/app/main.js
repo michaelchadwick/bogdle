@@ -922,39 +922,6 @@ Bogdle._saveSetting = function (setting, value) {
   // console.log('localStorage setting saved!', Bogdle.settings)
 };
 
-// add debug stuff if local
-Bogdle._initDebug = function () {
-  // if debug buttons are in template
-  if (Bogdle.dom.interactive.debug.all) {
-    // show debug buttons
-    Bogdle.dom.interactive.debug.all.style.display = "flex";
-    // make header buttons smaller to fit in debug buttons
-    document.querySelectorAll("button.icon").forEach((btn) => {
-      btn.style.fontSize = "16px";
-    });
-  }
-
-  var qd = {};
-  if (location.search)
-    location.search
-      .substr(1)
-      .split("&")
-      .forEach(function (item) {
-        var s = item.split("="),
-          k = s[0],
-          v = s[1] && decodeURIComponent(s[1]); //  null-coalescing / short-circuit
-        //(k in qd) ? qd[k].push(v) : qd[k] = [v]
-        (qd[k] = qd[k] || []).push(v); // null-coalescing / short-circuit
-      });
-
-  if (qd.debugCSS && qd.debugCSS == 1) {
-    var debugStyles = document.createElement("link");
-    debugStyles.rel = "stylesheet";
-    debugStyles.href = "./assets/css/debug.css";
-    document.head.appendChild(debugStyles);
-  }
-};
-
 // initialize seedWordsFile to pull initial seedWord from
 Bogdle._initSeedWordsFile = function (gameMode) {
   // console.log('initializing seedWordsFile:', gameMode)
@@ -2003,91 +1970,6 @@ Bogdle._displayGameSolution = function () {
   return html;
 };
 
-// initialize hint system when button clicked
-Bogdle._initHint = function() {
-  // console.log('checking for hintWord...')
-
-  if (!Bogdle.config[Bogdle.__getGameMode()].hintWord) {
-    const wordsLeft = Bogdle.__getUnGuessedWords()
-    Bogdle.config[Bogdle.__getGameMode()].hintWord = wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
-
-    // console.log('hintWord created:', Bogdle.config[Bogdle.__getGameMode()].hintWord.toUpperCase())
-
-    Array.from(Bogdle.config[Bogdle.__getGameMode()].hintWord).forEach(l => {
-      Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord.push('_')
-    })
-
-    Bogdle.dom.interactive.btnHintReset.classList.add('show')
-
-    // console.log('hintObscuredWord reset:', Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord.join(' ').toUpperCase())
-  } else {
-    // console.log('hintWord already existing:', Bogdle.config[Bogdle.__getGameMode()].hintWord.toUpperCase())
-  }
-
-  Bogdle._cycleHint()
-}
-// continually add letters to hint until max reached
-Bogdle._cycleHint = function() {
-  // console.log('cycling hintWord status...')
-
-  // if pressing the '/' key to cycle through hints
-  if (Bogdle.dom.interactive.btnHint.classList.contains('not-a-button')) {
-    return Bogdle._clearHint()
-  }
-
-  const hintWord = Bogdle.config[Bogdle.__getGameMode()].hintWord
-
-  // set maximum number of letters to show before forcing a new hint
-  var maxLetters = Math.ceil(hintWord.length / 2)
-
-  // console.log(`length: ${hintWord.length}, maxLetters: ${maxLetters}, count: ${Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter}`)
-
-  // if we haven't yet revealed enough letters,
-  // change a _ to a letter
-  if (Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter < maxLetters) {
-    let idx = 0
-    let foundEmpty = false
-
-    while (!foundEmpty) {
-      idx = Math.floor(Math.random() * Bogdle.config[Bogdle.__getGameMode()].hintWord.length)
-
-      if (Bogdle.config[Bogdle.__getGameMode()].hintWord[idx]) {
-        if (Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord[idx] == '_') {
-          Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord[idx] = Bogdle.config[Bogdle.__getGameMode()].hintWord[idx];
-          foundEmpty = true
-        }
-      }
-    }
-
-    // console.log('Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord', Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord.join(' ').toUpperCase())
-
-    Bogdle.dom.interactive.btnHint.innerHTML = Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord.join('')
-
-    Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter++
-  }
-
-  if (Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter == maxLetters) {
-    // console.log('maxLetters reached, no more letters')
-
-    Bogdle.dom.interactive.btnHint.classList.add('not-a-button')
-    Bogdle.dom.interactive.btnHint.setAttribute('disabled', true)
-  }
-}
-// change not-a-button hint back to button hint
-Bogdle._clearHint = function() {
-  // console.log('clearing hintWord...')
-
-  Bogdle.dom.interactive.btnHint.classList.remove('not-a-button')
-  Bogdle.dom.interactive.btnHint.removeAttribute('disabled')
-  Bogdle.dom.interactive.btnHint.innerHTML = 'HINT?'
-
-  Bogdle.dom.interactive.btnHintReset.classList.remove('show')
-
-  Bogdle.config[Bogdle.__getGameMode()].hintWord = null
-  Bogdle.config[Bogdle.__getGameMode()].hintObscuredWord = []
-  Bogdle.config[Bogdle.__getGameMode()].hintObscuredWordCounter = 0
-}
-
 // handle both clicks and touches outside of modals
 Bogdle._handleClickTouch = function(event) {
   var dialog = document.getElementsByClassName('modal-dialog')[0]
@@ -2104,62 +1986,6 @@ Bogdle._handleClickTouch = function(event) {
   if (event.target == Bogdle.dom.navOverlay) {
     Bogdle.dom.navOverlay.classList.toggle('show')
   }
-}
-
-// debug: beat game to check win state
-Bogdle._winGameHax = function(state = null) {
-  const solutionSet = Bogdle.config[Bogdle.__getGameMode()].solutionSet
-  const solutionSetSize = Bogdle.__getSolutionSize()
-
-  modalOpen('win-game-hax')
-
-  if (state == 'almost') {
-    console.log('HAX! Setting game to one word left...')
-
-    let count = 0
-
-    // set to winning, but stop one short
-    Object.keys(solutionSet).forEach(category => {
-      if (count == solutionSetSize - 1) return
-
-      Object.keys(solutionSet[category]).forEach(word => {
-        if (solutionSet[category][word] == 0) {
-          Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
-          Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
-          Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
-        }
-
-        count += 1
-
-        if (count == solutionSetSize - 1) return
-      })
-    })
-
-    Bogdle._setScore(count)
-
-    Bogdle.state[Bogdle.__getGameMode()].lastPlayedTime = new Date().getTime()
-
-    Bogdle._saveGame()
-  } else {
-    console.log('HAX! Winning game immediately...')
-
-    // set to winning
-    Object.keys(solutionSet).forEach(category => {
-      Object.keys(solutionSet[category]).forEach(word => {
-        if (solutionSet[category][word] == 0) {
-          Bogdle.config[Bogdle.__getGameMode()].solutionSet[category][word] = 1
-          Bogdle.state[Bogdle.__getGameMode()].guessedWords.push(word)
-          Bogdle.state[Bogdle.__getGameMode()].statistics.wordsFound += 1
-        }
-      })
-    })
-
-    Bogdle._setScore(Bogdle.__getSolutionSize())
-
-    Bogdle._saveGame()
-  }
-
-  Bogdle._checkWinState()
 }
 
 // copy results to clipboard for sharing
@@ -2410,7 +2236,6 @@ Bogdle.__createFindle = async (word, dictionary, config) => {
     console.error('Findle.createSolution() failed', err)
   }
 }
-
 
 // load random seed word for solutionSet
 Bogdle.__getNewSeedWord = async function() {
