@@ -4,7 +4,7 @@ A Boggle clone, visually-inspired by [Wordle](https://nytimes.com/games/wordle),
 
 ## Animation
 
-Animation is provided by [Animate.css](https://animate.style), a very cool drop-in CSS file that allows you to add simple animations to things easily.
+Animation is provided by [Animate.css](https://animate.style), a very cool drop-in CSS file that allows you to easily add animations to elements.
 
 ## Audio
 

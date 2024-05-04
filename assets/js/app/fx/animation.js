@@ -1,5 +1,5 @@
 /* audio */
-/* using Animate.CSS to add and remove simple animations to things */
+/* using Animate.CSS to add and remove animations from things */
 /* global Bogdle */
 
 Bogdle._animateCSS = (element, animation, loop, prefix = 'animate__') => {

@@ -1,6 +1,6 @@
 const MAX_LENGTH = '9'
 const SIZE = 26
-const DICTIONARY_FILE = "./assets/json/words-simple-test.json"
+const DICTIONARY_FILE = "./assets/json/_test/test-solution-set.json";
 
 class TrieNode {
   constructor() {

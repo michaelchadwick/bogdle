@@ -42,12 +42,16 @@ class Findle {
       let words = []
 
       switch (this.getMaxWordLength()) {
-        case 3: this.solution = EMPTY_ARR_SET_3; break
-        case 5: this.solution = EMPTY_ARR_SET_5; break
-        case 7: this.solution = EMPTY_ARR_SET_7; break
+        case 5:
+          this.solution = EMPTY_ARR_SET_5;
+          break;
+        case 7:
+          this.solution = EMPTY_ARR_SET_7;
+          break;
         case 9:
         default:
-          this.solution = EMPTY_ARR_SET; break
+          this.solution = EMPTY_ARR_SET;
+          break;
       }
 
       // load dictionary into array
