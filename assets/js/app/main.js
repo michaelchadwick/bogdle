@@ -2,6 +2,8 @@
 /* app entry point and main functions */
 /* global Bogdle */
 
+Bogdle.minWordLength = 4
+
 // settings: saved in LOCAL STORAGE
 Bogdle.settings = {}
 
@@ -1332,7 +1334,7 @@ Bogdle._submitWord = function (word) {
   // console.log('submitting word...', word)
 
   if (Bogdle.state[Bogdle.__getGameMode()].gameState == "IN_PROGRESS") {
-    if (word.length > 2) {
+    if (word.length >= Bogdle.minWordLength) {
       if (
         typeof Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][
           word
