@@ -946,7 +946,7 @@ Bogdle._initSeedWordsFile = function (gameMode) {
   // console.log(`Bogdle.config[${gameMode}].seedWordsFile`, Bogdle.config[gameMode].seedWordsFile)
 };
 
-// TODO: add to CacheStorage
+// TODO: add dictionaries to CacheStorage
 // initialize dictionary to find words for solutionSet
 Bogdle._initDictionaryFile = function (gameMode) {
   // console.log('initializing dictionary file:', gameMode)
