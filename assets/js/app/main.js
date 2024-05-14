@@ -76,6 +76,17 @@ async function modalOpen(type) {
     case "dictionary":
       const word = Bogdle.dom.guess.innerHTML;
 
+      this.myModal = new Modal(
+        "perm",
+        "Dictionary (via Free Dictionary API)",
+        'loading definition...',
+        null,
+        null,
+        false
+      );
+
+      const modalDialogText = document.querySelector('.modal-dialog .modal-text');
+
       try {
         const response = await fetch(`${BOGDLE_DEFINE_LOOKUP_URL}/${word}`);
         const responseJson = await response.json();
@@ -91,32 +102,18 @@ async function modalOpen(type) {
               <em>${entry.meanings[0].partOfSpeech}</em>: ${entry.meanings[0].definitions[0].definition}
             </div>
           `;
-
-          this.myModal = new Modal(
-            "perm",
-            "Dictionary (via Free Dictionary API)",
-            modalText,
-            null,
-            null,
-            false
-          );
         } else {
           modalText = `
             <div class="dictionary">
               <strong>${word}</strong> not found!
             </div>
           `;
-
-          this.myModal = new Modal(
-            "perm",
-            "Dictionary (via Free Dictionary API)",
-            modalText,
-            null,
-            null,
-            false
-          );
         }
+
+        modalDialogText.innerHTML = modalText;
       } catch (e) {
+        modalDialogText.innerHTML = 'Error: Free Dictionary could not be contacted.';
+
         console.error("could not lookup word", e);
       }
       break;
