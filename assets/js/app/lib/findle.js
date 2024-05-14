@@ -41,8 +41,6 @@ class Findle {
       const jsonWords = await response.json()
       let words = []
 
-      console.log('Findle createSolution', this.getMaxWordLength())
-
       switch (this.getMaxWordLength()) {
         case 5:
           this.solution = EMPTY_ARR_SET_5;
@@ -90,8 +88,6 @@ class Findle {
 
   setSolution = (set) => {
     var categories = Array.from({length: this.getMaxWordLength() - 3}, (x, i) => (i + 4).toString());
-
-    console.log('Findle categories', categories)
 
     // zero them all out because setting it to the EMPTY_ARR_SET does not work :'(
     categories.forEach(category => {
