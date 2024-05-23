@@ -144,7 +144,10 @@ async function modalOpen(type) {
         modalText += `
             <div class="statistic-additional">
               <div class="flex">
-                Today's Pangram Found!<button class="share tiny" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
+                <span>Today's Pangram Found!</span>
+                <span>
+                  <button class="share tiny" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
+                </span>
               </div>
             </div>
 
