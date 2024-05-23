@@ -29,28 +29,36 @@
   --marker-color:           #222222;
 }
 
+:root {
+  font-family: 'Changa', sans-serif;
+  font-size: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
 }
 
 html {
+  font-size: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
 }
 
 body {
   background-color: var(--white);
   color: var(--black);
-  font-family: 'Changa', sans-serif;
-  font-size: 1rem;
-  font-size-adjust: 0.5;
+  font-size: 100%;
   font-weight: 300;
   height: 100%;
   line-height: 1.3;
   margin: 0;
-  overflow-y: hidden;
+  overflow-y: unset;
   padding: 0;
   touch-action: manipulation;
+  vertical-align: baseline;
 }
 
 code {
@@ -545,7 +553,7 @@ header {
 section#game {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 40px); /* whole screen except for header */
+  height: calc(100% - 50px); /* whole screen except for header */
   margin: 0 auto;
   width: 100%;
 }
