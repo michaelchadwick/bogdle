@@ -29,7 +29,7 @@ async function modalOpen(type) {
     case "start":
     case "help":
       modalText = `
-        <p>Find all the words in the jumble of letters! Select letters in order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Letters don't need to be adjacent. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
+        <p>Find all the words in the jumble of letters! Select letters in any order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
 
         <div class="flex">
           <div>
@@ -51,7 +51,7 @@ async function modalOpen(type) {
 
         <ul class="help">
           <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
-          <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Backspace/Delete)</li>
+          <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Back/Del)</li>
           <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
           <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
           <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
@@ -951,14 +951,12 @@ Bogdle._initDictionaryFile = function (gameMode) {
   Bogdle.config[gameMode].dictionary = "./assets/json/";
 
   if (gameMode == "free") {
-    Bogdle.config[gameMode].dictionary += `${
-      BOGDLE_WORD_SOURCES[BOGDLE_DIFFICULTY[Bogdle.state[gameMode].difficulty]]
-    }`;
+    Bogdle.config[gameMode].dictionary += `${BOGDLE_WORD_SOURCES[BOGDLE_DIFFICULTY[Bogdle.state[gameMode].difficulty]]
+      }`;
   } else {
     // 'daily' is always 'normal' difficulty
-    Bogdle.config[gameMode].dictionary += `${
-      BOGDLE_WORD_SOURCES[BOGDLE_DIFFICULTY["normal"]]
-    }`;
+    Bogdle.config[gameMode].dictionary += `${BOGDLE_WORD_SOURCES[BOGDLE_DIFFICULTY["normal"]]
+      }`;
   }
 
   Bogdle.config[
@@ -1336,12 +1334,12 @@ Bogdle._submitWord = function (word) {
     if (word.length >= Bogdle.minWordLength) {
       if (
         typeof Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][
-          word
+        word
         ] != "undefined"
       ) {
         if (
           Bogdle.config[Bogdle.__getGameMode()].solutionSet[word.length][
-            word
+          word
           ] !== 1
         ) {
           if (word.length == Bogdle.__getMaxWordLength()) {
@@ -1731,9 +1729,8 @@ Bogdle._displayGameProgress = function () {
   var html = "";
 
   if (Bogdle.__getGameMode() == "free") {
-    html += `<h6>difficulty: ${
-      Bogdle.state[Bogdle.__getGameMode()].difficulty
-    }</h6>`;
+    html += `<h6>difficulty: ${Bogdle.state[Bogdle.__getGameMode()].difficulty
+      }</h6>`;
   }
 
   html += "<ul>";
@@ -1831,13 +1828,11 @@ Bogdle._displayGameConfig = function () {
 
           // special cases
           if (label == "hintWord") {
-            html += `<dd><code>${label}:</code></dd><dt>${
-              value ? value.toUpperCase() : value
-            }</dt>`;
+            html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value
+              }</dt>`;
           } else if (label == "hintObscuredWord" || label == "letters") {
-            html += `<dd><code>${label}:</code></dd><dt>${
-              value ? value.map((v) => v.toUpperCase()).join(", ") : value
-            }</dt>`;
+            html += `<dd><code>${label}:</code></dd><dt>${value ? value.map((v) => v.toUpperCase()).join(", ") : value
+              }</dt>`;
           } else {
             html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`;
           }
@@ -1908,13 +1903,11 @@ Bogdle._displayGameState = function () {
           }
         } else if (label == "guessedWords") {
           html += `<dd><code>${label}:</code></dd><dt>`;
-          html += `${
-            value ? value.map((v) => v.toUpperCase()).join(", ") : value
-          }</dt>`;
+          html += `${value ? value.map((v) => v.toUpperCase()).join(", ") : value
+            }</dt>`;
         } else if (label == "seedWord") {
-          html += `<dd><code>${label}:</code></dd><dt>${
-            value ? value.toUpperCase() : value
-          }</dt>`;
+          html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value
+            }</dt>`;
         } else {
           html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`;
         }
@@ -1972,7 +1965,7 @@ Bogdle._displayGameSolution = function () {
 };
 
 // handle both clicks and touches outside of modals
-Bogdle._handleClickTouch = function(event) {
+Bogdle._handleClickTouch = function (event) {
   var dialog = document.getElementsByClassName('modal-dialog')[0]
 
   if (dialog) {
@@ -1990,7 +1983,7 @@ Bogdle._handleClickTouch = function(event) {
 }
 
 // copy results to clipboard for sharing
-Bogdle._shareResults = async function(type = 'completion') {
+Bogdle._shareResults = async function (type = 'completion') {
   let shareText = ''
   const size = Bogdle.__getSolutionSize()
 
@@ -2038,7 +2031,7 @@ Bogdle._shareResults = async function(type = 'completion') {
 }
 
 // add event listeners to DOM
-Bogdle._attachEventListeners = function() {
+Bogdle._attachEventListeners = function () {
   // {} header icons to open modals
   Bogdle.dom.interactive.btnNav.addEventListener('click', () => {
     Bogdle.dom.navOverlay.classList.toggle('show')
@@ -2201,7 +2194,7 @@ Bogdle._attachEventListeners = function() {
   // console.log('added event listeners')
 }
 
-Bogdle._getNebyooApps = async function() {
+Bogdle._getNebyooApps = async function () {
   const response = await fetch(NEBYOOAPPS_SOURCE_URL)
   const json = await response.json()
   const apps = json.body
@@ -2239,7 +2232,7 @@ Bogdle.__createFindle = async (word, dictionary, difficulty) => {
 }
 
 // load random seed word for solutionSet
-Bogdle.__getNewSeedWord = async function() {
+Bogdle.__getNewSeedWord = async function () {
   // console.log('Bogdle.settings', Bogdle.settings)
   // console.log(`Bogdle.config[${Bogdle.__getGameMode()}]`, Bogdle.config[Bogdle.__getGameMode()])
 
@@ -2257,7 +2250,7 @@ Bogdle.__getNewSeedWord = async function() {
 }
 
 // get array of words not yet guessed for hint system
-Bogdle.__getUnGuessedWords = function() {
+Bogdle.__getUnGuessedWords = function () {
   var words = Bogdle.config[Bogdle.__getGameMode()].solutionSet
   var wordsLeft = []
 
@@ -2273,7 +2266,7 @@ Bogdle.__getUnGuessedWords = function() {
 }
 
 // timestamp to display date
-Bogdle.__getFormattedDate = function(date) {
+Bogdle.__getFormattedDate = function (date) {
   var formatted_date = ''
 
   formatted_date += `${date.getFullYear()}/`
@@ -2287,8 +2280,8 @@ Bogdle.__getFormattedDate = function(date) {
 }
 
 // return Bogdle.config[Bogdle.__getGameMode()].solutionSet size
-Bogdle.__getSolutionSize = function() {
- //  console.log('getting the current gameMode solutionSize...')
+Bogdle.__getSolutionSize = function () {
+  //  console.log('getting the current gameMode solutionSize...')
 
   let categorySize = 0
   let solutionSize = 0
@@ -2302,13 +2295,13 @@ Bogdle.__getSolutionSize = function() {
     }
   })
 
- //  console.log(`solutionSize for ${Bogdle.__getGameMode()} is ${solutionSize}`)
+  //  console.log(`solutionSize for ${Bogdle.__getGameMode()} is ${solutionSize}`)
 
   return solutionSize
 }
 
 // helper method to get game difficulty as a max letter length
-Bogdle.__getMaxWordLength = function() {
+Bogdle.__getMaxWordLength = function () {
   if (Bogdle.config.gameMode == 'daily') {
     return 9
   }
@@ -2321,7 +2314,7 @@ Bogdle.__getMaxWordLength = function() {
 }
 
 // get displayable string for today's date
-Bogdle.__getTodaysDate = function() {
+Bogdle.__getTodaysDate = function () {
   const d = new Date(Date.now())
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -2330,17 +2323,17 @@ Bogdle.__getTodaysDate = function() {
 }
 
 // shorter gameMode deducer
-Bogdle.__getGameMode = function() {
+Bogdle.__getGameMode = function () {
   return Bogdle.settings.gameMode
 }
 
-Bogdle.__updateDailyDetails = function(index) {
+Bogdle.__updateDailyDetails = function (index) {
   Bogdle.dailyNumber = parseInt(index) + 1
   Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
   Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
 }
 
-Bogdle.__winAnimation = async function() {
+Bogdle.__winAnimation = async function () {
   return new Promise((resolve, reject) => {
     Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1000ms'))
 
@@ -2358,7 +2351,7 @@ Bogdle.__winAnimation = async function() {
   })
 }
 
-Bogdle.__resetTilesDuration = function() {
+Bogdle.__resetTilesDuration = function () {
   Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '75ms'), 0)
 }
 
