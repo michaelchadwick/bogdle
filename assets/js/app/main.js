@@ -1741,16 +1741,23 @@ Bogdle._displayGameProgress = function () {
     .reverse()
     .forEach((category) => {
       if (parseInt(category) <= Bogdle.__getMaxWordLength()) {
-        html += `<li><span class="solution-category">${category}-LETTER</span>`;
-
-        var categoryEntries = Object.entries(
+        const categoryEntries = Object.entries(
           Bogdle.config[Bogdle.__getGameMode()].solutionSet[category]
         );
-        var categoryGuessed = categoryEntries.filter((entry) => entry[1]);
-
-        categoryLength = Object.keys(
+        const categoryGuessed = categoryEntries.filter((entry) => entry[1]);
+        const categoryLength = Object.keys(
           Bogdle.config[Bogdle.__getGameMode()].solutionSet[category]
         ).length;
+
+        let categoryClass = '';
+
+        if (categoryLength == 0) {
+          categoryClass = 'not-applicable';
+        } else if (categoryGuessed.length == categoryLength) {
+          categoryClass = 'full';
+        }
+
+        html += `<li class='${categoryClass}'><span class="solution-category">${category}-LETTER</span>`;
 
         html += ` ${categoryGuessed.length} of ${categoryLength}`;
         html += `<ul><li>`;

@@ -202,6 +202,20 @@
   color: var(--black);
 }
 
+.modal-text li.not-applicable {
+  color: var(--disabled);
+}
+.modal-text li.not-applicable span.solution-category + ul {
+  border-color: var(--disabled);
+}
+.modal-text li.full {
+  color: var(--dark-color);
+}
+.modal-text li.full span.solution-category + ul {
+  background-color: var(--vlight-color);
+  border-color: var(--dark-color);
+}
+
 /* MODAL->STATISTICS */
 .statistic-header {
   align-items: center;
