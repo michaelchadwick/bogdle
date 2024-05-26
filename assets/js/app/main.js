@@ -2201,6 +2201,8 @@ Bogdle._attachEventListeners = function () {
   window.onload = Bogdle._resizeBoard
   window.onresize = Bogdle._resizeBoard
 
+  document.body.addEventListener('touchmove', preventDefault, { passive: false })
+
   // console.log('added event listeners')
 }
 
