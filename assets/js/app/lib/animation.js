@@ -2,8 +2,6 @@
 /* using Animate.CSS to add and remove animations from things */
 /* global Bogdle */
 
-// TODO: Improve animations
-
 Bogdle._animateCSS = (element, animation, loop, prefix = 'animate__') => {
   // We create a Promise and return it
   return new Promise((resolve, reject) => {

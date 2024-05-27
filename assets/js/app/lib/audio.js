@@ -2,8 +2,6 @@
 /* sound playing mechanisms */
 /* global Bogdle */
 
-// TODO: add more sound FX
-
 const BOGDLE_CACHE_AUDIO_KEY = 'bogdle-cache-audio'
 const BOGDLE_ASSET_DATA_PATH = '/assets/audio'
 
