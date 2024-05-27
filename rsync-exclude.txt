@@ -15,4 +15,3 @@ LICENSE.md
 README.md
 Rakefile
 rsync-exclude.txt
-TODO.md
