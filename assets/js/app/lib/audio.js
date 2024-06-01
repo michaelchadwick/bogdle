@@ -10,11 +10,8 @@ async function getAudio(cacheName, url) {
   let cachedAudio = await getCachedAudio(cacheName, url);
 
   if (cachedAudio) {
-    // console.log('Retrieved cached audio', cachedAudio);
     return cachedAudio;
   }
-
-  // console.log('Fetching fresh data');
 
   const cacheStorage = await caches.open(cacheName);
   await cacheStorage.add(url);
@@ -97,8 +94,6 @@ Bogdle._initAudio = async function() {
   await caches.open(BOGDLE_CACHE_AUDIO_KEY).then(cache => {
     cache.keys().then(function(keys) {
       if (!keys.length) {
-        // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is empty. Adding files to it...`)
-
         cache.addAll([
           `${path}/correct1.wav`,
           `${path}/correct2.wav`,
