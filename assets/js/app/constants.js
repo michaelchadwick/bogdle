@@ -2,95 +2,84 @@
 /* set any global app constants */
 /* eslint-disable no-unused-vars */
 
-const BOGDLE_STATE_DAILY_KEY = 'bogdle-state-daily'
-const BOGDLE_STATE_FREE_KEY = 'bogdle-state-free'
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
+const BOGDLE_SHARE_URL = 'https://bogdle.neb.host/?r=share'
 
-const BOGDLE_SETTINGS_KEY = 'bogdle-settings'
+const EMPTY_OBJ_SET_5 = { 4: {}, 5: {} }
+const EMPTY_OBJ_SET_7 = { 4: {}, 5: {}, 6: {}, 7: {} }
+const EMPTY_OBJ_SET_9 = { 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {} }
+
+const EMPTY_ARR_SET_5 = { 4: [], 5: [] }
+const EMPTY_ARR_SET_7 = { 4: [], 5: [], 6: [], 7: [] }
+const EMPTY_ARR_SET_9 = { 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
+
+const BOGDLE_STATE_DAILY_LS_KEY = 'bogdle-state-daily'
+const BOGDLE_STATE_FREE_LS_KEY = 'bogdle-state-free'
+const BOGDLE_SETTINGS_LS_KEY = 'bogdle-settings'
 
 const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 const BOGDLE_ENV_PROD_URL = [
   'bogdle.fun',
   'bogdle.neb.host'
 ]
-const BOGDLE_DAILY_SCRIPT = './assets/scripts/daily.php'
+const BOGDLE_DAILY_SCRIPT = '/assets/scripts/daily.php'
+const BOGDLE_DICT_FILE_ROOT = '/assets/json/'
 
 const BOGDLE_DIFFICULTY = {
   easy: "small",
   medium: "small",
   normal: "small",
-};
+}
 
 const BOGDLE_WORD_SOURCES = {
   small: "01_sm",
   medium: "02_md",
   large: "03_lg",
-};
+}
 
 const BOGDLE_DIFF_TO_LENGTH = {
   easy: 5,
   medium: 7,
   normal: 9,
-};
+}
 
-const EMPTY_OBJ_SET = { 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {} };
-const EMPTY_OBJ_SET_5 = { 4: {}, 5: {} };
-const EMPTY_OBJ_SET_7 = { 4: {}, 5: {}, 6: {}, 7: {} };
-
-const EMPTY_ARR_SET = { 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
-const EMPTY_ARR_SET_5 = { 4: [], 5: [] };
-const EMPTY_ARR_SET_7 = { 4: [], 5: [], 6: [], 7: [] };
+const BOGDLE_DEFAULT_CONFIG = {
+  'dictionary': null,
+  'hintWord': null,
+  'hintObscuredWord': [],
+  'hintObscuredWordCounter': 0,
+  'letters': [],
+  'seedWordsFile': null,
+  'solutionSet': EMPTY_OBJ_SET_9,
+  'tilesSelected': []
+}
+const BOGDLE_DEFAULT_STATE = {
+  'difficulty': 'normal',
+  'gameState': 'IN_PROGRESS',
+  'gameWon': false,
+  'guessedWords': [],
+  'hintsUsed': 0,
+  'lastCompletedTime': null,
+  'lastPlayedTime': null,
+  'pangramFound': false,
+  'seedWord': null
+}
+const BOGDLE_DEFAULT_SETTINGS = {
+  'clearWord': true,
+  'darkMode': false,
+  'firstTime': true,
+  'gameMode': 'daily',
+  'noisy': false
+}
 
 const BOGDLE_DEFAULTS = {
   'config': {
-    'daily': {
-      'hintWord': null,
-      'hintObscuredWord': [],
-      'hintObscuredWordCounter': 0,
-      'solutionSet': EMPTY_OBJ_SET
-    },
-    'free': {
-      'hintWord': null,
-      'hintObscuredWord': [],
-      'hintObscuredWordCounter': 0,
-      'solutionSet': EMPTY_OBJ_SET
-    }
+    'daily': {...BOGDLE_DEFAULT_CONFIG},
+    'free': {...BOGDLE_DEFAULT_CONFIG}
   },
   'state': {
-    'daily': {
-      'gameState': 'IN_PROGRESS',
-      'guessedWords': [],
-      'lastCompletedTime': null,
-      'lastPlayedTime': null,
-      'pangramFound': false,
-      'seedWord': null,
-      'statistics': {
-        'gamesPlayed': 0,
-        'wordsFound': 0
-      }
-    },
-    'free': {
-      'difficulty': 'normal',
-      'gameState': 'IN_PROGRESS',
-      'guessedWords': [],
-      'lastCompletedTime': null,
-      'lastPlayedTime': null,
-      'pangramFound': false,
-      'seedWord': null,
-      'statistics': {
-        'gamesPlayed': 0,
-        'wordsFound': 0
-      }
-    }
+    'daily': [{...BOGDLE_DEFAULT_STATE}],
+    'free': [{...BOGDLE_DEFAULT_STATE}]
   },
-  'settings': {
-    'clearWord': true,
-    'darkMode': false,
-    'firstTime': true,
-    'gameMode': 'daily',
-    'noisy': false
-  }
+  'settings': BOGDLE_DEFAULT_SETTINGS
 }
-
-const BOGDLE_SHARE_URL = 'https://bogdle.neb.host/?r=share'
-
-const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'

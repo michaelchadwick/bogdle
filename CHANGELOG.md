@@ -9,14 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Number of hints used now tracked
+
 ### Changed
 
+- Bogdle.config and Bogdle.state getting/setting now use proper functions
 - `localStorage` now keeps track of all games in object array, not just most recent one in an object
+- Moved some functions into their own js files
 - Statistics now devised on-the-fly from `localStorage`
+- var -> const/let
 
 ### Removed
 
 - Bogdle.state[mode].statistics
+- Semicolons
 
 ## [1.0.0] - 2022-10-22
 

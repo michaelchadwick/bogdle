@@ -5,7 +5,7 @@ class Findle {
     this.word = w
     this.dictionary = dict
     this.difficulty = diff
-    this.solution = EMPTY_ARR_SET
+    this.solution = EMPTY_ARR_SET_9
   }
 
   findWords = (word, trie = this.trie, cur = '', words = []) => {
@@ -32,7 +32,7 @@ class Findle {
   }
 
   setDefault = (obj, prop, deflt) => {
-    return obj.hasOwnProperty(prop) ? obj[prop] : (obj[prop] = deflt);
+    return obj.hasOwnProperty(prop) ? obj[prop] : (obj[prop] = deflt)
   }
 
   createSolution = async () => {
@@ -43,15 +43,15 @@ class Findle {
 
       switch (this.getMaxWordLength()) {
         case 5:
-          this.solution = EMPTY_ARR_SET_5;
-          break;
+          this.solution = EMPTY_ARR_SET_5
+          break
         case 7:
-          this.solution = EMPTY_ARR_SET_7;
-          break;
+          this.solution = EMPTY_ARR_SET_7
+          break
         case 9:
         default:
-          this.solution = EMPTY_ARR_SET;
-          break;
+          this.solution = EMPTY_ARR_SET_9
+          break
       }
 
       // load dictionary into array
@@ -61,7 +61,7 @@ class Findle {
         })
       })
 
-      var cur = ''
+      let cur = ''
       //for word in map(lambda w: w.strip(), words): // py
       Array.from(words.map(w => w.trim())).forEach(word => {
         cur = this.trie
@@ -76,7 +76,7 @@ class Findle {
       })
 
       // find all valid, unique words found in seed word
-      var validWords = this.findWords(this.word)
+      const validWords = this.findWords(this.word)
         .filter((value, index, self) => self.indexOf(value) === index)
 
       // create solution set from valid words
@@ -87,9 +87,9 @@ class Findle {
   }
 
   setSolution = (set) => {
-    var categories = Array.from({length: this.getMaxWordLength() - 3}, (x, i) => (i + 4).toString());
+    const categories = Array.from({length: this.getMaxWordLength() - 3}, (x, i) => (i + 4).toString())
 
-    // zero them all out because setting it to the EMPTY_ARR_SET does not work :'(
+    // zero them all out because setting it to the EMPTY_ARR_SET_9 does not work :'(
     categories.forEach(category => {
       this.solution[category] = []
     })
