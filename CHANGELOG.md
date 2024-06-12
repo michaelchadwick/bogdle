@@ -14,10 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bogdle.config and Bogdle.state getting/setting now use proper functions
+- Daily game will have only one pangram
+  - Remove 9-letter words that have anagrams of each other.
 - `localStorage` now keeps track of all games in object array, not just most recent one in an object
 - Moved some functions into their own js files
 - Statistics now devised on-the-fly from `localStorage`
 - var -> const/let
+- Word sources pruned of uncommon words. Trying [Wordnik](https://developer.wordnik.com/docs#!/word/getWordFrequency) and [nltk](https://www.nltk.org/api/nltk.corpus.html) to assist
 
 ### Removed
 
