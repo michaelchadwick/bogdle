@@ -25,3 +25,8 @@ All parts of this app are free to use and abuse under the [open-source MIT licen
 * [small (~25k) - github/dolph/dictionary](https://raw.githubusercontent.com/dolph/dictionary/master/popular.txt)
 * [medium (~138k) - github/benhoyt/boggle](https://raw.githubusercontent.com/benhoyt/boggle/master/word-list.txt)
 * [large (~370k) - github/dwyl/english-words](https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt)
+
+Word lists were further filtered for anagrams, commonality, and vulgarity.
+
+* [commonality filter] - [hit.uib.no/icame/brown/bcm.html](http://www.hit.uib.no/icame/brown/bcm.html)
+* [vulgarity filter] - [cs.cmu.edu/~biglou/resources](https://www.cs.cmu.edu/~biglou/resources/)
