@@ -5,6 +5,11 @@
 const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
 const BOGDLE_SHARE_URL = 'https://bogdle.neb.host/?r=share'
 
+const BOGDLE_ENV_PROD_URL = [
+  'bogdle.fun',
+  'bogdle.neb.host'
+]
+
 const EMPTY_OBJ_SET_5 = { 4: {}, 5: {} }
 const EMPTY_OBJ_SET_7 = { 4: {}, 5: {}, 6: {}, 7: {} }
 const EMPTY_OBJ_SET_9 = { 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {} }
@@ -18,10 +23,7 @@ const BOGDLE_STATE_FREE_LS_KEY = 'bogdle-state-free'
 const BOGDLE_SETTINGS_LS_KEY = 'bogdle-settings'
 
 const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
-const BOGDLE_ENV_PROD_URL = [
-  'bogdle.fun',
-  'bogdle.neb.host'
-]
+
 const BOGDLE_DAILY_SCRIPT = '/assets/scripts/daily.php'
 const BOGDLE_DICT_FILE_ROOT = '/assets/json/'
 
