@@ -247,7 +247,7 @@ Bogdle._winGameHax = async function(state = null) {
       const solutionSet = Bogdle.__getConfig().solutionSet
       const solutionSetSize = Bogdle.__getSolutionSize()
 
-      modalOpen('win-game-hax')
+      Bogdle.modalOpen('win-game-hax')
 
       if (state == 'almost') {
         console.log('HAX! Setting game to one word left...')

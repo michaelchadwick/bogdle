@@ -18,7 +18,7 @@ Bogdle.state = BOGDLE_DEFAULTS.state
  *************************************************************************/
 
 // modal methods
-async function modalOpen(type) {
+Bogdle.modalOpen = async function(type) {
   let modalText
 
   switch (type) {
@@ -813,7 +813,7 @@ Bogdle._submitWord = function (word) {
               Bogdle.dom.guess.classList.remove("first-guess", "pangram")
               Bogdle.dom.guess.style.setProperty("--animate-duration", "150ms")
 
-              modalOpen("win-pangram")
+              Bogdle.modalOpen("win-pangram")
 
               if (Bogdle.settings.clearWord) {
                 Bogdle._resetTiles()
@@ -840,7 +840,7 @@ Bogdle._submitWord = function (word) {
           // get down tonight
           Bogdle._checkWinState()
         } else {
-          modalOpen("repeated-word", true, true)
+          Bogdle.modalOpen("repeated-word", true, true)
 
           // choose repeat[1-3] at random and play
           const num = Math.floor(Math.random() * 3) + 1
@@ -849,7 +849,7 @@ Bogdle._submitWord = function (word) {
           Bogdle._animateCSS("#guess", "headShake")
         }
       } else {
-        modalOpen("invalid-word", true, true)
+        Bogdle.modalOpen("invalid-word", true, true)
 
         // choose wrong[1-3] at random and play
         const num = Math.floor(Math.random() * 3) + 1
@@ -858,7 +858,7 @@ Bogdle._submitWord = function (word) {
         Bogdle._animateCSS("#guess", "headShake")
       }
     } else {
-      modalOpen("invalid-length", true, true)
+      Bogdle.modalOpen("invalid-length", true, true)
 
       Bogdle._animateCSS("#guess", "headShake")
     }
@@ -955,7 +955,7 @@ Bogdle._checkWinState = function () {
         Bogdle._saveGame()
       }
 
-      modalOpen("win-game")
+      Bogdle.modalOpen("win-game")
 
       Bogdle.__winAnimation().then(() => {
         Bogdle.__resetTilesDuration()
@@ -970,7 +970,7 @@ Bogdle._checkWinState = function () {
         Bogdle._disableUIButtons()
 
         // display modal win thingy
-        modalOpen("win")
+        Bogdle.modalOpen("win")
 
         return true
       })
@@ -1200,11 +1200,11 @@ Bogdle._shareResults = async function (type = 'completion') {
   } else {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText).then(() => {
-        modalOpen('shared')
+        Bogdle.modalOpen('shared')
       }).catch(() => {
         console.error('could not copy text to clipboard')
 
-        modalOpen('no-clipboard-access')
+        Bogdle.modalOpen('no-clipboard-access')
 
         return
       })
@@ -1213,17 +1213,17 @@ Bogdle._shareResults = async function (type = 'completion') {
 
       // if (canWrite.state == 'granted') {
       //   navigator.clipboard.writeText(shareText).then(() => {
-      //     modalOpen('shared')
+      //     Bogdle.modalOpen('shared')
       //   }).catch(() => console.error('could not copy text to clipboard'))
       // } else {
       //   console.warn('clipboard access was denied')
 
-      //   modalOpen('no-clipboard-access')
+      //   Bogdle.modalOpen('no-clipboard-access')
       // }
     } else {
       console.warn('no sharing or clipboard access available')
 
-      modalOpen('no-clipboard-access')
+      Bogdle.modalOpen('no-clipboard-access')
 
       return
     }
@@ -1239,9 +1239,9 @@ Bogdle._attachEventListeners = function () {
   Bogdle.dom.interactive.btnNavClose.addEventListener('click', () => {
     Bogdle.dom.navOverlay.classList.toggle('show')
   })
-  Bogdle.dom.interactive.btnHelp.addEventListener('click', () => modalOpen('help'))
-  Bogdle.dom.interactive.btnStats.addEventListener('click', () => modalOpen('stats'))
-  Bogdle.dom.interactive.btnSettings.addEventListener('click', () => modalOpen('settings'))
+  Bogdle.dom.interactive.btnHelp.addEventListener('click', () => Bogdle.modalOpen('help'))
+  Bogdle.dom.interactive.btnStats.addEventListener('click', () => Bogdle.modalOpen('stats'))
+  Bogdle.dom.interactive.btnSettings.addEventListener('click', () => Bogdle.modalOpen('settings'))
 
   // [A] tile interaction
   Array.from(Bogdle.dom.interactive.tiles).forEach(tile => {
@@ -1282,7 +1282,7 @@ Bogdle._attachEventListeners = function () {
 
   // := show current game word list progress
   Bogdle.dom.interactive.btnShowProgress.addEventListener('click', () => {
-    modalOpen('show-progress')
+    Bogdle.modalOpen('show-progress')
   })
 
   // + create new solution
@@ -1293,7 +1293,7 @@ Bogdle._attachEventListeners = function () {
   // 📕 dictionary lookup
   Bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
     if (Bogdle.dom.guess.classList.contains('valid')) {
-      modalOpen('dictionary')
+      Bogdle.modalOpen('dictionary')
     }
   })
 
@@ -1302,17 +1302,17 @@ Bogdle._attachEventListeners = function () {
     if (Bogdle.dom.interactive.debug.all) {
       // 🪣 show master word list
       Bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
-        modalOpen('show-solution')
+        Bogdle.modalOpen('show-solution')
       })
 
       // ⚙️ show current bogdle config
       Bogdle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
-        modalOpen('show-config')
+        Bogdle.modalOpen('show-config')
       })
 
       // 🎚️ show current bogdle state
       Bogdle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
-        modalOpen('show-state')
+        Bogdle.modalOpen('show-state')
       })
 
       // 🏆 win game immediately
@@ -1425,22 +1425,6 @@ Bogdle.__getNewSeedWord = async function () {
   return this.seedWord
 }
 
-// get array of words not yet guessed for hint system
-Bogdle.__getUnGuessedWords = function () {
-  const words = Bogdle.__getConfig().solutionSet
-  const wordsLeft = []
-
-  Object.keys(words).forEach(length => {
-    Object.keys(words[length]).forEach(word => {
-      if (!words[length][word]) {
-        wordsLeft.push(word)
-      }
-    })
-  })
-
-  return wordsLeft
-}
-
 Bogdle.__getGameMode = function () {
   return Bogdle.settings.gameMode || 'daily'
 }
@@ -1463,7 +1447,12 @@ Bogdle.__getState = function(mode = Bogdle.__getGameMode()) {
     return undefined
   }
 }
-Bogdle.__setState = function(key, val, mode = Bogdle.__getGameMode(), index = Bogdle.__getSessionIndex()) {
+Bogdle.__setState = function(
+  key,
+  val,
+  mode = Bogdle.__getGameMode(),
+  index = Bogdle.__getSessionIndex()
+) {
   Bogdle.state[mode][index][key] = val
 }
 Bogdle.__getStateObj = function(mode = Bogdle.__getGameMode()) {
@@ -1471,7 +1460,6 @@ Bogdle.__getStateObj = function(mode = Bogdle.__getGameMode()) {
 
   return rootState || undefined
 }
-
 Bogdle.__getSessionIndex = function(mode = Bogdle.__getGameMode()) {
   const rootState = Bogdle.state[mode]
 

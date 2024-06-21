@@ -140,7 +140,7 @@ Bogdle._loadGame = async function () {
     !Bogdle.__getState('daily').lastPlayedTime
   ) {
     if (Bogdle.settings.firstTime) {
-      modalOpen("start")
+      Bogdle.modalOpen("start")
 
       Bogdle._saveSetting("firstTime", false)
     }
@@ -189,9 +189,11 @@ Bogdle._saveGame = function () {
   }
 
   // save global game settings
-  // console.log('saving Bogdle.settings', Bogdle.settings)
   try {
-    localStorage.setItem(BOGDLE_SETTINGS_LS_KEY, JSON.stringify(Bogdle.settings))
+    localStorage.setItem(
+      BOGDLE_SETTINGS_LS_KEY,
+      JSON.stringify(Bogdle.settings)
+    )
   } catch (error) {
     console.error("localStorage global settings save failed", error)
   }

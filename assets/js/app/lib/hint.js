@@ -80,3 +80,19 @@ Bogdle._disableHint = function () {
 Bogdle._enableHint = function () {
   Bogdle.dom.interactive.btnHint.disabled = false
 }
+
+// get array of words not yet guessed for hint system
+Bogdle.__getUnGuessedWords = function () {
+  const words = Bogdle.__getConfig().solutionSet
+  const wordsLeft = []
+
+  Object.keys(words).forEach(length => {
+    Object.keys(words[length]).forEach(word => {
+      if (!words[length][word]) {
+        wordsLeft.push(word)
+      }
+    })
+  })
+
+  return wordsLeft
+}
