@@ -952,9 +952,10 @@ Bogdle._checkWinState = function () {
       if (gameState == "IN_PROGRESS") {
         // make sure to only increment wins if we are going from
         // IN_PROGRESS -> GAME_OVER (ignores page refreshes)
-        Bogdle.__setState(gameState, "GAME_OVER")
+        Bogdle.__setState('gameState', "GAME_OVER")
 
         const now = new Date().getTime()
+        Bogdle.__setState('gameWon', true)
         Bogdle.__setState('lastCompletedTime', now)
         Bogdle.__setState('lastPlayedTime', now)
 
