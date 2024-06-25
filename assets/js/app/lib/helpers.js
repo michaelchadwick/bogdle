@@ -57,6 +57,11 @@ Bogdle.__getSolutionSize = function () {
   return solutionSize
 }
 
+// return Bogdle.__getState().hintsUsed count
+Bogdle.__getHintsUsed = function () {
+  return Bogdle.__getState().hintsUsed
+}
+
 Bogdle.__updateDailyDetails = function (index) {
   Bogdle.dailyNumber = parseInt(index) + 1
   Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()

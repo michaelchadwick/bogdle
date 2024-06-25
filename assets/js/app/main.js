@@ -1193,12 +1193,13 @@ Bogdle._handleClickTouch = function (event) {
 Bogdle._shareResults = async function (type = 'completion') {
   let shareText = ''
   const size = Bogdle.__getSolutionSize()
+  const hints = Bogdle.__getHintsUsed()
 
   if (type == 'completion') {
-    shareText += `🧩 Bogdle #${Bogdle.dailyNumber} ${size}/${size} words\n`
+    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}\n${size}/${size} words, ${hints} hints\n`
     shareText += BOGDLE_SHARE_URL
   } else if (type == 'pangram') {
-    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}: Pangram found!\n`
+    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}\nPangram found!\n`
     shareText += BOGDLE_SHARE_URL
   }
 
