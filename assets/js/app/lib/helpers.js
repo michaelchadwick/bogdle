@@ -57,6 +57,16 @@ Bogdle.__getSolutionSize = function () {
   return solutionSize
 }
 
+Bogdle.__updateDailyDetails = function (index) {
+  Bogdle.dailyNumber = parseInt(index) + 1
+  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
+  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
+}
+
+Bogdle.__resetTilesDuration = function () {
+  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '75ms'), 0)
+}
+
 // get list of other NebyooApps from Dave
 Bogdle._getNebyooApps = async function () {
   const response = await fetch(NEBYOOAPPS_SOURCE_URL)

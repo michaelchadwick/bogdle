@@ -379,7 +379,13 @@ Bogdle.modalOpen = async function(type) {
       break
 
     case "win-game":
-      this.myModal = new Modal("temp", null, "Congratulations!", null, null)
+      this.myModal = new Modal(
+        "temp",
+        null,
+        "Congratulations!",
+        null,
+        null
+      )
       break
 
     case "win-game-hax":
@@ -1466,12 +1472,6 @@ Bogdle.__getSessionIndex = function(mode = Bogdle.__getGameMode()) {
   return rootState ? rootState.length - 1 : 0
 }
 
-Bogdle.__updateDailyDetails = function (index) {
-  Bogdle.dailyNumber = parseInt(index) + 1
-  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
-  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
-}
-
 Bogdle.__winAnimation = async function () {
   return new Promise((resolve, reject) => {
     Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '1000ms'))
@@ -1488,10 +1488,6 @@ Bogdle.__winAnimation = async function () {
 
     setTimeout(() => resolve('__winAnimation ended'), 2000)
   })
-}
-
-Bogdle.__resetTilesDuration = function () {
-  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '75ms'), 0)
 }
 
 /************************************************************************
