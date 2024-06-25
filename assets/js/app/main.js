@@ -549,7 +549,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
 
       // zero them all out because setting it to the EMPTY_OBJ_SET_9 does not work :'(
       categories.forEach((category) => {
-        Bogdle._getConfig(gameMode).solutionSet[category] = {}
+        Bogdle.__getConfig(gameMode).solutionSet[category] = {}
       })
 
       // create bogdle's solutionSet
