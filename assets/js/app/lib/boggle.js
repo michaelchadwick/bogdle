@@ -13,13 +13,13 @@ class TrieNode {
   }
 }
 
-class Bogdle {
+class Boggle {
   M = 3
   N = 3
-  solution = { "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [] }
+  solution = EMPTY_ARR_SET_9
 
   constructor(d, b) {
-    this.bogdle = b
+    this.boggle = b
 
     if (d) {
       this.dictionary = d
@@ -30,7 +30,7 @@ class Bogdle {
   }
 
   createSolution = () => {
-    console.log(`creating solution for ${MAX_LENGTH}-letter word: ${this.bogdle.flat().join('')}...`)
+    console.log(`creating solution for ${MAX_LENGTH}-letter word: ${this.boggle.flat().join('')}...`)
 
     let root = new TrieNode()
 
@@ -41,8 +41,8 @@ class Bogdle {
       this.insert(root, this.dictionary[i])
     }
 
-    // loads all words from dictionary found in bogdle into solution
-    this.findWords(this.bogdle, root)
+    // loads all words from dictionary found in boggle into solution
+    this.findWords(this.boggle, root)
   }
 
   getSolution = () => {
@@ -62,7 +62,7 @@ class Bogdle {
 
         // random starter word
         // let starterIdx = Math.floor(Math.random() * wordList[MAX_LENGTH].length)
-        // this.bogdle = wordList[MAX_LENGTH][starterIdx]
+        // this.boggle = wordList[MAX_LENGTH][starterIdx]
 
         this.createSolution()
       }).catch((err) => {
@@ -100,8 +100,8 @@ class Bogdle {
     )
   }
 
-  // A recursive function to find all words present on bogdle
-  searchWord = (root, bogdle, i, j, visited, str) => {
+  // A recursive function to find all words present on boggle
+  searchWord = (root, boggle, i, j, visited, str) => {
     // if we found word in trie / dictionary
     if (root.leaf == true) {
       console.log('found word!', str, str.length)
@@ -123,45 +123,45 @@ class Bogdle {
           let ch = String.fromCharCode(K + 'A'.charCodeAt(0))
 
           // Recursively search remaining characters of word in trie
-          // for all 8 adjacent cells of bogdle[i][j]
+          // for all 8 adjacent cells of boggle[i][j]
           if (this.isSafe(i + 1, j + 1, visited)
-            && bogdle[i + 1][j + 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i + 1][j + 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i + 1, j + 1,
                 visited, str + ch)
           if (this.isSafe(i, j + 1, visited)
-            && bogdle[i][j + 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i][j + 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i, j + 1,
                 visited, str + ch)
           if (this.isSafe(i - 1, j + 1, visited)
-            && bogdle[i - 1][j + 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i - 1][j + 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i - 1, j + 1,
                 visited, str + ch)
           if (this.isSafe(i + 1, j, visited)
-            && bogdle[i + 1][j] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i + 1][j] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i + 1, j,
                 visited, str + ch)
           if (this.isSafe(i + 1, j - 1, visited)
-            && bogdle[i + 1][j - 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i + 1][j - 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i + 1, j - 1,
                 visited, str + ch)
           if (this.isSafe(i, j - 1, visited)
-            && bogdle[i][j - 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i][j - 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i, j - 1,
                 visited, str + ch)
           if (this.isSafe(i - 1, j - 1, visited)
-            && bogdle[i - 1][j - 1] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i - 1][j - 1] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i - 1, j - 1,
                 visited, str + ch)
           if (this.isSafe(i - 1, j, visited)
-            && bogdle[i - 1][j] == ch)
-            this.searchWord(root.Child[K], bogdle,
+            && boggle[i - 1][j] == ch)
+            this.searchWord(root.Child[K], boggle,
                 i - 1, j,
                 visited, str + ch)
         }
@@ -174,7 +174,7 @@ class Bogdle {
 
   // Finds all words present in dictionary
   // Adds them to class instance's solution
-  findWords = (bogdle,root) => {
+  findWords = (boggle,root) => {
     // Mark all characters as not visited
     let visited = new Array(this.M)
     for (let i=0; i < this.M; i++) {
@@ -193,10 +193,10 @@ class Bogdle {
         // we start searching for word in dictionary
         // if we found a character which is child
         // of Trie root
-        if (pChild.Child[(bogdle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)] != null) {
-          str = str + bogdle[i][j]
-          this.searchWord(pChild.Child[(bogdle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)],
-              bogdle, i, j, visited, str)
+        if (pChild.Child[(boggle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)] != null) {
+          str = str + boggle[i][j]
+          this.searchWord(pChild.Child[(boggle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)],
+              boggle, i, j, visited, str)
           str = ""
         }
       }
@@ -204,7 +204,7 @@ class Bogdle {
   }
 }
 
-function createBogdle() {
+function createExampleBoggle() {
   let dictionary = [
     'ANT', 'CAT', 'DOG', 'EAT', 'END', 'FAN', 'HOT', 'MAN', 'MAT', 'RAM', 'RAT', 'SEA',
     'CASE', 'CATS', 'DOGS', 'ELMS', 'LATE', 'MART', 'PUPS', 'RAMS', 'SEAS', 'TRAM',
@@ -214,14 +214,14 @@ function createBogdle() {
     'AARDVARK', 'CRYSTALS', 'DOGHOUSE', 'HOTHOUSE', 'SUITCASE',
     'AARDVARKS', 'CATAMARAN', 'ENDEAVORS', 'POSTULATE'
   ]
-  let bogdle = [
+  let boggle = [
     ['C', 'A', 'T'],
     ['A', 'M', 'A'],
     ['R', 'A', 'N']
   ]
 
   // create new Bogdle instance
-  let bogdleInstance = new Bogdle(dictionary, bogdle)
+  let bogdleInstance = new Bogdle(dictionary, boggle)
   let solution = bogdleInstance.getSolution()
 
   console.log(solution)
