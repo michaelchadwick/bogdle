@@ -1,8 +1,8 @@
 class Findle {
   trie = {}
 
-  constructor(w, dict, diff) {
-    this.word = w
+  constructor(word, dict, diff) {
+    this.word = word
     this.dictionary = dict
     this.difficulty = diff
     this.solution = EMPTY_ARR_SET_9
