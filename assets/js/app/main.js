@@ -533,7 +533,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
 
   // create Findle/Bogdle solutionSet
   try {
-    const findle = await Bogdle.__createFindle(
+    const findle = await Bogdle.__createPuzzle(
       Bogdle.__getState(gameMode).seedWord,
       Bogdle.__getConfig(gameMode).dictionary,
       Bogdle.__getState(gameMode).difficulty
@@ -541,7 +541,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
 
     if (findle) {
       /**********************************************************************
-       * set new Bogdle/Findle solution                                      *
+       * set new Findle/Boggle solution                                      *
        * ------------------------------                                      *
        * load object of arrays (e.g. {"4":['aaaa'],"5":['aaaaa']})           *
        * turn into object of objects (e.g. {"4":{'aaaa':0},"5":{'aaaaa':0}}) *
@@ -577,8 +577,11 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
       // set score
       Bogdle._setScore(0)
 
+      // fill DOM tiles
+      Bogdle._fillTiles()
+
       // choose letters randomly from solutionSet
-      Bogdle._shuffleTiles()
+      // Bogdle._shuffleTiles()
     }
   } catch (err) {
     console.error("could not create new solution", err)
@@ -649,7 +652,7 @@ Bogdle._loadExistingSolutionSet = async function (
 
   // load existing solutionSet
   try {
-    const findle = await Bogdle.__createFindle(
+    const findle = await Bogdle.__createPuzzle(
       Bogdle.__getState(gameMode).seedWord,
       Bogdle.__getConfig(gameMode).dictionary,
       Bogdle.__getState(gameMode).difficulty
@@ -657,7 +660,7 @@ Bogdle._loadExistingSolutionSet = async function (
 
     if (findle) {
       /**********************************************************************
-       * set new Bogdle/Findle solution                                      *
+       * set new Findle/Boggle solution                                      *
        * -------------------                                                 *
        * load object of arrays (e.g. {"4":['aaaa'],"5":['aaaaa']})           *
        * turn into object of objects (e.g. {"4":{'aaaa':0},"5":{'aaaaa':0}}) *
@@ -721,8 +724,11 @@ Bogdle._loadExistingSolutionSet = async function (
         }
       }
 
+      // fill DOM tiles
+      Bogdle._fillTiles()
+
       // shuffle tiles randomly
-      Bogdle._shuffleTiles()
+      // Bogdle._shuffleTiles()
 
       // see if we've already won
       Bogdle._checkWinState()
@@ -770,8 +776,11 @@ Bogdle._resetFreeProgress = async function () {
   // re-enable DOM inputs
   Bogdle._resetInput()
 
+  // fill DOM tiles
+  Bogdle._fillTiles()
+
   // choose letters randomly from solutionSet
-  Bogdle._shuffleTiles()
+  // Bogdle._shuffleTiles()
 
   // save those defaults to localStorage
   Bogdle._saveGame()
@@ -1033,6 +1042,15 @@ Bogdle._enableUIButtons = function () {
   })
 }
 
+Bogdle._fillTiles = function () {
+  const letters = Bogdle.__getConfig().letters
+
+  // fill UI tiles with letters
+  Array.from(Bogdle.dom.interactive.tiles).forEach((tile, i) => {
+    tile.innerHTML = letters[i]
+  })
+}
+
 // randomize the order of tiles
 Bogdle._shuffleTiles = function () {
   let letters = Bogdle.__getConfig().letters
@@ -1046,10 +1064,7 @@ Bogdle._shuffleTiles = function () {
     letters[j] = x
   }
 
-  // fill UI tiles with letters
-  Array.from(Bogdle.dom.interactive.tiles).forEach((tile, i) => {
-    tile.innerHTML = letters[i]
-  })
+  Bogdle._fillTiles()
 
   // make sure game is playable again
   Bogdle._resetInput()
@@ -1404,17 +1419,16 @@ Bogdle._attachEventListeners = function () {
  * _private __helper methods *
  ************************************************************************/
 
-Bogdle.__createFindle = async (word, dictionary, difficulty) => {
-  // create new empty Findle instance
-  const findleInstance = new Findle(word, dictionary, difficulty)
+Bogdle.__createPuzzle = async (seedWord, dictionary, difficulty) => {
+  console.log(`new '${Bogdle.__getGameMode()}' Puzzle('${seedWord}', '${dictionary}', '${difficulty}')`)
+  const puzzleInstance = new Puzzle(seedWord, dictionary, difficulty, type = 'findle')
 
-  // create a new solution to return
   try {
-    await findleInstance.createSolution()
-    // return solution
-    return findleInstance.solution
+    await puzzleInstance.createSolution()
+
+    return puzzleInstance.solution
   } catch (err) {
-    console.error('Findle.createSolution() failed', err)
+    console.error('Puzzle.createSolution() failed', err)
   }
 }
 
