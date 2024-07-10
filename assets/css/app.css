@@ -29,6 +29,16 @@
   --marker-color:           #222222;
 }
 
+@font-face {
+  font-family: 'Changa';
+  src: url(https://fonts.neb.host/Changa/static/Changa-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Changa Bold';
+  src: url(https://fonts.neb.host/Changa/static/Changa-Bold.ttf);
+}
+
 :root {
   font-family: 'Changa', sans-serif;
   font-size: 16px;
@@ -178,6 +188,7 @@ button {
   box-sizing: border-box;
   color: #364333;
   display: inline-flex;
+  font-family: 'Changa Bold';
   font-size: 1.5em;
   font-weight: bold;
   justify-content: center;
@@ -315,6 +326,7 @@ button {
 
 .help .invalid,
 .help .valid {
+  font-family: 'Changa Bold';
   font-weight: 600;
 }
 
@@ -411,6 +423,7 @@ header {
               align-items: center;
               background-color: transparent;
               display: flex;
+              font-family: 'Changa Bold';
               font-size: 16px;
               font-weight: bold;
               height: 30px;
@@ -523,7 +536,7 @@ header {
         }
 
   header .title {
-    font-family: 'Changa', sans-serif;
+    font-family: 'Changa Bold', sans-serif;
     font-weight: 700;
     font-size: 14px;
     line-height: 100%;
@@ -631,6 +644,7 @@ section#game {
         transform: scale(1);
       }
         section#game #mode-container #daily-details .day {
+          font-family: 'Changa Bold';
           font-weight: 600;
         }
     /* GAME->MODE-CONTAINER->DIFFICULTY-CONTAINER */
@@ -648,7 +662,7 @@ section#game {
     align-content: center;
     align-items: center;
     display: flex;
-    font-family: 'Changa', sans-serif;
+    font-family: 'Changa Bold', sans-serif;
     font-size: 2.25em;
     font-weight: 700;
     height: 30px;
@@ -750,6 +764,7 @@ section#game {
     text-align: center;
   }
     section#game #score-container #score-total {
+      font-family: 'Changa Bold';
       font-weight: 700;
     }
 
