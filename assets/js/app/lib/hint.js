@@ -2,12 +2,15 @@
 /* word hint functions */
 /* global Bogdle */
 
-Bogdle._initHint = function() {
+Bogdle._initHint = function () {
   if (!Bogdle.__getConfig().hintWord) {
     const wordsLeft = Bogdle.__getUnGuessedWords()
-    Bogdle.__setConfig('hintWord', wordsLeft[Math.floor(Math.random() * wordsLeft.length)])
+    Bogdle.__setConfig(
+      'hintWord',
+      wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
+    )
 
-    Array.from(Bogdle.__getConfig().hintWord).forEach(l => {
+    Array.from(Bogdle.__getConfig().hintWord).forEach((l) => {
       Bogdle.__getConfig().hintObscuredWord.push('_')
     })
 
@@ -21,7 +24,7 @@ Bogdle._initHint = function() {
 }
 
 // continually add letters to hint until max reached
-Bogdle._cycleHint = function() {
+Bogdle._cycleHint = function () {
   // if pressing the '/' key to cycle through hints
   if (Bogdle.dom.interactive.btnHint.classList.contains('not-a-button')) {
     return Bogdle._clearHint()
@@ -43,13 +46,15 @@ Bogdle._cycleHint = function() {
 
       if (Bogdle.__getConfig().hintWord[idx]) {
         if (Bogdle.__getConfig().hintObscuredWord[idx] == '_') {
-          Bogdle.__getConfig().hintObscuredWord[idx] = Bogdle.__getConfig().hintWord[idx]
+          Bogdle.__getConfig().hintObscuredWord[idx] =
+            Bogdle.__getConfig().hintWord[idx]
           foundEmpty = true
         }
       }
     }
 
-    Bogdle.dom.interactive.btnHint.innerHTML = Bogdle.__getConfig().hintObscuredWord.join('')
+    Bogdle.dom.interactive.btnHint.innerHTML =
+      Bogdle.__getConfig().hintObscuredWord.join('')
 
     Bogdle.__getConfig().hintObscuredWordCounter++
   }
@@ -61,7 +66,7 @@ Bogdle._cycleHint = function() {
 }
 
 // change not-a-button hint back to button hint
-Bogdle._clearHint = function() {
+Bogdle._clearHint = function () {
   Bogdle.dom.interactive.btnHint.classList.remove('not-a-button')
   Bogdle.dom.interactive.btnHint.removeAttribute('disabled')
   Bogdle.dom.interactive.btnHint.innerHTML = 'HINT?'
@@ -86,8 +91,8 @@ Bogdle.__getUnGuessedWords = function () {
   const words = Bogdle.__getConfig().solutionSet
   const wordsLeft = []
 
-  Object.keys(words).forEach(length => {
-    Object.keys(words[length]).forEach(word => {
+  Object.keys(words).forEach((length) => {
+    Object.keys(words[length]).forEach((word) => {
       if (!words[length][word]) {
         wordsLeft.push(word)
       }

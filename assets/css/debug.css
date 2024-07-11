@@ -1,36 +1,36 @@
 section#game {
   background-color: #b9ffad;
 }
-  section#game #mode-container {
-    background-color: #ffe8aa;
-  }
-    section#game #mode-container #gamemode-container {
-      background-color: #ffdcaa;
-    }
-    section#game #mode-container #daily-details {
-      background-color: #ffd3aa;
-    }
-    section#game #mode-container #difficulty-container {
-      background-color: #ffe4ca;
-    }
+section#game #mode-container {
+  background-color: #ffe8aa;
+}
+section#game #mode-container #gamemode-container {
+  background-color: #ffdcaa;
+}
+section#game #mode-container #daily-details {
+  background-color: #ffd3aa;
+}
+section#game #mode-container #difficulty-container {
+  background-color: #ffe4ca;
+}
 
-  section#game #board-container {
-    background-color: #ffc6c6;
-  }
-    section#game #board-container #board {
-      background-color: #c6c7ff;
-    }
+section#game #board-container {
+  background-color: #ffc6c6;
+}
+section#game #board-container #board {
+  background-color: #c6c7ff;
+}
 
-  section#game #score-container {
-    background-color: #f9ffaa;
-  }
+section#game #score-container {
+  background-color: #f9ffaa;
+}
 
-  section#game #hint-container {
-    background-color: #ffb0fa;
-  }
-    section#game #hint-container button {
-      border: 1px solid #529952;
-    }
-    section#game #hint-container #hint-arena {
-      background-color: #eb839b;
-    }
+section#game #hint-container {
+  background-color: #ffb0fa;
+}
+section#game #hint-container button {
+  border: 1px solid #529952;
+}
+section#game #hint-container #hint-arena {
+  background-color: #eb839b;
+}

@@ -19,10 +19,33 @@ Bogdle.__getFormattedDate = function (date) {
 // get displayable string for today's date
 Bogdle.__getTodaysDate = function () {
   const d = new Date(Date.now())
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ]
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
 
-  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
+  return `${days[d.getDay()]}, ${
+    months[d.getMonth()]
+  } ${d.getDate()}, ${d.getFullYear()}`
 }
 
 // helper method to get game difficulty as a max letter length
@@ -47,7 +70,7 @@ Bogdle.__getSolutionSize = function () {
 
   const solutionSet = Bogdle.__getConfig().solutionSet
 
-  Object.keys(solutionSet).forEach(category => {
+  Object.keys(solutionSet).forEach((category) => {
     if (parseInt(category) <= Bogdle.__getMaxWordLength()) {
       categorySize = Object.keys(solutionSet[category]).length
       solutionSize += categorySize
@@ -64,12 +87,18 @@ Bogdle.__getHintsUsed = function () {
 
 Bogdle.__updateDailyDetails = function (index) {
   Bogdle.dailyNumber = parseInt(index) + 1
-  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
-  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
+  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (
+    parseInt(index) + 1
+  ).toString()
+  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML =
+    Bogdle.__getTodaysDate()
 }
 
 Bogdle.__resetTilesDuration = function () {
-  Array.from(Bogdle.dom.interactive.tiles).forEach(tile => tile.style.setProperty('--animate-duration', '75ms'), 0)
+  Array.from(Bogdle.dom.interactive.tiles).forEach(
+    (tile) => tile.style.setProperty('--animate-duration', '75ms'),
+    0
+  )
 }
 
 // get list of other NebyooApps from Dave
@@ -79,7 +108,7 @@ Bogdle._getNebyooApps = async function () {
   const apps = json.body
   const appList = document.querySelector('.nav-list')
 
-  Object.values(apps).forEach(app => {
+  Object.values(apps).forEach((app) => {
     const appLink = document.createElement('a')
     appLink.href = app.url
     appLink.innerText = app.title

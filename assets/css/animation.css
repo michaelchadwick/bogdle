@@ -1,7 +1,7 @@
 :root {
   --animate-duration: 150ms;
   --animate-delay: 0s;
-  --animate-repeat: 1
+  --animate-repeat: 1;
 }
 
 .tile {
@@ -16,7 +16,7 @@ section#game #guess-container #guess {
   --animate-duration: 150ms;
 }
 
-@keyFrames SlideRight {
+@keyframes SlideRight {
   0% {
     opacity: 0;
     transform: translateX(-100px);
@@ -26,7 +26,7 @@ section#game #guess-container #guess {
     transform: translateX(0px);
   }
 }
-@keyFrames SlideLeft {
+@keyframes SlideLeft {
   0% {
     opacity: 1;
     transform: translateX(0px);

@@ -76,23 +76,23 @@ async function useFetch(url) {
   const source = context.createBufferSource()
 
   const audioBuffer = await fetch(url)
-    .then(response => response.arrayBuffer())
-    .then(ArrayBuffer => context.decodeAudioData(ArrayBuffer))
+    .then((response) => response.arrayBuffer())
+    .then((ArrayBuffer) => context.decodeAudioData(ArrayBuffer))
 
-    gainNode.gain.value = 0.5
-    source.buffer = audioBuffer
+  gainNode.gain.value = 0.5
+  source.buffer = audioBuffer
 
-    source.connect(gainNode)
-    gainNode.connect(context.destination)
+  source.connect(gainNode)
+  gainNode.connect(context.destination)
 
-    source.start()
+  source.start()
 }
 
-Bogdle._initAudio = async function() {
+Bogdle._initAudio = async function () {
   const path = BOGDLE_ASSET_DATA_PATH
 
-  await caches.open(BOGDLE_CACHE_AUDIO_KEY).then(cache => {
-    cache.keys().then(function(keys) {
+  await caches.open(BOGDLE_CACHE_AUDIO_KEY).then((cache) => {
+    cache.keys().then(function (keys) {
       if (!keys.length) {
         cache.addAll([
           `${path}/correct1.wav`,
@@ -106,7 +106,7 @@ Bogdle._initAudio = async function() {
           `${path}/tile_delete.wav`,
           `${path}/wrong1.wav`,
           `${path}/wrong2.wav`,
-          `${path}/wrong3.wav`
+          `${path}/wrong3.wav`,
         ])
       } else {
         // console.info(`${BOGDLE_CACHE_AUDIO_KEY} is full, so no need to initialize.`)
@@ -115,7 +115,7 @@ Bogdle._initAudio = async function() {
   })
 }
 
-Bogdle._audioPlay = async soundId => {
+Bogdle._audioPlay = async (soundId) => {
   if (Bogdle.settings.noisy) {
     const path = BOGDLE_ASSET_DATA_PATH
     const format = 'wav'

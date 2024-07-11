@@ -1,6 +1,6 @@
 const MAX_LENGTH = '9'
 const SIZE = 26
-const DICTIONARY_FILE = "./assets/json/_test/test-solution-set.json"
+const DICTIONARY_FILE = './assets/json/_test/test-solution-set.json'
 
 class TrieNode {
   constructor() {
@@ -30,7 +30,11 @@ class Boggle {
   }
 
   createSolution = () => {
-    console.log(`creating solution for ${MAX_LENGTH}-letter word: ${this.boggle.flat().join('')}...`)
+    console.log(
+      `creating solution for ${MAX_LENGTH}-letter word: ${this.boggle
+        .flat()
+        .join('')}...`
+    )
 
     let root = new TrieNode()
 
@@ -55,7 +59,8 @@ class Boggle {
       .then((response) => {
         console.log('loadDictionary() got json', response)
         return response.json()
-      }).then((wordJson) => {
+      })
+      .then((wordJson) => {
         console.log('wordJson', wordJson)
 
         this.dictionary = wordJson
@@ -65,7 +70,8 @@ class Boggle {
         // this.boggle = wordList[MAX_LENGTH][starterIdx]
 
         this.createSolution()
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.error('solution set could not be created', err)
       })
   }
@@ -92,12 +98,7 @@ class Boggle {
 
   // check that current location (i and j) is in matrix range
   isSafe = (i, j, visited) => {
-    return (i >= 0
-      && i < this.M
-      && j >= 0
-      && j < this.N
-      && !visited[i][j]
-    )
+    return i >= 0 && i < this.M && j >= 0 && j < this.N && !visited[i][j]
   }
 
   // A recursive function to find all words present on boggle
@@ -124,46 +125,50 @@ class Boggle {
 
           // Recursively search remaining characters of word in trie
           // for all 8 adjacent cells of boggle[i][j]
-          if (this.isSafe(i + 1, j + 1, visited)
-            && boggle[i + 1][j + 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i + 1, j + 1,
-                visited, str + ch)
-          if (this.isSafe(i, j + 1, visited)
-            && boggle[i][j + 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i, j + 1,
-                visited, str + ch)
-          if (this.isSafe(i - 1, j + 1, visited)
-            && boggle[i - 1][j + 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i - 1, j + 1,
-                visited, str + ch)
-          if (this.isSafe(i + 1, j, visited)
-            && boggle[i + 1][j] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i + 1, j,
-                visited, str + ch)
-          if (this.isSafe(i + 1, j - 1, visited)
-            && boggle[i + 1][j - 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i + 1, j - 1,
-                visited, str + ch)
-          if (this.isSafe(i, j - 1, visited)
-            && boggle[i][j - 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i, j - 1,
-                visited, str + ch)
-          if (this.isSafe(i - 1, j - 1, visited)
-            && boggle[i - 1][j - 1] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i - 1, j - 1,
-                visited, str + ch)
-          if (this.isSafe(i - 1, j, visited)
-            && boggle[i - 1][j] == ch)
-            this.searchWord(root.Child[K], boggle,
-                i - 1, j,
-                visited, str + ch)
+          if (this.isSafe(i + 1, j + 1, visited) && boggle[i + 1][j + 1] == ch)
+            this.searchWord(
+              root.Child[K],
+              boggle,
+              i + 1,
+              j + 1,
+              visited,
+              str + ch
+            )
+          if (this.isSafe(i, j + 1, visited) && boggle[i][j + 1] == ch)
+            this.searchWord(root.Child[K], boggle, i, j + 1, visited, str + ch)
+          if (this.isSafe(i - 1, j + 1, visited) && boggle[i - 1][j + 1] == ch)
+            this.searchWord(
+              root.Child[K],
+              boggle,
+              i - 1,
+              j + 1,
+              visited,
+              str + ch
+            )
+          if (this.isSafe(i + 1, j, visited) && boggle[i + 1][j] == ch)
+            this.searchWord(root.Child[K], boggle, i + 1, j, visited, str + ch)
+          if (this.isSafe(i + 1, j - 1, visited) && boggle[i + 1][j - 1] == ch)
+            this.searchWord(
+              root.Child[K],
+              boggle,
+              i + 1,
+              j - 1,
+              visited,
+              str + ch
+            )
+          if (this.isSafe(i, j - 1, visited) && boggle[i][j - 1] == ch)
+            this.searchWord(root.Child[K], boggle, i, j - 1, visited, str + ch)
+          if (this.isSafe(i - 1, j - 1, visited) && boggle[i - 1][j - 1] == ch)
+            this.searchWord(
+              root.Child[K],
+              boggle,
+              i - 1,
+              j - 1,
+              visited,
+              str + ch
+            )
+          if (this.isSafe(i - 1, j, visited) && boggle[i - 1][j] == ch)
+            this.searchWord(root.Child[K], boggle, i - 1, j, visited, str + ch)
         }
       }
 
@@ -174,18 +179,18 @@ class Boggle {
 
   // Finds all words present in dictionary
   // Adds them to class instance's solution
-  findWords = (boggle,root) => {
+  findWords = (boggle, root) => {
     // Mark all characters as not visited
     let visited = new Array(this.M)
-    for (let i=0; i < this.M; i++) {
+    for (let i = 0; i < this.M; i++) {
       visited[i] = new Array(this.N)
-      for (let j=0; j < this.N; j++) {
+      for (let j = 0; j < this.N; j++) {
         visited[i][j] = false
       }
     }
 
     let pChild = root
-    let str = ""
+    let str = ''
 
     // traverse all matrix elements
     for (let i = 0; i < this.M; i++) {
@@ -193,11 +198,19 @@ class Boggle {
         // we start searching for word in dictionary
         // if we found a character which is child
         // of Trie root
-        if (pChild.Child[(boggle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)] != null) {
+        if (
+          pChild.Child[boggle[i][j].charCodeAt(0) - 'A'.charCodeAt(0)] != null
+        ) {
           str = str + boggle[i][j]
-          this.searchWord(pChild.Child[(boggle[i][j]).charCodeAt(0) - 'A'.charCodeAt(0)],
-              boggle, i, j, visited, str)
-          str = ""
+          this.searchWord(
+            pChild.Child[boggle[i][j].charCodeAt(0) - 'A'.charCodeAt(0)],
+            boggle,
+            i,
+            j,
+            visited,
+            str
+          )
+          str = ''
         }
       }
     }
@@ -206,18 +219,53 @@ class Boggle {
 
 function createExampleBoggle() {
   let dictionary = [
-    'ANT', 'CAT', 'DOG', 'EAT', 'END', 'FAN', 'HOT', 'MAN', 'MAT', 'RAM', 'RAT', 'SEA',
-    'CASE', 'CATS', 'DOGS', 'ELMS', 'LATE', 'MART', 'PUPS', 'RAMS', 'SEAS', 'TRAM',
-    'CASES', 'CATCH', 'FLICK', 'PRUNE', 'SANDY',
-    'CRYSTAL', 'FLICKS', 'MANGOS', 'PEANUT',
-    'DOBERMAN', 'FLICKERS',
-    'AARDVARK', 'CRYSTALS', 'DOGHOUSE', 'HOTHOUSE', 'SUITCASE',
-    'AARDVARKS', 'CATAMARAN', 'ENDEAVORS', 'POSTULATE'
+    'ANT',
+    'CAT',
+    'DOG',
+    'EAT',
+    'END',
+    'FAN',
+    'HOT',
+    'MAN',
+    'MAT',
+    'RAM',
+    'RAT',
+    'SEA',
+    'CASE',
+    'CATS',
+    'DOGS',
+    'ELMS',
+    'LATE',
+    'MART',
+    'PUPS',
+    'RAMS',
+    'SEAS',
+    'TRAM',
+    'CASES',
+    'CATCH',
+    'FLICK',
+    'PRUNE',
+    'SANDY',
+    'CRYSTAL',
+    'FLICKS',
+    'MANGOS',
+    'PEANUT',
+    'DOBERMAN',
+    'FLICKERS',
+    'AARDVARK',
+    'CRYSTALS',
+    'DOGHOUSE',
+    'HOTHOUSE',
+    'SUITCASE',
+    'AARDVARKS',
+    'CATAMARAN',
+    'ENDEAVORS',
+    'POSTULATE',
   ]
   let boggle = [
     ['C', 'A', 'T'],
     ['A', 'M', 'A'],
-    ['R', 'A', 'N']
+    ['R', 'A', 'N'],
   ]
 
   // create new Bogdle instance

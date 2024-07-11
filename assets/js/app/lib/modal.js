@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 
 class Modal {
-
   constructor(modalType, modalTitle, modalText, acceptText, cancelText) {
     this.modalDelay = 1500
     this.modalType = modalType || 'perm'
@@ -31,9 +30,12 @@ class Modal {
     if (modalType == 'temp') {
       // close temp modals after delay
       let modal = this
-      setTimeout(function(modal) {
-        modal._destroyModal()
-      }.bind(this, modal), this.modalDelay)
+      setTimeout(
+        function (modal) {
+          modal._destroyModal()
+        }.bind(this, modal),
+        this.modalDelay
+      )
     }
   }
 

@@ -31,18 +31,18 @@ class Puzzle {
       }
 
       // load dictionary into array
-      Object.keys(jsonWords).forEach(key => {
-        jsonWords[key].forEach(word => {
+      Object.keys(jsonWords).forEach((key) => {
+        jsonWords[key].forEach((word) => {
           words.push(word)
         })
       })
 
       let cur = ''
       //for word in map(lambda w: w.strip(), words): // py
-      Array.from(words.map(w => w.trim())).forEach(word => {
+      Array.from(words.map((w) => w.trim())).forEach((word) => {
         cur = this.trie
 
-        Array.from(word).forEach(letter => {
+        Array.from(word).forEach((letter) => {
           // cur = cur.setdefault(l, {}) // py
           cur = this.#setDefault(cur, letter, {})
         })
@@ -57,12 +57,14 @@ class Puzzle {
           const wordGrid = this.#createWordGrid(this.word)
           console.log('wordGrid', wordGrid)
 
-          validWords = this.#gatherBoggleWords(wordGrid)
-            .filter((value, index, self) => self.indexOf(value) === index)
+          validWords = this.#gatherBoggleWords(wordGrid).filter(
+            (value, index, self) => self.indexOf(value) === index
+          )
         case 'findle':
         default:
-          validWords = this.#gatherFindleWords(this.word)
-            .filter((value, index, self) => self.indexOf(value) === index)
+          validWords = this.#gatherFindleWords(this.word).filter(
+            (value, index, self) => self.indexOf(value) === index
+          )
       }
 
       console.log(`createSolution(${this.type}) validWords`, validWords)
@@ -73,10 +75,13 @@ class Puzzle {
       console.error(`New Puzzle(${this.type}) could not be created`, err)
 
       if (this.type == 'boggle') {
-        console.log('Boggle type Puzzles still WIP, returning Findle type instead')
+        console.log(
+          'Boggle type Puzzles still WIP, returning Findle type instead'
+        )
 
-        validWords = this.#gatherFindleWords(this.word)
-          .filter((value, index, self) => self.indexOf(value) === index)
+        validWords = this.#gatherFindleWords(this.word).filter(
+          (value, index, self) => self.indexOf(value) === index
+        )
 
         console.log(`createSolution('findle') validWords`, validWords)
       }
@@ -134,7 +139,7 @@ class Puzzle {
   #createWordGrid = (word) => {
     const letters = word.split('')
     console.log('letters', letters)
-    const myrng = new Math.seedrandom(word);
+    const myrng = new Math.seedrandom(word)
 
     let j, x, index
     for (index = letters.length - 1; index > 0; index--) {
@@ -152,15 +157,18 @@ class Puzzle {
   }
 
   #setSolution = (set) => {
-    const categories = Array.from({length: this.#getMaxWordLength() - 3}, (x, i) => (i + 4).toString())
+    const categories = Array.from(
+      { length: this.#getMaxWordLength() - 3 },
+      (x, i) => (i + 4).toString()
+    )
 
     // zero them all out because setting it to the EMPTY_ARR_SET_9 does not work :'(
-    categories.forEach(category => {
+    categories.forEach((category) => {
       this.solution[category] = []
     })
 
     // add new solution words
-    set.forEach(word => {
+    set.forEach((word) => {
       this.solution[word.length].push(word)
     })
 
@@ -173,8 +181,6 @@ class Puzzle {
   }
 
   #getMaxWordLength = () => {
-    return this.difficulty ?
-      BOGDLE_DIFF_TO_LENGTH[this.difficulty] :
-      9
+    return this.difficulty ? BOGDLE_DIFF_TO_LENGTH[this.difficulty] : 9
   }
 }
