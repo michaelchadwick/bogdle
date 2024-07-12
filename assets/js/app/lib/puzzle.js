@@ -88,6 +88,29 @@ class Puzzle {
     }
   }
 
+  #gatherBoggleWords = (wordGrid, trie = this.trie, cur = '', words = []) => {
+    let wordArrEntries = wordGrid.split('').entries()
+
+    for (let [i, letter] of wordArrEntries) {
+      if (trie[letter]) {
+        if (trie[letter]['word']) {
+          words.push(cur + letter)
+        }
+
+        this.#gatherBoggleWords(
+          word.slice(0, i) + word.slice(i + 1),
+          trie[letter],
+          cur + letter,
+          words
+        )
+      }
+
+      console.log('boggle words', words)
+    }
+
+    return words
+  }
+
   #gatherFindleWords = (word, trie = this.trie, cur = '', words = []) => {
     let wordArrEntries = word.split('').entries()
 
@@ -108,29 +131,6 @@ class Puzzle {
           words
         )
       }
-    }
-
-    return words
-  }
-
-  #gatherBoggleWords = (wordGrid, trie = this.trie, cur = '', words = []) => {
-    let wordArrEntries = wordGrid.split('').entries()
-
-    for (let [i, letter] of wordArrEntries) {
-      if (trie[letter]) {
-        if (trie[letter]['word']) {
-          words.push(cur + letter)
-        }
-
-        this.#gatherBoggleWords(
-          word.slice(0, i) + word.slice(i + 1),
-          trie[letter],
-          cur + letter,
-          words
-        )
-      }
-
-      console.log('words', words)
     }
 
     return words
