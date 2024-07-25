@@ -733,7 +733,7 @@ Bogdle._loadExistingSolutionSet = async function (
       Bogdle._fillTiles()
 
       // shuffle tiles randomly
-      // Bogdle._shuffleTiles()
+      Bogdle._shuffleTiles()
 
       // see if we've already won
       Bogdle._checkWinState()
