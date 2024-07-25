@@ -531,13 +531,13 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
 
   // create Findle/Bogdle solutionSet
   try {
-    const findle = await Bogdle.__createPuzzle(
+    const puzzle = await Bogdle.__createPuzzle(
       Bogdle.__getState(gameMode).seedWord,
       Bogdle.__getConfig(gameMode).dictionary,
       Bogdle.__getState(gameMode).difficulty
     )
 
-    if (findle) {
+    if (puzzle) {
       /**********************************************************************
        * set new Findle/Boggle solution                                      *
        * ------------------------------                                      *
@@ -557,8 +557,8 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
       })
 
       // create bogdle's solutionSet
-      Object.keys(findle).forEach((key) => {
-        findle[key].forEach((word) => {
+      Object.keys(puzzle).forEach((key) => {
+        puzzle[key].forEach((word) => {
           if (key <= Bogdle.__getMaxWordLength()) {
             if (
               !Bogdle.__getConfig(gameMode).solutionSet[key.toString()][word]
@@ -653,13 +653,13 @@ Bogdle._loadExistingSolutionSet = async function (
 
   // load existing solutionSet
   try {
-    const findle = await Bogdle.__createPuzzle(
+    const puzzle = await Bogdle.__createPuzzle(
       Bogdle.__getState(gameMode).seedWord,
       Bogdle.__getConfig(gameMode).dictionary,
       Bogdle.__getState(gameMode).difficulty
     )
 
-    if (findle) {
+    if (puzzle) {
       /**********************************************************************
        * set new Findle/Boggle solution                                      *
        * -------------------                                                 *
@@ -680,8 +680,8 @@ Bogdle._loadExistingSolutionSet = async function (
       })
 
       // re-create bogdle's solutionSet
-      Object.keys(findle).forEach((key) => {
-        findle[key].forEach((word) => {
+      Object.keys(puzzle).forEach((key) => {
+        puzzle[key].forEach((word) => {
           if (key <= Bogdle.__getMaxWordLength()) {
             if (!solutionSet[key.toString()][word]) {
               Bogdle.__getConfig(gameMode).solutionSet[key.toString()][word] =
