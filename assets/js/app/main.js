@@ -582,7 +582,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
       Bogdle._fillTiles()
 
       // choose letters randomly from solutionSet
-      // Bogdle._shuffleTiles()
+      Bogdle._shuffleTiles()
     }
   } catch (err) {
     console.error('could not create new solution', err)
@@ -785,7 +785,7 @@ Bogdle._resetFreeProgress = async function () {
   Bogdle._fillTiles()
 
   // choose letters randomly from solutionSet
-  // Bogdle._shuffleTiles()
+  Bogdle._shuffleTiles()
 
   // save those defaults to localStorage
   Bogdle._saveGame()
