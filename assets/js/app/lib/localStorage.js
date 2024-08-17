@@ -197,6 +197,7 @@ Bogdle._loadGame = async function () {
     Bogdle.settings.gameMode = 'daily'
   }
 
+  // daily
   if (Bogdle.__getGameMode() == 'daily') {
     // daily
     Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
@@ -210,7 +211,9 @@ Bogdle._loadGame = async function () {
     } else {
       await Bogdle._createNewSolutionSet('daily')
     }
-  } else {
+  }
+  // free
+  else {
     // free
     if (freeCreateOrLoad == 'load') {
       await Bogdle._loadExistingSolutionSet(
@@ -222,6 +225,8 @@ Bogdle._loadGame = async function () {
     }
   }
 
+  // if first time user visit
+  // show help modal, toggle 'firstTime'
   if (
     Bogdle.__getGameMode() == 'daily' &&
     !Bogdle.__getState('daily').lastPlayedTime

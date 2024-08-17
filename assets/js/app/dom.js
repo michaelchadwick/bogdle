@@ -60,3 +60,5 @@ Bogdle.dom.interactive.debug = {
   btnWinGameAlmost: document.getElementById('button-win-game-almost'),
   btnWinAnimation: document.getElementById('button-win-animation'),
 }
+
+Bogdle._logStatus('[LOADED] /app/dom')

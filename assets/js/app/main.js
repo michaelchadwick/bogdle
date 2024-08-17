@@ -399,11 +399,6 @@ Bogdle.modalOpen = async function (type) {
 
 // start the engine
 Bogdle.initApp = async () => {
-  // set env
-  const hasHostname = BOGDLE_ENV_PROD_URL.includes(document.location.hostname)
-
-  Bogdle.env = hasHostname ? 'prod' : 'local'
-
   // if local dev, show debug stuff
   if (Bogdle.env == 'local') {
     Bogdle._initDebug()
@@ -418,6 +413,8 @@ Bogdle.initApp = async () => {
   Bogdle._getNebyooApps()
 
   Bogdle._loadGame()
+
+  Bogdle._logStatus('[LOADED] /app/main')
 }
 
 /*************************************************************************
@@ -1120,29 +1117,6 @@ Bogdle._resizeBoard = function () {
   board.style.height = `${tileHeight}px`
 }
 
-// user clicks a tile
-Bogdle._onTileClick = function (tile) {
-  const tileStatus = tile.target.dataset.state
-
-  if (tileStatus == 'tbd') {
-    Bogdle._animateCSS(`#${tile.target.id}`, 'pulse')
-
-    // change tile status
-    tile.target.dataset.state = 'selected'
-
-    // push another selected tile onto selected array
-    Bogdle.__getConfig().tilesSelected.push(tile.target.dataset.pos)
-
-    // add selected tile to guess
-    Bogdle.dom.guess.innerHTML += tile.target.innerHTML
-
-    Bogdle._audioPlay('tile_click')
-
-    // check guess for validity
-    Bogdle._checkGuess()
-  }
-}
-
 // modal: show how many words have been guessed
 Bogdle._displayGameProgress = function () {
   let html = ''
@@ -1190,24 +1164,6 @@ Bogdle._displayGameProgress = function () {
   html += '</ul>'
 
   return html
-}
-
-// handle both clicks and touches outside of modals
-Bogdle._handleClickTouch = function (event) {
-  const dialog = document.getElementsByClassName('modal-dialog')[0]
-
-  if (dialog) {
-    const isConfirm = dialog.classList.contains('modal-confirm')
-
-    // only close if not a confirmation!
-    if (event.target == dialog && !isConfirm) {
-      dialog.remove()
-    }
-  }
-
-  if (event.target == Bogdle.dom.navOverlay) {
-    Bogdle.dom.navOverlay.classList.toggle('show')
-  }
 }
 
 // copy results to clipboard for sharing
@@ -1262,200 +1218,6 @@ Bogdle._shareResults = async function (type = 'completion') {
   }
 }
 
-// add event listeners to DOM
-Bogdle._attachEventListeners = function () {
-  // {} header icons to open modals
-  Bogdle.dom.interactive.btnNav.addEventListener('click', () => {
-    Bogdle.dom.navOverlay.classList.toggle('show')
-  })
-  Bogdle.dom.interactive.btnNavClose.addEventListener('click', () => {
-    Bogdle.dom.navOverlay.classList.toggle('show')
-  })
-  Bogdle.dom.interactive.btnHelp.addEventListener('click', () =>
-    Bogdle.modalOpen('help')
-  )
-  Bogdle.dom.interactive.btnStats.addEventListener('click', () =>
-    Bogdle.modalOpen('stats')
-  )
-  Bogdle.dom.interactive.btnSettings.addEventListener('click', () =>
-    Bogdle.modalOpen('settings')
-  )
-
-  // [A] tile interaction
-  Array.from(Bogdle.dom.interactive.tiles).forEach((tile) => {
-    tile.addEventListener('click', (t) => {
-      Bogdle._onTileClick(t)
-    })
-  })
-
-  // ❔ hint
-  Bogdle.dom.interactive.btnHint.addEventListener('click', () => {
-    Bogdle._initHint()
-  })
-
-  // X hint reset
-  Bogdle.dom.interactive.btnHintReset.addEventListener('click', () => {
-    Bogdle._clearHint()
-  })
-
-  // ✅ submit word
-  Bogdle.dom.interactive.btnSubmit.addEventListener('click', () => {
-    Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
-  })
-
-  // ⌫ backspace
-  Bogdle.dom.interactive.btnBackspace.addEventListener('click', () => {
-    Bogdle._removeLastLetter()
-  })
-
-  // X clear
-  Bogdle.dom.interactive.btnClearGuess.addEventListener('click', () => {
-    Bogdle._resetInput()
-  })
-
-  // 🔀 shuffle
-  Bogdle.dom.interactive.btnShuffle.addEventListener('click', () => {
-    Bogdle._shuffleTiles()
-  })
-
-  // := show current game word list progress
-  Bogdle.dom.interactive.btnShowProgress.addEventListener('click', () => {
-    Bogdle.modalOpen('show-progress')
-  })
-
-  // + create new solution
-  Bogdle.dom.interactive.btnCreateNew.addEventListener('click', () => {
-    Bogdle._confirmFreeCreateNew()
-  })
-
-  // 📕 dictionary lookup
-  Bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
-    if (Bogdle.dom.guess.classList.contains('valid')) {
-      Bogdle.modalOpen('dictionary')
-    }
-  })
-
-  // local debug buttons
-  if (Bogdle.env == 'local') {
-    if (Bogdle.dom.interactive.debug.all) {
-      // 🪣 show master word list
-      Bogdle.dom.interactive.debug.btnShowList.addEventListener('click', () => {
-        Bogdle.modalOpen('show-solution')
-      })
-
-      // ⚙️ show current bogdle config
-      Bogdle.dom.interactive.debug.btnShowConfig.addEventListener(
-        'click',
-        () => {
-          Bogdle.modalOpen('show-config')
-        }
-      )
-
-      // 🎚️ show current bogdle state
-      Bogdle.dom.interactive.debug.btnShowState.addEventListener(
-        'click',
-        () => {
-          Bogdle.modalOpen('show-state')
-        }
-      )
-
-      // 🏆 win game immediately
-      Bogdle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
-        Bogdle._winGameHax()
-      })
-      // 🏅 almost win game (post-penultimate move)
-      Bogdle.dom.interactive.debug.btnWinGameAlmost.addEventListener(
-        'click',
-        () => {
-          Bogdle._winGameHax('almost')
-        }
-      )
-      // 🏁 display win tile animation
-      Bogdle.dom.interactive.debug.btnWinAnimation.addEventListener(
-        'click',
-        () => {
-          Bogdle.__winAnimation().then(() => Bogdle.__resetTilesDuration())
-        }
-      )
-    }
-  }
-
-  // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
-  document.addEventListener('keydown', (event) => {
-    if (event.code == 'Enter') {
-      Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
-    } else if (event.code == 'Backspace' || event.code == 'Delete') {
-      Bogdle._removeLastLetter()
-    } else if (event.code == 'Space') {
-      Bogdle._shuffleTiles()
-    } else if (event.code == 'Slash') {
-      Bogdle._initHint()
-    } else {
-      const excludedKeys = [
-        'Alt',
-        'Control',
-        'Meta',
-        'Shift',
-        'ShiftLeft',
-        'ShiftRight',
-      ]
-      const validLetters = Bogdle.__getConfig().letters.map((l) =>
-        l.toUpperCase()
-      )
-      const pressedLetter = event.code.charAt(event.code.length - 1)
-
-      if (!excludedKeys.some((key) => event.getModifierState(key))) {
-        if (validLetters.includes(pressedLetter)) {
-          // find any available tiles to select
-          const boardTiles = Array.from(Bogdle.dom.interactive.tiles)
-
-          const availableTiles = boardTiles.filter(
-            (tile) =>
-              tile.innerHTML.toUpperCase() == pressedLetter &&
-              tile.dataset.state == 'tbd'
-          )
-
-          // if we found one, select first found
-          // this only works in Findle, not Bogdle
-          if (availableTiles.length) {
-            const tileToPush = availableTiles[0]
-
-            tileToPush.dataset.state = 'selected'
-
-            // push another selected tile onto selected array
-            Bogdle.__getConfig().tilesSelected.push(tileToPush.dataset.pos)
-
-            // add selected tile to guess
-            Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
-
-            // do a little dance
-            Bogdle._animateCSS(`#${tileToPush.id}`, 'pulse')
-            Bogdle._audioPlay('tile_click')
-
-            // check guess for validity
-            Bogdle._checkGuess()
-          }
-        }
-      }
-    }
-  })
-
-  // When the user clicks or touches anywhere outside of the modal, close it
-  window.addEventListener('click', Bogdle._handleClickTouch)
-  window.addEventListener('touchend', Bogdle._handleClickTouch)
-
-  window.onload = Bogdle._resizeBoard
-  window.onresize = Bogdle._resizeBoard
-
-  document.body.addEventListener(
-    'touchmove',
-    function (event) {
-      event.preventDefault
-    },
-    { passive: false }
-  )
-}
-
 /************************************************************************
  * _private __helper methods *
  ************************************************************************/
@@ -1478,62 +1240,6 @@ Bogdle.__createPuzzle = async (seedWord, dictionary, difficulty) => {
   } catch (err) {
     console.error('Puzzle.createSolution() failed', err)
   }
-}
-
-// load random seed word for solutionSet
-Bogdle.__getNewSeedWord = async function () {
-  const seedWordsFile = Bogdle.__getConfig().seedWordsFile
-  const response = await fetch(seedWordsFile)
-  const responseJson = await response.json()
-
-  // random max-length word
-  let possibles = responseJson['9']
-  let possibleIdx = Math.floor(Math.random() * possibles.length)
-
-  this.seedWord = possibles[possibleIdx]
-
-  return this.seedWord
-}
-
-Bogdle.__getGameMode = function () {
-  return Bogdle.settings.gameMode || 'daily'
-}
-
-Bogdle.__getConfig = function (mode = Bogdle.__getGameMode()) {
-  return Bogdle.config[mode] || undefined
-}
-Bogdle.__setConfig = function (key, val, mode = Bogdle.__getGameMode()) {
-  Bogdle.config[mode][key] = val
-}
-Bogdle.__getState = function (mode = Bogdle.__getGameMode()) {
-  const rootState = Bogdle.state[mode]
-
-  if (rootState) {
-    const seshId = Bogdle.__getSessionIndex()
-    const state = rootState[seshId]
-
-    return state || undefined
-  } else {
-    return undefined
-  }
-}
-Bogdle.__setState = function (
-  key,
-  val,
-  mode = Bogdle.__getGameMode(),
-  index = Bogdle.__getSessionIndex()
-) {
-  Bogdle.state[mode][index][key] = val
-}
-Bogdle.__getStateObj = function (mode = Bogdle.__getGameMode()) {
-  const rootState = Bogdle.state[mode]
-
-  return rootState || undefined
-}
-Bogdle.__getSessionIndex = function (mode = Bogdle.__getGameMode()) {
-  const rootState = Bogdle.state[mode]
-
-  return rootState ? rootState.length - 1 : 0
 }
 
 Bogdle.__winAnimation = async function () {

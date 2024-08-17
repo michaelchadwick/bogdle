@@ -101,6 +101,62 @@ Bogdle.__resetTilesDuration = function () {
   )
 }
 
+Bogdle.__getGameMode = function () {
+  return Bogdle.settings.gameMode || 'daily'
+}
+
+Bogdle.__getConfig = function (mode = Bogdle.__getGameMode()) {
+  return Bogdle.config[mode] || undefined
+}
+Bogdle.__setConfig = function (key, val, mode = Bogdle.__getGameMode()) {
+  Bogdle.config[mode][key] = val
+}
+Bogdle.__getState = function (mode = Bogdle.__getGameMode()) {
+  const rootState = Bogdle.state[mode]
+
+  if (rootState) {
+    const seshId = Bogdle.__getSessionIndex()
+    const state = rootState[seshId]
+
+    return state || undefined
+  } else {
+    return undefined
+  }
+}
+Bogdle.__setState = function (
+  key,
+  val,
+  mode = Bogdle.__getGameMode(),
+  index = Bogdle.__getSessionIndex()
+) {
+  Bogdle.state[mode][index][key] = val
+}
+Bogdle.__getStateObj = function (mode = Bogdle.__getGameMode()) {
+  const rootState = Bogdle.state[mode]
+
+  return rootState || undefined
+}
+Bogdle.__getSessionIndex = function (mode = Bogdle.__getGameMode()) {
+  const rootState = Bogdle.state[mode]
+
+  return rootState ? rootState.length - 1 : 0
+}
+
+// load random seed word for solutionSet
+Bogdle.__getNewSeedWord = async function () {
+  const seedWordsFile = Bogdle.__getConfig().seedWordsFile
+  const response = await fetch(seedWordsFile)
+  const responseJson = await response.json()
+
+  // random max-length word
+  let possibles = responseJson['9']
+  let possibleIdx = Math.floor(Math.random() * possibles.length)
+
+  this.seedWord = possibles[possibleIdx]
+
+  return this.seedWord
+}
+
 // get list of other NebyooApps from Dave
 Bogdle._getNebyooApps = async function () {
   const response = await fetch(NEBYOOAPPS_SOURCE_URL)

@@ -5,7 +5,6 @@
 const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
 const BOGDLE_SHARE_URL = 'https://bogdle.neb.host/?r=share'
 
-const BOGDLE_ENV_PROD_URL = ['bogdle.fun', 'bogdle.neb.host']
 
 const EMPTY_OBJ_SET_5 = { 4: {}, 5: {} }
 const EMPTY_OBJ_SET_7 = { 4: {}, 5: {}, 6: {}, 7: {} }
