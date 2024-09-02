@@ -60,7 +60,7 @@ Bogdle.modalOpen = async function (type) {
         <p><strong>Dev</strong>: <a href="https://michaelchadwick.info" target="_blank">Michael Chadwick</a>. <strong>Sound</strong>: Fliss.</p>
       `
 
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm',
         'How to Play Bogdle',
         modalText,
@@ -72,7 +72,7 @@ Bogdle.modalOpen = async function (type) {
     case 'dictionary':
       const word = Bogdle.dom.guess.innerHTML
 
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm',
         'Dictionary (via Free Dictionary API)',
         'loading definition...',
@@ -188,7 +188,7 @@ Bogdle.modalOpen = async function (type) {
         </div>
       `
 
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm',
         'Statistics',
         modalText,
@@ -258,14 +258,14 @@ Bogdle.modalOpen = async function (type) {
         </div>
       `
 
-      this.myModal = new Modal('perm', 'Settings', modalText, null, null)
+      Bogdle.myModal = new Modal('perm', 'Settings', modalText, null, null)
 
       Bogdle._loadSettings()
 
       break
 
     case 'show-progress':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm',
         'Game Progress',
         Bogdle._displayGameProgress(),
@@ -275,7 +275,7 @@ Bogdle.modalOpen = async function (type) {
       break
 
     case 'show-solution':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm-debug',
         'Master Word List',
         Bogdle._displayGameSolution(),
@@ -284,7 +284,7 @@ Bogdle.modalOpen = async function (type) {
       )
       break
     case 'show-config':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm-debug',
         'Game Config (code model only)',
         Bogdle._displayGameConfig(),
@@ -293,7 +293,7 @@ Bogdle.modalOpen = async function (type) {
       )
       break
     case 'show-state':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm-debug',
         'Game State (load from/save to LS)',
         Bogdle._displayGameState(),
@@ -303,7 +303,7 @@ Bogdle.modalOpen = async function (type) {
       break
 
     case 'loading':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'throbber',
         'Loading',
         'loading...',
@@ -314,7 +314,7 @@ Bogdle.modalOpen = async function (type) {
       break
 
     case 'invalid-length':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'temp',
         null,
         'Needs to be 4 or more characters',
@@ -323,13 +323,13 @@ Bogdle.modalOpen = async function (type) {
       )
       break
     case 'invalid-word':
-      this.myModal = new Modal('temp', null, 'Not in word list', null, null)
+      Bogdle.myModal = new Modal('temp', null, 'Not in word list', null, null)
       break
     case 'repeated-word':
-      this.myModal = new Modal('temp', null, 'Word already found', null, null)
+      Bogdle.myModal = new Modal('temp', null, 'Word already found', null, null)
       break
     case 'shared':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'temp',
         null,
         'Results copied to clipboard',
@@ -338,7 +338,7 @@ Bogdle.modalOpen = async function (type) {
       )
       break
     case 'no-clipboard-access':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'temp',
         null,
         'Sorry, but access to clipboard not available',
@@ -371,7 +371,7 @@ Bogdle.modalOpen = async function (type) {
         </div>
       `
 
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'perm',
         'Pangram Found!',
         modalText,
@@ -382,11 +382,11 @@ Bogdle.modalOpen = async function (type) {
       break
 
     case 'win-game':
-      this.myModal = new Modal('temp', null, 'Congratulations!', null, null)
+      Bogdle.myModal = new Modal('temp', null, 'Congratulations!', null, null)
       break
 
     case 'win-game-hax':
-      this.myModal = new Modal(
+      Bogdle.myModal = new Modal(
         'temp',
         null,
         'Hacking the game, I see',
