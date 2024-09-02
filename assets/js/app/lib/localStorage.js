@@ -379,6 +379,12 @@ Bogdle._loadSettings = function () {
 Bogdle._changeSetting = async function (setting, value, event) {
   switch (setting) {
     case 'gameMode':
+      // if at end-state and a gameMode is clicked
+      // make sure to close the open modal
+      const dialog = document.getElementsByClassName('modal-dialog')[0]
+      if (dialog) dialog.remove()
+      if (Bogdle.myModal) Bogdle.myModal._destroyModal()
+
       switch (value) {
         case 'daily':
           // get seedWord for today
@@ -397,13 +403,12 @@ Bogdle._changeSetting = async function (setting, value, event) {
           Bogdle._saveSetting('gameMode', 'daily')
           Bogdle._clearHint()
 
-          Bogdle.dom.interactive.btnCreateNew.disabled = true
-
           // set dom status
           Bogdle.dom.interactive.gameModeDailyLink.dataset.active = true
           Bogdle.dom.interactive.gameModeFreeLink.dataset.active = false
           Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
           Bogdle.dom.dailyDetails.classList.add('show')
+          Bogdle.dom.interactive.btnCreateNew.disabled = true
 
           await Bogdle._loadExistingSolutionSet(
             'daily',
@@ -419,13 +424,12 @@ Bogdle._changeSetting = async function (setting, value, event) {
           Bogdle._clearHint()
           Bogdle._enableUIButtons()
 
-          Bogdle.dom.interactive.btnCreateNew.disabled = false
-
           // set dom status
           Bogdle.dom.interactive.gameModeDailyLink.dataset.active = false
           Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
           Bogdle.dom.interactive.difficultyContainer.classList.add('show')
           Bogdle.dom.dailyDetails.classList.remove('show')
+          Bogdle.dom.interactive.btnCreateNew.disabled = false
 
           await Bogdle._loadExistingSolutionSet(
             'free',
