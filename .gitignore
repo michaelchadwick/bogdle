@@ -1,5 +1,6 @@
 .DS_Store
 _archive
+_debug
 assets/text
 scripts
 
