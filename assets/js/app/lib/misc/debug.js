@@ -291,6 +291,8 @@ Bogdle._winGameHax = async function (state = null) {
 
       Bogdle._checkWinState()
     }
+
+    Bogdle.ui._removeModalVestige()
   } catch (err) {
     console.error('win game via hax failed', err)
   }

@@ -6,11 +6,13 @@ Bogdle.ui = {}
 
 // reset UI tiles to default state
 Bogdle.ui._resetInput = function () {
-  Bogdle.ui._resetTiles()
+  if (Bogdle.__getState().status == 'IN_PROGRESS') {
+    Bogdle.ui._resetTiles()
 
-  Bogdle._enableHint()
+    Bogdle._enableHint()
 
-  Bogdle.ui._resetGuess()
+    Bogdle.ui._resetGuess()
+  }
 }
 // set all tiles back to 'tbd'
 Bogdle.ui._resetTiles = function () {
@@ -35,6 +37,10 @@ Bogdle.ui._disableUIButtons = function () {
   Object.values(Bogdle.dom.mainUI).forEach((btn) => {
     if (!btn.dataset.permanent) {
       btn.setAttribute('disabled', '')
+    }
+
+    if (Bogdle.__getGameMode() == 'free' && btn.id == 'button-create-new') {
+      btn.removeAttribute('disabled')
     }
   })
 }

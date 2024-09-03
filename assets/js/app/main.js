@@ -534,7 +534,11 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
       // set score
       Bogdle.ui._setScore(0)
 
+      // enable DOM buttons
+      Bogdle.ui._enableUIButtons()
+
       // fill DOM tiles
+      Bogdle.ui._resetTiles()
       Bogdle.ui._fillTiles()
 
       // choose letters randomly from solutionSet
@@ -692,7 +696,11 @@ Bogdle._loadExistingSolutionSet = async function (gameMode, newWord = null, isNe
         }
       }
 
+      // enable DOM buttons
+      Bogdle.ui._enableUIButtons()
+
       // fill DOM tiles
+      Bogdle.ui._resetTiles()
       Bogdle.ui._fillTiles()
 
       // shuffle tiles randomly
@@ -730,6 +738,7 @@ Bogdle._confirmNewFree = async function () {
     if (confirmed) {
       Bogdle._resetFreeProgress()
       await Bogdle._createNewSolutionSet('free')
+      Bogdle.ui._removeModalVestige()
     }
   } catch (err) {
     console.error('progress reset failed', err)
@@ -959,7 +968,7 @@ Bogdle._displayGameProgress = function () {
   let html = ''
 
   if (Bogdle.__getGameMode() == 'free') {
-    html += `<h6>difficulty: ${Bogdle._getState().difficulty}</h6>`
+    html += `<h6>difficulty: ${Bogdle.__getState().difficulty}</h6>`
   }
 
   html += '<ul>'
