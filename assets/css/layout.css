@@ -26,8 +26,8 @@ header .menu-left #button-nav img {
 }
 @media (hover: hover) {
   header .menu-left #button-nav img:hover {
-    filter: invert(44%) sepia(19%) saturate(845%) hue-rotate(340deg)
-      brightness(99%) contrast(92%);
+    filter: invert(47%) sepia(66%) saturate(370%) hue-rotate(71deg)
+      brightness(98%) contrast(80%);
   }
 }
 header .menu-left #nav-overlay {
