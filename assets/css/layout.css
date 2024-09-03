@@ -20,6 +20,16 @@ header .menu-left {
   padding: 0;
   width: 70px;
 }
+header .menu-left #button-nav img {
+  height: 24px;
+  width: 24px;
+}
+@media (hover: hover) {
+  header .menu-left #button-nav img:hover {
+    filter: invert(44%) sepia(19%) saturate(845%) hue-rotate(340deg)
+      brightness(99%) contrast(92%);
+  }
+}
 header .menu-left #nav-overlay {
   align-items: unset;
   background-color: transparent;
