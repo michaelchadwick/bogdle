@@ -1,0 +1,57 @@
+section#game #hint-container {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+}
+section#game #hint-container button {
+  border: 1px solid var(--gray-dark);
+  height: 30px;
+}
+@media (hover: hover) {
+  section#game #hint-container button:hover {
+    background-color: var(--gray-dark);
+    border: 1px solid var(--black);
+    color: var(--white);
+  }
+}
+section#game #hint-container button:disabled {
+  background-color: var(--gray);
+  border: none;
+  color: var(--disabled);
+}
+@media (hover: hover) {
+  section#game #hint-container button:disabled:hover {
+    background-color: var(--gray);
+    border: none;
+    color: var(--disabled);
+  }
+}
+section#game #hint-container #hint-arena button#button-hint {
+  float: left;
+  font-size: 1.25em;
+  font-weight: normal;
+  letter-spacing: 0.25rem;
+  margin-right: 0;
+  min-width: 50px;
+  padding: 5px 10px;
+}
+section#game #hint-container #hint-arena button#button-hint.not-a-button {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: var(--black);
+  cursor: text;
+}
+section#game #hint-container button#button-hint-reset {
+  display: none;
+  float: left;
+  font-size: 1em;
+  height: 30px;
+  margin-left: 6px;
+  max-width: 40px;
+  max-height: 40px;
+  padding: 0;
+  width: 30px;
+}
+section#game #hint-container button#button-hint-reset.show {
+  display: block;
+}

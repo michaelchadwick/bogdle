@@ -1,4 +1,4 @@
-/* lib/helpers */
+/* lib/misc/helpers */
 /* misc global functions */
 /* global Bogdle */
 
@@ -19,15 +19,7 @@ Bogdle.__getFormattedDate = function (date) {
 // get displayable string for today's date
 Bogdle.__getTodaysDate = function () {
   const d = new Date(Date.now())
-  const days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ]
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const months = [
     'January',
     'February',
@@ -43,9 +35,7 @@ Bogdle.__getTodaysDate = function () {
     'December',
   ]
 
-  return `${days[d.getDay()]}, ${
-    months[d.getMonth()]
-  } ${d.getDate()}, ${d.getFullYear()}`
+  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 }
 
 // helper method to get game difficulty as a max letter length
@@ -87,22 +77,12 @@ Bogdle.__getHintsUsed = function () {
 
 Bogdle.__updateDailyDetails = function (index) {
   Bogdle.dailyNumber = parseInt(index) + 1
-  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (
-    parseInt(index) + 1
-  ).toString()
-  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML =
-    Bogdle.__getTodaysDate()
-}
-
-Bogdle.__resetTilesDuration = function () {
-  Array.from(Bogdle.dom.interactive.tiles).forEach(
-    (tile) => tile.style.setProperty('--animate-duration', '75ms'),
-    0
-  )
+  Bogdle.dom.dailyDetails.querySelector('.index').innerHTML = (parseInt(index) + 1).toString()
+  Bogdle.dom.dailyDetails.querySelector('.day').innerHTML = Bogdle.__getTodaysDate()
 }
 
 Bogdle.__getGameMode = function () {
-  return Bogdle.settings.gameMode || 'daily'
+  return Bogdle.settings ? Bogdle.settings.gameMode : BOGDLE_DEFAULT_GAMEMODE
 }
 
 Bogdle.__getConfig = function (mode = Bogdle.__getGameMode()) {

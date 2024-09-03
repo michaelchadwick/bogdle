@@ -1,4 +1,4 @@
-/* hint */
+/* lib/misc/hint */
 /* word hint functions */
 /* global Bogdle */
 
@@ -17,7 +17,7 @@ Bogdle._initHint = function () {
     Bogdle.dom.interactive.btnHintReset.classList.add('show')
 
     Bogdle.__getState().hintsUsed++
-    Bogdle._saveGame()
+    Bogdle._saveGame(Bogdle.__getGameMode())
   }
 
   Bogdle._cycleHint()

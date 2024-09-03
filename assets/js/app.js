@@ -4,6 +4,7 @@ if (typeof Bogdle === 'undefined') var Bogdle = {}
 const BOGDLE_ENV_PROD_URL = ['bogdle.fun', 'bogdle.neb.host']
 
 Bogdle.env = BOGDLE_ENV_PROD_URL.includes(document.location.hostname) ? 'prod' : 'local'
+const BOGDLE_SHARE_URL = `${document.location.origin}/?r=share`
 
 Bogdle._logStatus = function (msg, arg = null) {
   if (Bogdle.env == 'local') {

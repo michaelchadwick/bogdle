@@ -1,0 +1,54 @@
+section#game #keyboard-container {
+  margin: 0 8px;
+  user-select: none; /* no selecting text */
+}
+section#game #keyboard-container .row {
+  display: flex;
+  margin: 0 auto 4px;
+  /* Enable panning, pinch zoom, but not double-tap zoom */
+  touch-action: manipulation;
+  width: 100%;
+}
+section#game #keyboard-container .row:last-of-type {
+  margin-bottom: 16px;
+}
+
+@media (min-height: 500px) {
+  section#game #keyboard-container .row {
+    margin: 0 auto 8px;
+  }
+  section#game #keyboard-container .row:last-of-type {
+    margin-bottom: 20px;
+  }
+}
+
+section#game #keyboard-container .row.sub button {
+  background-color: #d6cece;
+}
+section#game #keyboard-container .row.sub button:disabled {
+  background-color: var(--gray);
+}
+section#game #keyboard-container button {
+  border: 1px solid transparent;
+  font-size: 1rem;
+  height: 25px;
+  width: 50px;
+}
+@media (min-height: 500px) {
+  section#game #keyboard-container button {
+    font-size: 1.25rem;
+    height: 50px;
+    width: 100px;
+  }
+}
+section#game #keyboard-container button:last-of-type {
+  margin: 0;
+}
+@media (hover: hover) {
+  section#game #keyboard-container button:hover:not(.disabled),
+  section#game #keyboard-container button:hover:not([disabled]) {
+    background-color: var(--gray-dark);
+    border: 1px solid var(--black);
+    color: var(--white);
+  }
+}

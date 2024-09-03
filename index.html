@@ -1,279 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!-- BASIC
+  <head>
+    <!-- BASIC
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <title>Bogdle</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <title>Bogdle</title>
 
-  <!-- META
+    <!-- META
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="description" content="Wordle-inspired Boggle.">
-  <meta name="author" content="Michael Chadwick">
-  <meta name="application-name" content="Bogdle">
-  <meta name="title" content="Bogdle" />
-  <meta property="og:url" content="https://bogdle.neb.host">
-  <meta property="og:title" content="Bogdle - A daily Boggle-like game">
-  <meta property="og:description" content="Guess all the words in the grid. A new grid each day.">
-  <meta property="og:image" content="https://bogdle.neb.host/assets/icons/android-chrome-512x512.png">
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="bogdle.neb.host">
+    <meta name="description" content="Wordle-inspired Boggle." />
+    <meta name="author" content="Michael Chadwick" />
+    <meta name="application-name" content="Bogdle" />
+    <meta name="title" content="Bogdle" />
+    <meta property="og:url" content="https://bogdle.neb.host" />
+    <meta property="og:title" content="Bogdle - A daily Boggle-like game" />
+    <meta
+      property="og:description"
+      content="Guess all the words in the grid. A new grid each day."
+    />
+    <meta
+      property="og:image"
+      content="https://bogdle.neb.host/assets/icons/android-chrome-512x512.png"
+    />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="bogdle.neb.host" />
 
-  <!-- FAVICONS
+    <!-- FAVICONS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/favicon-16x16.png">
-  <link rel="manifest" href="./site.webmanifest">
-  <link rel="mask-icon" href="./assets/icons/safari-pinned-tab.svg" color="#529952">
-  <link rel="shortcut icon" href="./favicon.ico">
-  <meta name="msapplication-TileColor" content="#529952">
-  <meta name="msapplication-config" content="./browserconfig.xml">
-  <meta name="theme-color" content="#529952">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./assets/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="./assets/icons/safari-pinned-tab.svg"
+      color="#529952"
+    />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <meta name="msapplication-TileColor" content="#529952" />
+    <meta name="msapplication-config" content="./browserconfig.xml" />
+    <meta name="theme-color" content="#529952" />
 
-  <!-- FONTAWESOME
+    <!-- FONTAWESOME
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="./assets/fontawesome/css/fontawesome.min.css">
-  <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css">
+    <link
+      rel="stylesheet"
+      href="./assets/fontawesome/css/fontawesome.min.css"
+    />
+    <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css" />
 
-  <!-- CSS
+    <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="./assets/css/app.css">
-  <link rel="stylesheet" href="./assets/css/app-dark.css">
-  <link rel="stylesheet" href="./assets/css/modal.css">
-  <link rel="stylesheet" href="./assets/css/animation.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-</head>
-<body>
-  <header>
-    <div class="menu-left">
+    <link rel="stylesheet" href="./assets/css/app.css" />
+    <link rel="stylesheet" href="./assets/css/app-dark.css" />
+    <link rel="stylesheet" href="./assets/css/modal.css" />
+    <link rel="stylesheet" href="./assets/css/animation.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="menu-left">
+        <div id="nav-links">
+          <button
+            id="button-nav"
+            class="icon"
+            aria-label="Click for links to more apps by neb.host"
+            tabindex="-1"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div id="nav-overlay">
+            <div id="nav-content">
+              <div class="container">
+                <div class="nav-header">More Apps By Neb</div>
 
-      <div id="nav-links">
-        <button id="button-nav" class="icon" aria-label="Click for links to more apps by neb.host" tabindex="-1">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div id="nav-overlay">
-          <div id="nav-content">
-            <div class="container">
+                <div class="nav-list"></div>
 
-              <div class="nav-header">More Apps By Neb</div>
+                <div class="nav-footer">
+                  <!-- vvv neb.host subsite footer -->
+                  <footer id="footer-neb-host">
+                    site by
+                    <a
+                      style="
+                        color: #ffffff;
+                        font-family: 'Consolas', sans-serif;
+                        font-size: 12px;
+                      "
+                      href="https://neb.host"
+                      >neb.host</a
+                    >
+                  </footer>
+                  <!-- ^^^ neb.host subsite footer -->
+                </div>
+              </div>
 
-              <div class="nav-list"></div>
-
-              <div class="nav-footer">
-                <!-- vvv neb.host subsite footer -->
-                <footer id="footer-neb-host">site by <a style="color: #ffffff; font-family: 'Consolas', sans-serif; font-size: 12px;" href="https://neb.host">neb.host</a>
-                </footer>
-                <!-- ^^^ neb.host subsite footer -->
+              <div id="button-nav-close">
+                <a href="#">X</a>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div id="button-nav-close">
-              <a href="#">X</a>
+        <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
+          <i class="fa-solid fa-question"></i>
+        </button>
+
+        <div id="debug-buttons" class="debug">
+          <nav class="ddmenu">
+            <div class="ddgroup">
+              <button id="button-debug-dropdown" class="icon debug">
+                <i class="fa-solid fa-bug"></i>
+              </button>
+              <div class="ddsub">
+                <button
+                  id="button-show-config"
+                  class="icon"
+                  title="Show Config"
+                >
+                  <i class="fa-solid fa-gears"></i>
+                </button>
+                <button id="button-show-state" class="icon" title="Show State">
+                  <i class="fa-solid fa-sliders"></i>
+                </button>
+                <button
+                  id="button-show-solution"
+                  class="icon"
+                  title="Show Solution"
+                >
+                  <i class="fa-solid fa-list-check"></i>
+                </button>
+                <button id="button-win-game" class="icon" title="Win Game">
+                  <i class="fa-solid fa-trophy"></i>
+                </button>
+                <button
+                  id="button-win-game-almost"
+                  class="icon"
+                  title="Win Game (Almost)"
+                >
+                  <i class="fa-solid fa-award"></i>
+                </button>
+                <button
+                  id="button-win-animation"
+                  class="icon"
+                  title="Win Animation"
+                >
+                  <i class="fa-solid fa-flag-checkered"></i>
+                </button>
+              </div>
             </div>
+          </nav>
+        </div>
+      </div>
 
+      <div class="title">
+        <h1>Bogdle</h1>
+      </div>
+
+      <div class="menu-right">
+        <button
+          id="button-stats"
+          class="icon"
+          aria-label="Statistics"
+          tabindex="-1"
+        >
+          <i class="fa-solid fa-chart-simple"></i>
+        </button>
+        <button
+          id="button-settings"
+          class="icon"
+          aria-label="Settings"
+          tabindex="-1"
+        >
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+    <section id="game">
+      <div id="mode-container">
+        <div id="gamemode-container" class="setting-row">
+          <a
+            href="#"
+            id="gamemode-0"
+            data-active="true"
+            date-gamemodeid="daily"
+            onclick="Bogdle._changeSetting('gameMode', 'daily', event)"
+            >Daily</a
+          >
+
+          <span>/</span>
+
+          <a
+            href="#"
+            id="gamemode-1"
+            data-active="false"
+            date-gamemodeid="free"
+            onclick="Bogdle._changeSetting('gameMode', 'free', event)"
+            >Free Play</a
+          >
+        </div>
+
+        <div id="daily-details" class="setting-row">
+          Bogdle #<span class="index"></span> for <span class="day"></span>
+        </div>
+
+        <div id="difficulty-container" class="setting-row">
+          <a
+            href="#"
+            id="diff-easy"
+            data-active="false"
+            data-diffid="easy"
+            onclick="Bogdle._changeSetting('difficulty', 'easy', event)"
+            >Easy</a
+          >
+
+          <span>/</span>
+
+          <a
+            href="#"
+            id="diff-medium"
+            data-active="false"
+            data-diffid="medium"
+            onclick="Bogdle._changeSetting('difficulty', 'medium', event)"
+            >Medium</a
+          >
+
+          <span>/</span>
+
+          <a
+            href="#"
+            id="diff-normal"
+            data-active="true"
+            data-diffid="normal"
+            onclick="Bogdle._changeSetting('difficulty', 'normal', event)"
+            >Normal</a
+          >
+        </div>
+      </div>
+
+      <div id="guess-container">
+        <div id="guess"></div>
+      </div>
+
+      <div id="board-container">
+        <div id="board">
+          <div class="row">
+            <div class="tile" data-state="tbd" data-pos="1" id="tile1"></div>
+            <div class="tile" data-state="tbd" data-pos="2" id="tile2"></div>
+            <div class="tile" data-state="tbd" data-pos="3" id="tile3"></div>
+          </div>
+          <div class="row">
+            <div class="tile" data-state="tbd" data-pos="4" id="tile4"></div>
+            <div class="tile" data-state="tbd" data-pos="5" id="tile5"></div>
+            <div class="tile" data-state="tbd" data-pos="6" id="tile6"></div>
+          </div>
+          <div class="row">
+            <div class="tile" data-state="tbd" data-pos="7" id="tile7"></div>
+            <div class="tile" data-state="tbd" data-pos="8" id="tile8"></div>
+            <div class="tile" data-state="tbd" data-pos="9" id="tile9"></div>
           </div>
         </div>
       </div>
 
-      <button id="button-help" class="icon" aria-label="Help" tabindex="-1">
-        <i class="fa-solid fa-question"></i>
-      </button>
-
-      <div id="debug-buttons" class="debug">
-        <nav class="ddmenu">
-          <div class="ddgroup">
-            <button id="button-debug-dropdown" class="icon debug">
-              <i class="fa-solid fa-bug"></i>
-            </button>
-            <div class="ddsub">
-              <button id="button-show-config" class="icon" title="Show Config">
-                <i class="fa-solid fa-gears"></i>
-              </button>
-              <button id="button-show-state" class="icon" title="Show State">
-                <i class="fa-solid fa-sliders"></i>
-              </button>
-              <button id="button-show-solution" class="icon" title="Show Solution">
-                <i class="fa-solid fa-list-check"></i>
-              </button>
-              <button id="button-win-game" class="icon" title="Win Game">
-                <i class="fa-solid fa-trophy"></i>
-              </button>
-              <button id="button-win-game-almost" class="icon" title="Win Game (Almost)">
-                <i class="fa-solid fa-award"></i>
-              </button>
-              <button id="button-win-animation" class="icon" title="Win Animation">
-                <i class="fa-solid fa-flag-checkered"></i>
-              </button>
-            </div>
-          </div>
-        </nav>
+      <div id="score-container">
+        <span id="score-guessed"></span><span id="score-guessed-of"></span>
+        <span id="score-total"></span><span id="score-total-words"></span>
       </div>
 
-    </div>
-
-    <div class="title">
-      <h1>Bogdle</h1>
-    </div>
-
-    <div class="menu-right">
-      <button id="button-stats" class="icon" aria-label="Statistics" tabindex="-1">
-        <i class="fa-solid fa-chart-simple"></i>
-      </button>
-      <button id="button-settings" class="icon" aria-label="Settings" tabindex="-1">
-        <i class="fa-solid fa-gear"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-  <section id="game">
-
-    <div id="mode-container">
-
-      <div id="gamemode-container" class="setting-row">
-        <a href="#" id="gamemode-0"
-          data-active="true"
-          date-gamemodeid="daily"
-          onclick="Bogdle._changeSetting('gameMode', 'daily', event)"
-        >Daily</a>
-
-        <span>/</span>
-
-        <a href="#" id="gamemode-1"
-          data-active="false"
-          date-gamemodeid="free"
-          onclick="Bogdle._changeSetting('gameMode', 'free', event)"
-        >Free Play</a>
-      </div>
-
-      <div id="daily-details" class="setting-row">
-        Bogdle #<span class="index"></span> for <span class="day"></span>
-      </div>
-
-      <div id="difficulty-container" class="setting-row">
-        <a href="#" id="diff-easy"
-          data-active="false"
-          data-diffid="easy"
-          onclick="Bogdle._changeSetting('difficulty', '', event)"
-        >Easy</a>
-
-        <span>/</span>
-
-        <a href="#" id="diff-medium"
-          data-active="false"
-          data-diffid="medium"
-          onclick="Bogdle._changeSetting('difficulty', '', event)"
-        >Medium</a>
-
-        <span>/</span>
-
-        <a href="#" id="diff-normal"
-          data-active="true"
-          data-diffid="normal"
-          onclick="Bogdle._changeSetting('difficulty', '', event)"
-        >Normal</a>
-      </div>
-
-    </div>
-
-    <div id="guess-container">
-      <div id="guess"></div>
-    </div>
-
-    <div id="board-container">
-      <div id="board">
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="1" id="tile1"></div>
-          <div class="tile" data-state="tbd" data-pos="2" id="tile2"></div>
-          <div class="tile" data-state="tbd" data-pos="3" id="tile3"></div>
-        </div>
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="4" id="tile4"></div>
-          <div class="tile" data-state="tbd" data-pos="5" id="tile5"></div>
-          <div class="tile" data-state="tbd" data-pos="6" id="tile6"></div>
-        </div>
-        <div class="row">
-          <div class="tile" data-state="tbd" data-pos="7" id="tile7"></div>
-          <div class="tile" data-state="tbd" data-pos="8" id="tile8"></div>
-          <div class="tile" data-state="tbd" data-pos="9" id="tile9"></div>
+      <div id="hint-container">
+        <div id="hint-arena">
+          <button
+            id="button-hint"
+            title="Get a hint to an undiscovered word (Forward Slash)"
+          >
+            Hint?
+          </button>
+          <button id="button-hint-reset">X</button>
         </div>
       </div>
-    </div>
 
-    <div id="score-container">
-      <span id="score-guessed"></span><span id="score-guessed-of"></span>
-      <span id="score-total"></span><span id="score-total-words"></span>
-    </div>
-
-    <div id="hint-container">
-      <div id="hint-arena">
-        <button id="button-hint" title="Get a hint to an undiscovered word (Forward Slash)">Hint?</button>
-        <button id="button-hint-reset">X</button>
+      <div id="keyboard-container">
+        <div class="row">
+          <button id="button-submit" title="Submit word (Enter/Return)">
+            <i class="fa-solid fa-check"></i>
+          </button>
+          <button
+            id="button-backspace"
+            title="Remove last letter (Backspace/Delete)"
+          >
+            <i class="fa-solid fa-backspace"></i>
+          </button>
+          <button id="button-clear-guess" title="Clear guess">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <button id="button-shuffle" title="Shuffle tiles (Space)">
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
+        </div>
+        <div class="row sub">
+          <button
+            id="button-show-progress"
+            title="Show progress"
+            data-permanent="true"
+          >
+            <i class="fa-solid fa-list-check"></i>
+          </button>
+          <button
+            id="button-guess-lookup"
+            title="Define valid word"
+            data-permanent="true"
+          >
+            <i class="fa-solid fa-book"></i>
+          </button>
+          <button id="button-create-new" title="Create new puzzle" disabled>
+            <i class="fa-solid fa-circle-plus"></i>
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div id="keyboard-container">
-      <div class="row">
-        <button id="button-submit" title="Submit word (Enter/Return)">
-          <i class="fa-solid fa-check"></i>
-        </button>
-        <button id="button-backspace" title="Remove last letter (Backspace/Delete)">
-          <i class="fa-solid fa-backspace"></i>
-        </button>
-        <button id="button-clear-guess" title="Clear guess">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-        <button id="button-shuffle" title="Shuffle tiles (Space)">
-          <i class="fa-solid fa-shuffle"></i>
-        </button>
-      </div>
-      <div class="row sub">
-        <button id="button-show-progress" title="Show progress" data-permanent="true">
-          <i class="fa-solid fa-list-check"></i>
-        </button>
-        <button id="button-guess-lookup" title="Define valid word" data-permanent="true">
-          <i class="fa-solid fa-book"></i>
-        </button>
-        <button id="button-create-new" title="Create new puzzle" disabled>
-          <i class="fa-solid fa-circle-plus"></i>
-        </button>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- End Document
+    <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
-  <!-- JAVASCRIPTS (VENDOR)
+    <!-- JAVASCRIPTS (VENDOR)
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="./assets/js/vendor/seedrandom.min.js"></script>
+    <script src="./assets/js/vendor/seedrandom.min.js"></script>
 
-  <!-- JAVASCRIPTS (CUSTOM)
+    <!-- JAVASCRIPTS (CUSTOM)
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="./assets/js/app.js"></script>
-  <script src="./assets/js/app/dom.js"></script>
-  <script src="./assets/js/app/events.js"></script>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/app/dom.js"></script>
+    <script src="./assets/js/app/events.js"></script>
+    <script src="./assets/js/app/ui.js"></script>
 
-  <!-- JAVASCRIPTS (CUSTOM - LIBRARIES)
+    <!-- JAVASCRIPTS (CUSTOM - LIBRARIES)
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="./assets/js/app/lib/constants/general.js"></script>
+    <script src="./assets/js/app/lib/constants/general.js"></script>
+    <script src="./assets/js/app/lib/constants/specific.js"></script>
 
-  <script src="./assets/js/app/lib/misc/animation.js"></script>
-  <script src="./assets/js/app/lib/misc/audio.js"></script>
-  <script src="./assets/js/app/lib/misc/debug.js"></script>
-  <script src="./assets/js/app/lib/misc/helpers.js"></script>
-  <script src="./assets/js/app/lib/misc/hint.js"></script>
-  <script src="./assets/js/app/lib/misc/local_storage.js"></script>
-  <script src="./assets/js/app/lib/misc/modal.js"></script>
-  <script src="./assets/js/app/lib/misc/puzzle.js"></script>
-  <script src="./assets/js/app/lib/misc/stats.js"></script>
+    <script src="./assets/js/app/lib/misc/animation.js"></script>
+    <script src="./assets/js/app/lib/misc/audio.js"></script>
+    <script src="./assets/js/app/lib/misc/debug.js"></script>
+    <script src="./assets/js/app/lib/misc/helpers.js"></script>
+    <script src="./assets/js/app/lib/misc/hint.js"></script>
+    <script src="./assets/js/app/lib/misc/local_storage.js"></script>
+    <script src="./assets/js/app/lib/misc/modal.js"></script>
+    <script src="./assets/js/app/lib/misc/puzzle.js"></script>
+    <script src="./assets/js/app/lib/misc/stats.js"></script>
 
-  <script src="./assets/js/app/main.js"></script>
-</body>
+    <script src="./assets/js/app/main.js"></script>
+  </body>
 </html>

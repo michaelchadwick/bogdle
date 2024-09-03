@@ -1,3 +1,9 @@
+/* lib/misc/puzzle */
+/*
+  Creates a new solution full of words,
+  given a seed word and dictionary
+*/
+
 class Puzzle {
   trie = {}
 
@@ -67,17 +73,13 @@ class Puzzle {
           )
       }
 
-      console.log(`createSolution(${this.type}) validWords`, validWords)
-
       // create solution set from valid words
       this.#setSolution(validWords)
     } catch (err) {
       console.error(`New Puzzle(${this.type}) could not be created`, err)
 
       if (this.type == 'boggle') {
-        console.log(
-          'Boggle type Puzzles still WIP, returning Findle type instead'
-        )
+        console.log('Boggle type Puzzles still WIP, returning Findle type instead')
 
         validWords = this.#gatherFindleWords(this.word).filter(
           (value, index, self) => self.indexOf(value) === index
@@ -157,9 +159,8 @@ class Puzzle {
   }
 
   #setSolution = (set) => {
-    const categories = Array.from(
-      { length: this.#getMaxWordLength() - 3 },
-      (x, i) => (i + 4).toString()
+    const categories = Array.from({ length: this.#getMaxWordLength() - 3 }, (x, i) =>
+      (i + 4).toString()
     )
 
     // zero them all out because setting it to the EMPTY_ARR_SET_9 does not work :'(

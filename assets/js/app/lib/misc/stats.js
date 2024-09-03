@@ -1,4 +1,4 @@
-/* lib/localStorage */
+/* lib/misc/stats */
 /* function for modal win/stats */
 /* global Bogdle */
 

@@ -1,4 +1,4 @@
-/* audio */
+/* lib/misc/audio */
 /* sound playing mechanisms */
 /* global Bogdle */
 

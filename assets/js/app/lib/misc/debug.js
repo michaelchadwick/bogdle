@@ -1,4 +1,4 @@
-/* debug */
+/* lib/misc/debug */
 /* debug functions */
 /* global Bogdle */
 
@@ -75,9 +75,7 @@ Bogdle._displayGameConfig = function () {
               if (Object.keys(value)) {
                 // console.log('found another object', key, label, value)
               } else {
-                html += `<dd><code>${label}:</code></dd><dt>${value.join(
-                  ', '
-                )}</dt>`
+                html += `<dd><code>${label}:</code></dd><dt>${value.join(', ')}</dt>`
               }
             })
 
@@ -95,9 +93,7 @@ Bogdle._displayGameConfig = function () {
 
           // special cases
           if (label == 'hintWord') {
-            html += `<dd><code>${label}:</code></dd><dt>${
-              value ? value.toUpperCase() : value
-            }</dt>`
+            html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value}</dt>`
           } else if (label == 'hintObscuredWord' || label == 'letters') {
             html += `<dd><code>${label}:</code></dd><dt>${
               value ? value.map((v) => v.toUpperCase()).join(', ') : value
@@ -169,13 +165,9 @@ Bogdle._displayGameState = function () {
           }
         } else if (label == 'guessedWords') {
           html += `<dd><code>${label}:</code></dd><dt>`
-          html += `${
-            value ? value.map((v) => v.toUpperCase()).join(', ') : value
-          }</dt>`
+          html += `${value ? value.map((v) => v.toUpperCase()).join(', ') : value}</dt>`
         } else if (label == 'seedWord') {
-          html += `<dd><code>${label}:</code></dd><dt>${
-            value ? value.toUpperCase() : value
-          }</dt>`
+          html += `<dd><code>${label}:</code></dd><dt>${value ? value.toUpperCase() : value}</dt>`
         } else {
           html += `<dd><code>${label}:</code></dd><dt>${value}</dt>`
         }
@@ -200,9 +192,7 @@ Bogdle._displayGameSolution = function () {
     .reverse()
     .forEach((key) => {
       if (key != 10) {
-        if (
-          Object.keys(Bogdle.__getConfig(gameMode).solutionSet).includes(key)
-        ) {
+        if (Object.keys(Bogdle.__getConfig(gameMode).solutionSet).includes(key)) {
           var solutionWords = []
 
           // create sorted array of each length category's words
@@ -276,11 +266,11 @@ Bogdle._winGameHax = async function (state = null) {
           })
         })
 
-        Bogdle._setScore(count)
+        Bogdle.ui._setScore(count)
 
         Bogdle.__setState('lastPlayedTime', new Date().getTime())
 
-        Bogdle._saveGame()
+        Bogdle._saveGame(Bogdle.__getGameMode())
       } else {
         console.log('HAX! Winning game immediately...')
 
@@ -294,9 +284,9 @@ Bogdle._winGameHax = async function (state = null) {
           })
         })
 
-        Bogdle._setScore(Bogdle.__getSolutionSize())
+        Bogdle.ui._setScore(Bogdle.__getSolutionSize())
 
-        Bogdle._saveGame()
+        Bogdle._saveGame(Bogdle.__getGameMode())
       }
 
       Bogdle._checkWinState()

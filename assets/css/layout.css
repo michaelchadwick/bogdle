@@ -1,0 +1,418 @@
+/*
+ * HEADER
+ */
+header {
+  align-items: center;
+  background-color: var(--vlight-color);
+  border-bottom: 1px solid var(--base-color);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: 50px;
+  padding: 0 16px;
+}
+header .menu-left {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  width: 70px;
+}
+header .menu-left #nav-overlay {
+  align-items: unset;
+  background-color: transparent;
+  display: none;
+  height: 100%;
+  justify-content: left;
+  left: 0;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 11;
+}
+header .menu-left #nav-overlay.show {
+  display: flex;
+}
+header .menu-left #nav-overlay #nav-content {
+  background-color: var(--white);
+  border-radius: 0;
+  box-shadow: 3px 5px 5px rgb(0 0 0 / 15%);
+  box-sizing: border-box;
+  max-height: calc(100% - 41px);
+  max-width: 500px;
+  overflow-y: auto;
+  padding: 0px;
+  position: relative;
+  top: 0;
+  width: 100%;
+}
+@media (min-width: 415px) {
+  header .menu-left #nav-overlay #nav-content {
+    width: 325px;
+  }
+}
+header .menu-left #nav-overlay #nav-content a {
+  color: var(--black);
+  text-decoration: none;
+}
+
+header .menu-left #nav-overlay #nav-content .container {
+  align-items: normal;
+  padding: 0;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-header {
+  font-size: 20px;
+  padding-bottom: 18px;
+  padding-left: 18px;
+  padding-top: 18px;
+}
+header .menu-left #nav-overlay #nav-content .container .nav-list a {
+  align-items: center;
+  background-color: transparent;
+  display: flex;
+  font-family: "Changa Bold";
+  font-size: 16px;
+  font-weight: bold;
+  height: 30px;
+  justify-content: left;
+  padding: 4px 0 4px 18px;
+}
+@media (hover: hover) {
+  header .menu-left #nav-overlay #nav-content .container .nav-list a:hover {
+    background-color: #91c791;
+  }
+}
+header .menu-left #nav-overlay #nav-content #button-nav-close {
+  font-size: 20px;
+  height: 24px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 24px;
+}
+@media (hover: hover) {
+  header .menu-left #nav-overlay #nav-content #button-nav-close a:hover {
+    color: var(--dark-color);
+  }
+}
+header .menu-left #nav-overlay #nav-content .nav-footer {
+  display: flex;
+}
+#footer-neb-host {
+  background: var(--base-color);
+  border-top: 2px solid var(--dark-color);
+  bottom: 0;
+  color: var(--black);
+  font-family: "Consolas", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  height: 18px;
+  left: 0;
+  letter-spacing: initial;
+  margin-top: 20px;
+  padding: 10px 18px;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  z-index: 2;
+}
+
+header #debug-buttons {
+  display: none;
+}
+header #debug-buttons button {
+  color: var(--debug-color);
+}
+header #debug-buttons .ddmenu {
+  align-items: center;
+  display: flex;
+  z-index: 10;
+}
+header #debug-buttons .ddmenu .ddgroup {
+  border: 1px solid transparent;
+  position: relative;
+  text-decoration: none;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup button {
+  margin-right: 0;
+}
+@media (hover: hover) {
+  header #debug-buttons .ddmenu .ddgroup:hover {
+    background: #d8d2f5;
+    border: 1px solid #8c85ae;
+    cursor: pointer;
+  }
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub {
+  display: none;
+  left: -1px;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub a {
+  box-sizing: border-box;
+  display: block;
+}
+header #debug-buttons .ddmenu .ddgroup .ddsub button {
+  background-color: #e3e0f3;
+  border: 1px solid transparent;
+  border-radius: 0;
+  height: 20px;
+  padding: 5px;
+  width: 26px;
+}
+@media (hover: hover) {
+  header #debug-buttons .ddmenu .ddgroup .ddsub button:hover {
+    background: #e1ddf7;
+    border: 1px solid #8c85ae;
+  }
+  header #debug-buttons .ddmenu .ddgroup:hover .ddsub {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 640px) {
+  .ddmenu {
+    flex-wrap: wrap;
+  }
+  .ddsub {
+    position: static;
+  }
+}
+
+header .title {
+  font-family: "Changa Bold", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  text-align: center;
+  text-transform: uppercase;
+}
+@media (min-width: 768px) {
+  header .title {
+    font-size: 20px;
+    letter-spacing: 0.01em;
+  }
+}
+header .menu-right {
+  display: flex;
+  width: 70px;
+}
+header .menu-right button#button-settings {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 0;
+}
+
+/*
+ * GAME
+ */
+section#game {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 50px); /* whole screen except for header */
+  margin: 0 auto;
+  width: 100%;
+}
+@media (min-height: 500px) {
+  section#game {
+    max-width: 515px;
+  }
+}
+
+/* GAME->MODE-CONTAINER */
+section#game #mode-container {
+  height: 60px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  text-underline-offset: 2px;
+  width: 100%;
+}
+@media (min-height: 500px) {
+  section#game #mode-container {
+    height: 80px;
+  }
+}
+section#game #mode-container .setting-row {
+  font-size: 20px;
+  margin: 0 auto;
+  padding: 4px;
+  text-align: center;
+}
+section#game #mode-container .setting-row a {
+  color: var(--black);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  section#game #mode-container .setting-row a:hover:not(.disabled) {
+    text-decoration: underline;
+  }
+}
+section#game #mode-container .setting-row a[data-active="true"] {
+  text-decoration: underline;
+}
+section#game #mode-container .setting-row button#button-create-new {
+  background-color: var(--disabled);
+  border-radius: 4px;
+  font-weight: normal;
+  height: 22px;
+  margin-left: 10px;
+  padding: 13px 5px;
+}
+section#game #mode-container .setting-row button#button-create-new i {
+  margin-right: 5px;
+}
+/* GAME->MODE-CONTAINER->GAMEMODE-CONTAINER */
+section#game #mode-container #gamemode-container {
+  height: 15px;
+}
+@media (min-height: 500px) {
+  section#game #mode-container #gamemode-container {
+    height: 20px;
+  }
+}
+
+/* GAME->MODE-CONTAINER->DAILY-DETAILS */
+section#game #mode-container #daily-details {
+  color: var(--marker-color);
+  display: none;
+  font-size: 0.9rem;
+  height: 20px;
+  margin: 5px 0 0;
+  padding: 4px 4px 0;
+  transform: scale(0);
+}
+section#game #mode-container #daily-details.show {
+  display: block;
+  transform: scale(1);
+}
+section#game #mode-container #daily-details .day {
+  font-family: "Changa Bold";
+  font-weight: 600;
+}
+/* GAME->MODE-CONTAINER->DIFFICULTY-CONTAINER */
+section#game #mode-container #difficulty-container {
+  display: block;
+  height: 20px;
+  transform: scale(0);
+}
+section#game #mode-container #difficulty-container.show {
+  transform: scale(1);
+}
+
+/* GUESS-CONTAINER */
+section#game #guess-container {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  font-family: "Changa Bold", sans-serif;
+  font-size: 2.25em;
+  font-weight: 700;
+  height: 30px;
+  margin: 0 auto;
+  max-width: 100%;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  top: 0;
+  vertical-align: middle;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+@media (min-width: 350px) and (min-height: 500px) {
+  section#game #guess-container {
+    font-size: 3.5em;
+    height: 30px;
+  }
+}
+@media (min-width: 768px) and (min-height: 500px) {
+  section#game #guess-container {
+    font-size: 5em;
+    height: 60px;
+  }
+}
+section#game #guess-container #guess {
+  background-color: transparent;
+  font-size: 1em;
+  line-height: 0.7em;
+  letter-spacing: 0.03em;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  transition: all 50ms;
+  top: 0;
+  width: 100%;
+}
+section#game #guess-container #guess.valid {
+  letter-spacing: 0.04em;
+}
+section#game #guess-container #guess.valid.first-guess {
+  font-size: 1.1em;
+}
+
+/* BOARD-CONTAINER */
+section#game #board-container {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+@media (min-height: 415px) {
+  section#game #board-container {
+    flex-grow: 1;
+  }
+}
+section#game #board-container #board {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 1px;
+  padding: 0;
+}
+@media (min-height: 500px) {
+  section#game #board-container #board {
+    grid-gap: 5px;
+    padding: 10px;
+  }
+}
+section#game #board-container #board .row {
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (min-height: 500px) {
+  section#game #board-container #board .row {
+    grid-gap: 5px;
+  }
+}
+section#game #board-container #board .row:nth-of-type(1) {
+  z-index: 10;
+}
+section#game #board-container #board .row:nth-of-type(2) {
+  z-index: 9;
+}
+section#game #board-container #board .row:nth-of-type(3) {
+  z-index: 8;
+}
+section#game #board-container #board .row .tile.animate__animated {
+  box-shadow: 1px 1px 5px #c5c5c5;
+}
+
+/* SCORE-CONTAINER */
+section#game #score-container {
+  font-size: 20px;
+  height: 25px;
+  text-align: center;
+}
+section#game #score-container #score-total {
+  font-family: "Changa Bold";
+  font-weight: 700;
+}

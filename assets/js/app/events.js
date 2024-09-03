@@ -1,8 +1,7 @@
-/* /assets/js/app/events.js */
+/* events */
 /* adds event listeners to dom */
 /* global Bogdle */
 
-// user clicks a tile
 Bogdle._onTileClick = function (tile) {
   const tileStatus = tile.target.dataset.state
 
@@ -51,15 +50,9 @@ Bogdle._attachEventListeners = function () {
   Bogdle.dom.interactive.btnNavClose.addEventListener('click', () => {
     Bogdle.dom.navOverlay.classList.toggle('show')
   })
-  Bogdle.dom.interactive.btnHelp.addEventListener('click', () =>
-    Bogdle.modalOpen('help')
-  )
-  Bogdle.dom.interactive.btnStats.addEventListener('click', () =>
-    Bogdle.modalOpen('stats')
-  )
-  Bogdle.dom.interactive.btnSettings.addEventListener('click', () =>
-    Bogdle.modalOpen('settings')
-  )
+  Bogdle.dom.interactive.btnHelp.addEventListener('click', () => Bogdle.modalOpen('help'))
+  Bogdle.dom.interactive.btnStats.addEventListener('click', () => Bogdle.modalOpen('stats'))
+  Bogdle.dom.interactive.btnSettings.addEventListener('click', () => Bogdle.modalOpen('settings'))
 
   // [A] tile interaction
   Array.from(Bogdle.dom.interactive.tiles).forEach((tile) => {
@@ -85,17 +78,17 @@ Bogdle._attachEventListeners = function () {
 
   // ⌫ backspace
   Bogdle.dom.interactive.btnBackspace.addEventListener('click', () => {
-    Bogdle._removeLastLetter()
+    Bogdle.ui._removeLastLetter()
   })
 
   // X clear
   Bogdle.dom.interactive.btnClearGuess.addEventListener('click', () => {
-    Bogdle._resetInput()
+    Bogdle.ui._resetInput()
   })
 
   // 🔀 shuffle
   Bogdle.dom.interactive.btnShuffle.addEventListener('click', () => {
-    Bogdle._shuffleTiles()
+    Bogdle.ui._shuffleTiles()
   })
 
   // := show current game word list progress
@@ -105,7 +98,7 @@ Bogdle._attachEventListeners = function () {
 
   // + create new solution
   Bogdle.dom.interactive.btnCreateNew.addEventListener('click', () => {
-    Bogdle._confirmFreeCreateNew()
+    Bogdle._confirmNewFree()
   })
 
   // 📕 dictionary lookup
@@ -124,39 +117,27 @@ Bogdle._attachEventListeners = function () {
       })
 
       // ⚙️ show current bogdle config
-      Bogdle.dom.interactive.debug.btnShowConfig.addEventListener(
-        'click',
-        () => {
-          Bogdle.modalOpen('show-config')
-        }
-      )
+      Bogdle.dom.interactive.debug.btnShowConfig.addEventListener('click', () => {
+        Bogdle.modalOpen('show-config')
+      })
 
       // 🎚️ show current bogdle state
-      Bogdle.dom.interactive.debug.btnShowState.addEventListener(
-        'click',
-        () => {
-          Bogdle.modalOpen('show-state')
-        }
-      )
+      Bogdle.dom.interactive.debug.btnShowState.addEventListener('click', () => {
+        Bogdle.modalOpen('show-state')
+      })
 
       // 🏆 win game immediately
       Bogdle.dom.interactive.debug.btnWinGame.addEventListener('click', () => {
         Bogdle._winGameHax()
       })
       // 🏅 almost win game (post-penultimate move)
-      Bogdle.dom.interactive.debug.btnWinGameAlmost.addEventListener(
-        'click',
-        () => {
-          Bogdle._winGameHax('almost')
-        }
-      )
+      Bogdle.dom.interactive.debug.btnWinGameAlmost.addEventListener('click', () => {
+        Bogdle._winGameHax('almost')
+      })
       // 🏁 display win tile animation
-      Bogdle.dom.interactive.debug.btnWinAnimation.addEventListener(
-        'click',
-        () => {
-          Bogdle.__winAnimation().then(() => Bogdle.__resetTilesDuration())
-        }
-      )
+      Bogdle.dom.interactive.debug.btnWinAnimation.addEventListener('click', () => {
+        Bogdle.__winAnimation().then(() => Bogdle.ui._resetTilesDuration())
+      })
     }
   }
 
@@ -165,23 +146,14 @@ Bogdle._attachEventListeners = function () {
     if (event.code == 'Enter') {
       Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
     } else if (event.code == 'Backspace' || event.code == 'Delete') {
-      Bogdle._removeLastLetter()
+      Bogdle.ui._removeLastLetter()
     } else if (event.code == 'Space') {
-      Bogdle._shuffleTiles()
+      Bogdle.ui._shuffleTiles()
     } else if (event.code == 'Slash') {
       Bogdle._initHint()
     } else {
-      const excludedKeys = [
-        'Alt',
-        'Control',
-        'Meta',
-        'Shift',
-        'ShiftLeft',
-        'ShiftRight',
-      ]
-      const validLetters = Bogdle.__getConfig().letters.map((l) =>
-        l.toUpperCase()
-      )
+      const excludedKeys = ['Alt', 'Control', 'Meta', 'Shift', 'ShiftLeft', 'ShiftRight']
+      const validLetters = Bogdle.__getConfig().letters.map((l) => l.toUpperCase())
       const pressedLetter = event.code.charAt(event.code.length - 1)
 
       if (!excludedKeys.some((key) => event.getModifierState(key))) {
@@ -190,9 +162,7 @@ Bogdle._attachEventListeners = function () {
           const boardTiles = Array.from(Bogdle.dom.interactive.tiles)
 
           const availableTiles = boardTiles.filter(
-            (tile) =>
-              tile.innerHTML.toUpperCase() == pressedLetter &&
-              tile.dataset.state == 'tbd'
+            (tile) => tile.innerHTML.toUpperCase() == pressedLetter && tile.dataset.state == 'tbd'
           )
 
           // if we found one, select first found
@@ -224,8 +194,8 @@ Bogdle._attachEventListeners = function () {
   window.addEventListener('click', Bogdle._handleClickTouch)
   window.addEventListener('touchend', Bogdle._handleClickTouch)
 
-  window.onload = Bogdle._resizeBoard
-  window.onresize = Bogdle._resizeBoard
+  window.onload = Bogdle.ui._resizeBoard
+  window.onresize = Bogdle.ui._resizeBoard
 
   document.body.addEventListener(
     'touchmove',

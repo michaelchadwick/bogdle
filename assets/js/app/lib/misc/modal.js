@@ -1,3 +1,5 @@
+/* lib/misc/modal */
+/* Modal class */
 /* eslint-disable no-unused-vars */
 
 class Modal {
@@ -149,7 +151,17 @@ class Modal {
   }
 
   _destroyModal() {
-    this.parent.removeChild(this.modal)
-    delete this
+    if (this.modal) {
+      const modals = document.getElementsByClassName('modal-dialog')
+      const modalCount = modals.length
+      const modal = modals[modalCount - 1]
+
+      if (this.parent.contains(modal)) {
+        if (!modal.classList.contains('modal-confirm') && !modal.classList.contains('end-state')) {
+          this.parent.removeChild(modal)
+          delete this
+        }
+      }
+    }
   }
 }
