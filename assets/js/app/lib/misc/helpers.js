@@ -122,6 +122,22 @@ Bogdle.__getSessionIndex = function (mode = Bogdle.__getGameMode()) {
   return rootState ? rootState.length - 1 : 0
 }
 
+Bogdle.__getShareText = (type) => {
+  let html = ''
+  const size = Bogdle.__getSolutionSize()
+  const hints = Bogdle.__getHintsUsed()
+
+  if (type == 'completion') {
+    html += `🧩 Bogdle #${Bogdle.dailyNumber}\n${size}/${size} words, ${hints} hints\n`
+    html += BOGDLE_SHARE_URL
+  } else if (type == 'pangram') {
+    html += `🧩 Bogdle #${Bogdle.dailyNumber}\nPangram found!\n`
+    html += BOGDLE_SHARE_URL
+  }
+
+  return html
+}
+
 // load random seed word for solutionSet
 Bogdle.__getNewSeedWord = async function () {
   const seedWordsFile = Bogdle.__getConfig().seedWordsFile

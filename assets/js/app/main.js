@@ -1010,54 +1010,44 @@ Bogdle._displayGameProgress = function () {
 
 // copy results to clipboard for sharing
 Bogdle._shareResults = async function (type = 'completion') {
-  let shareText = ''
-  const size = Bogdle.__getSolutionSize()
-  const hints = Bogdle.__getHintsUsed()
+  let shareText = Bogdle.__getShareText(type)
 
-  if (type == 'completion') {
-    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}\n${size}/${size} words, ${hints} hints\n`
-    shareText += BOGDLE_SHARE_URL
-  } else if (type == 'pangram') {
-    shareText += `🧩 Bogdle #${Bogdle.dailyNumber}\nPangram found!\n`
-    shareText += BOGDLE_SHARE_URL
-  }
+  // if (navigator.canShare({ text: shareText })) {
+  //   navigator.share({ text: shareText }).then(() => {
+  //     console.log('sharing was successful')
+  //   })
+  //   .catch((error) => {
+  //     if (error.name == 'AbortError') {
+  //       console.log('user canceled share')
+  //     } else {
+  //       console.log('navigator.share failed', error)
+  //     }
+  //   })
+  //   .finally(() => {
+  //     // console.log('navigator.share() ended')
+  //   })
+  // } else {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(shareText)
+      .then(() => {
+        Bogdle.modalOpen('shared')
+      })
+      .catch(() => {
+        console.error('could not copy text to clipboard')
 
-  if (navigator.canShare) {
-    navigator.share({ text: shareText })
+        Bogdle.modalOpen('no-clipboard-access')
+
+        return
+      })
   } else {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(shareText)
-        .then(() => {
-          Bogdle.modalOpen('shared')
-        })
-        .catch(() => {
-          console.error('could not copy text to clipboard')
+    console.warn('no sharing or clipboard access available')
 
-          Bogdle.modalOpen('no-clipboard-access')
+    Bogdle.modalOpen('no-clipboard-access')
 
-          return
-        })
-
-      // const canWrite = await navigator.permissions.query({ name: 'clipboard-write' })
-
-      // if (canWrite.state == 'granted') {
-      //   navigator.clipboard.writeText(shareText).then(() => {
-      //     Bogdle.modalOpen('shared')
-      //   }).catch(() => console.error('could not copy text to clipboard'))
-      // } else {
-      //   console.warn('clipboard access was denied')
-
-      //   Bogdle.modalOpen('no-clipboard-access')
-      // }
-    } else {
-      console.warn('no sharing or clipboard access available')
-
-      Bogdle.modalOpen('no-clipboard-access')
-
-      return
-    }
+    return
   }
+  // }
 }
 
 /************************************************************************
