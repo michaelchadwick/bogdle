@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!-- BASIC
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta charset="utf-8" />
     <meta http-equiv="cache-control" content="no-cache" />
     <meta
@@ -12,7 +12,7 @@
     <title>Bogdle</title>
 
     <!-- META
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta name="description" content="Wordle-inspired Boggle." />
     <meta name="author" content="Michael Chadwick" />
     <meta name="application-name" content="Bogdle" />
@@ -31,7 +31,7 @@
     <meta property="twitter:domain" content="bogdle.neb.host" />
 
     <!-- FAVICONS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -61,7 +61,7 @@
     <meta name="theme-color" content="#bce2bc" />
 
     <!-- FONTAWESOME
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link
       rel="stylesheet"
       href="./assets/fontawesome/css/fontawesome.min.css"
@@ -69,7 +69,7 @@
     <link rel="stylesheet" href="./assets/fontawesome/css/solid.min.css" />
 
     <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link rel="stylesheet" href="./assets/css/app.css" />
     <link rel="stylesheet" href="./assets/css/app-dark.css" />
     <link rel="stylesheet" href="./assets/css/modal.css" />
@@ -199,7 +199,7 @@
     </header>
 
     <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
     <section id="game">
       <div id="mode-container">
@@ -345,34 +345,38 @@
     </section>
 
     <!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 
     <!-- JAVASCRIPTS (VENDOR)
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="./assets/js/vendor/seedrandom.min.js"></script>
 
     <!-- JAVASCRIPTS (CUSTOM)
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/app/constants.js"></script>
     <script src="./assets/js/app/dom.js"></script>
     <script src="./assets/js/app/events.js"></script>
+    <script src="./assets/js/app/modals.js"></script>
     <script src="./assets/js/app/ui.js"></script>
 
     <!-- JAVASCRIPTS (CUSTOM - LIBRARIES)
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    <script src="./assets/js/app/lib/constants/general.js"></script>
-    <script src="./assets/js/app/lib/constants/specific.js"></script>
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="./assets/js/app/lib/animation.js"></script>
+    <script src="./assets/js/app/lib/audio.js"></script>
+    <script src="./assets/js/app/lib/debug.js"></script>
+    <script src="./assets/js/app/lib/helpers.js"></script>
+    <script src="./assets/js/app/lib/hint.js"></script>
+    <script src="./assets/js/app/lib/local_storage.js"></script>
+    <script src="./assets/js/app/lib/stats.js"></script>
 
-    <script src="./assets/js/app/lib/misc/animation.js"></script>
-    <script src="./assets/js/app/lib/misc/audio.js"></script>
-    <script src="./assets/js/app/lib/misc/debug.js"></script>
-    <script src="./assets/js/app/lib/misc/helpers.js"></script>
-    <script src="./assets/js/app/lib/misc/hint.js"></script>
-    <script src="./assets/js/app/lib/misc/local_storage.js"></script>
-    <script src="./assets/js/app/lib/misc/modal.js"></script>
-    <script src="./assets/js/app/lib/misc/puzzle.js"></script>
-    <script src="./assets/js/app/lib/misc/stats.js"></script>
+    <!-- JAVASCRIPTS (CUSTOM - LIBRARIES - CLASSES)
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="./assets/js/app/lib/classes/modal.js"></script>
+    <script src="./assets/js/app/lib/classes/puzzle.js"></script>
 
+    <!-- JAVASCRIPTS (CUSTOM)
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <script src="./assets/js/app/main.js"></script>
   </body>
 </html>

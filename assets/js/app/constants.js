@@ -1,6 +1,13 @@
-/* lib/constants/specific */
 /* global specific constants */
 /* eslint-disable no-unused-vars */
+
+const NEBYOOAPPS_SOURCE_URL = 'https://dave.neb.host/?sites'
+
+const BOGDLE_STATE_DAILY_LS_KEY = 'bogdle-state-daily'
+const BOGDLE_STATE_FREE_LS_KEY = 'bogdle-state-free'
+const BOGDLE_SETTINGS_LS_KEY = 'bogdle-settings'
+
+const BOGDLE_DAILY_SCRIPT = '/assets/scripts/daily.php'
 
 const BOGDLE_DEFAULT_GAMEMODE = 'daily'
 
@@ -12,8 +19,7 @@ const EMPTY_ARR_SET_5 = { 4: [], 5: [] }
 const EMPTY_ARR_SET_7 = { 4: [], 5: [], 6: [], 7: [] }
 const EMPTY_ARR_SET_9 = { 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] }
 
-const BOGDLE_DEFINE_LOOKUP_URL =
-  'https://api.dictionaryapi.dev/api/v2/entries/en'
+const BOGDLE_DEFINE_LOOKUP_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en'
 
 const BOGDLE_DICT_FILE_ROOT = '/assets/json/'
 
