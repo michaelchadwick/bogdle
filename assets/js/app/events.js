@@ -27,17 +27,18 @@ Bogdle._onTileClick = function (tile) {
 // handle both clicks and touches outside of modals
 Bogdle._handleClickTouch = function (event) {
   const dialog = document.getElementsByClassName('modal-dialog')[0]
+  const elem = event.target
 
   if (dialog) {
     const isConfirm = dialog.classList.contains('modal-confirm')
 
     // only close if not a confirmation!
-    if (event.target == dialog && !isConfirm) {
+    if (elem == dialog && !isConfirm) {
       dialog.remove()
     }
   }
 
-  if (event.target == Bogdle.dom.navOverlay) {
+  if (elem == Bogdle.dom.navOverlay) {
     Bogdle.dom.navOverlay.classList.toggle('show')
   }
 }

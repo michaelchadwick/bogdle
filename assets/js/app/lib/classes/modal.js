@@ -1,24 +1,22 @@
-/* lib/misc/modal */
 /* Modal class */
 /* eslint-disable no-unused-vars */
 
 class Modal {
-  constructor(modalType, modalTitle, modalText, acceptText, cancelText) {
+  constructor(
+    modalType = 'perm',
+    modalTitle = 'Confirmation',
+    modalText = 'You sure?',
+    acceptText = 'Yes',
+    cancelText = 'No',
+    modalClass = null
+  ) {
     this.modalDelay = 1500
-    this.modalType = modalType || 'perm'
-    this.modalTitle = modalTitle || 'Confirmation'
-    this.modalText = modalText || 'Are you sure you want to do this?'
-
-    if (acceptText) {
-      this.acceptText = acceptText || 'Yes'
-    } else {
-      this.acceptText = null
-    }
-    if (cancelText) {
-      this.cancelText = cancelText || 'No'
-    } else {
-      this.cancelText = null
-    }
+    this.modalType = modalType
+    this.modalTitle = modalTitle
+    this.modalText = modalText
+    this.modalClass = modalClass
+    this.acceptText = acceptText
+    this.cancelText = cancelText
 
     this.parent = document.body
 
@@ -65,23 +63,41 @@ class Modal {
     // Background dialog
     this.modal = document.createElement('dialog')
     this.modal.classList.add('modal-dialog')
-    if (modalType == 'confirm' || modalType == 'confirm-debug') {
-      this.modal.classList.add('modal-confirm')
-    }
 
-    if (modalType == 'temp') {
-      this.modal.classList.add('temp')
+    // add proper CSS class
+    switch (modalType) {
+      case 'confirm':
+      case 'confirm-debug':
+        this.modal.classList.add('modal-confirm')
+        break
+
+      case 'temp':
+        this.modal.classList.add('temp')
+        break
+
+      case 'temp-api':
+        this.modal.classList.add('temp-api')
+        break
+
+      case 'end-state':
+        this.modal.classList.add('end-state')
+        break
     }
 
     // Message window
-    const window = document.createElement('div')
-    window.classList.add('modal-window')
-    window.classList.add('animate__animated', 'animate__fadeInUp')
+    const msgWindow = document.createElement('div')
+    msgWindow.classList.add('modal-window')
+    msgWindow.classList.add('animate__animated', 'animate__fadeInUp')
+
+    if (this.modalClass) {
+      msgWindow.classList.add(this.modalClass)
+    }
 
     if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
-      window.classList.add('debug')
+      msgWindow.classList.add('debug')
     }
-    this.modal.appendChild(window)
+
+    this.modal.appendChild(msgWindow)
 
     // if not a temporary modal, add a title and close button
     if (modalType != 'temp') {
