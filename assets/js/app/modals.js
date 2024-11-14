@@ -297,9 +297,24 @@ Bogdle.modalOpen = async function (type) {
     case 'repeated-word':
       Bogdle.myModal = new Modal('temp', null, 'Word already found', null, null)
       break
-    case 'shared':
+    case 'shared': {
+      const btnShare = document.querySelector('button.share')
+
+      if (btnShare) {
+        btnShare.innerHTML = `
+          Copied <i class="fa-solid fa-check"></i>
+        `
+
+        setTimeout(() => {
+          btnShare.innerHTML = `
+            Share <i class="fa-solid fa-share-nodes"></i>
+          `
+        }, 1500)
+      }
+
       Bogdle.myModal = new Modal('temp', null, 'Results copied to clipboard', null, null)
       break
+    }
     case 'no-clipboard-access':
       Bogdle.myModal = new Modal(
         'temp',
