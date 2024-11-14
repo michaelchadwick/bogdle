@@ -107,7 +107,7 @@ class Modal {
       if (modalType == 'perm-debug' || modalType == 'confirm-debug') {
         title.classList.add('debug')
       }
-      window.appendChild(title)
+      msgWindow.appendChild(title)
 
       // Title text
       const titleText = document.createElement('div')
@@ -131,7 +131,7 @@ class Modal {
     const text = document.createElement('div')
     text.classList.add('modal-text')
     text.innerHTML = this.modalText
-    window.appendChild(text)
+    msgWindow.appendChild(text)
 
     // if a confirm modal, add buttons
     if (modalType == 'confirm' || modalType == 'confirm-debug') {
@@ -141,7 +141,8 @@ class Modal {
       if (modalType == 'confirm-debug') {
         buttonGroup.classList.add('debug')
       }
-      window.appendChild(buttonGroup)
+
+      msgWindow.appendChild(buttonGroup)
 
       // Cancel button
       this.cancelButton = document.createElement('button')
