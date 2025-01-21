@@ -260,7 +260,9 @@ Bogdle._loadSettings = function () {
       }
     }
   } else {
-    Bogdle.modalOpen('start')
+    if (document.referrer.indexOf('omni.neb.host') < 0) {
+      Bogdle.modalOpen('start')
+    }
   }
 
   // STATE->GAMEMODE
