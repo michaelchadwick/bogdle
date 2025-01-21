@@ -297,3 +297,18 @@ Bogdle._winGameHax = async function (state = null) {
     console.error('win game via hax failed', err)
   }
 }
+
+// modal: debug: clear localStorage
+Bogdle._clearLocalStorage = (showModal = true) => {
+  localStorage.clear()
+
+  if (showModal) {
+    if (
+      localStorage.key(BOGDLE_SETTINGS_LS_KEY) == undefined &&
+      localStorage.key(BOGDLE_STATE_DAILY_LS_KEY) == undefined &&
+      localStorage.key(BOGDLE_STATE_FREE_LS_KEY) == undefined
+    ) {
+      Bogdle.modalOpen('cleared-local-storage')
+    }
+  }
+}

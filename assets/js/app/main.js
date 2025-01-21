@@ -27,6 +27,10 @@ Bogdle.initApp = async () => {
       document.title = '(LH) ' + document.title
     }
   }
+  // if loading from omni.neb.host
+  if (document.referrer.indexOf('omni.neb.host') >= 0) {
+    Bogdle._clearLocalStorage(false)
+  }
 
   Bogdle._getNebyooApps()
 
