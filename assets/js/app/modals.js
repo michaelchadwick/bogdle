@@ -359,5 +359,9 @@ Bogdle.modalOpen = async function (type) {
     case 'win-game-hax':
       Bogdle.myModal = new Modal('temp', null, 'Hacking the game, I see', null, null)
       break
+
+    case 'cleared-local-storage':
+      Bogdle.myModalTemp = new Modal('temp', null, 'Local Storage has been cleared', null, null)
+      break
   }
 }
