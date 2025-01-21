@@ -161,7 +161,7 @@ Bogdle._loadGame = async function () {
     }
   }
 
-  if (Bogdle.settings.firstTime) {
+  if (Bogdle.settings.firstTime && document.referrer.indexOf('omni.neb.host') < 0) {
     Bogdle.modalOpen('start')
   }
 }
