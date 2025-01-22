@@ -667,8 +667,8 @@ Bogdle._displayGameProgress = function () {
 }
 
 // copy results to clipboard for sharing
-Bogdle._shareResults = async function (type = 'completion') {
-  let shareText = Bogdle.__getShareText(type)
+Bogdle._shareResults = async function (shareType = 'completion') {
+  let shareText = Bogdle.__getShareText(shareType)
 
   // if (navigator.canShare({ text: shareText })) {
   //   navigator.share({ text: shareText }).then(() => {
@@ -689,7 +689,7 @@ Bogdle._shareResults = async function (type = 'completion') {
     navigator.clipboard
       .writeText(shareText)
       .then(() => {
-        Bogdle.modalOpen('shared')
+        Bogdle.modalOpen('shared', shareType)
       })
       .catch(() => {
         console.error('could not copy text to clipboard')

@@ -2,7 +2,7 @@
 /* global Deckdle */
 /* eslint-disable no-undef */
 
-Bogdle.modalOpen = async function (type) {
+Bogdle.modalOpen = async function (type, shareType = null) {
   let modalText
 
   switch (type) {
@@ -139,7 +139,7 @@ Bogdle.modalOpen = async function (type) {
               <div class="flex">
                 <span>Today's Pangram Found!</span>
                 <span>
-                  <button class="share tiny" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
+                  <button class="share tiny pangram" onclick="Bogdle._shareResults('pangram')">Share <i class="fa-solid fa-share-nodes"></i></button>
                 </span>
               </div>
             </div>
@@ -169,7 +169,7 @@ Bogdle.modalOpen = async function (type) {
       if (Bogdle.__getState().gameState == 'GAME_OVER') {
         modalText += `
           <div class="share">
-            <button class="share" onclick="Bogdle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
+            <button class="share completion" onclick="Bogdle._shareResults()">Share <i class="fa-solid fa-share-nodes"></i></button>
           </div>
         `
       }
@@ -298,7 +298,7 @@ Bogdle.modalOpen = async function (type) {
       Bogdle.myModal = new Modal('temp', null, 'Word already found', null, null)
       break
     case 'shared': {
-      const btnShare = document.querySelector('button.share')
+      const btnShare = document.querySelector(`button.share.${shareType}`)
 
       if (btnShare) {
         btnShare.innerHTML = `
