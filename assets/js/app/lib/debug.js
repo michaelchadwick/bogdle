@@ -285,6 +285,7 @@ Bogdle._winGameHax = async function (state = null) {
         })
 
         Bogdle.ui._setScore(Bogdle.__getSolutionSize())
+        Bogdle.__setState('pangramFound', true)
 
         Bogdle._saveGame(Bogdle.__getGameMode())
       }
