@@ -321,12 +321,14 @@ section#game #guess-container {
   align-content: center;
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   font-family: "Changa Bold", sans-serif;
   font-size: 2.25em;
   font-weight: 700;
   height: 30px;
   margin: 0 auto;
   max-width: 100%;
+  min-height: 30px;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -367,20 +369,34 @@ section#game #guess-container #guess.valid.first-guess {
   font-size: 1.1em;
 }
 
-/* BOARD-CONTAINER */
-section#game #board-container {
+/* BOARD-SCORE */
+section#game #board-score {
   align-items: center;
   display: flex;
+  flex-direction: row;
   flex-grow: 1;
-  justify-content: center;
-  overflow: hidden;
+  gap: 10px;
 }
-@media (min-height: 415px) {
-  section#game #board-container {
-    flex-grow: 1;
+@media (min-height: 500px) {
+  section#game #board-score {
+    flex-direction: column;
   }
 }
-section#game #board-container #board {
+/* BOARD-SCORE BOARD-CONTAINER */
+section#game #board-score #board-container {
+  align-items: center;
+  display: flex;
+  flex-grow: 0.5;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+@media (min-height: 500px) {
+  section#game #board-score #board-container {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+section#game #board-score #board-container #board {
   box-sizing: border-box;
   display: grid;
   grid-template-rows: repeat(3, 1fr);
@@ -388,41 +404,54 @@ section#game #board-container #board {
   padding: 0;
 }
 @media (min-height: 500px) {
-  section#game #board-container #board {
+  section#game #board-score #board-container #board {
     grid-gap: 5px;
     padding: 10px;
   }
 }
-section#game #board-container #board .row {
+section#game #board-score #board-container #board .row {
   display: grid;
   grid-gap: 1px;
   grid-template-columns: repeat(3, 1fr);
 }
 @media (min-height: 500px) {
-  section#game #board-container #board .row {
+  section#game #board-score #board-container #board .row {
     grid-gap: 5px;
   }
 }
-section#game #board-container #board .row:nth-of-type(1) {
+section#game #board-score #board-container #board .row:nth-of-type(1) {
   z-index: 10;
 }
-section#game #board-container #board .row:nth-of-type(2) {
+section#game #board-score #board-container #board .row:nth-of-type(2) {
   z-index: 9;
 }
-section#game #board-container #board .row:nth-of-type(3) {
+section#game #board-score #board-container #board .row:nth-of-type(3) {
   z-index: 8;
 }
-section#game #board-container #board .row .tile.animate__animated {
+section#game #board-score #board-container #board .row .tile.animate__animated {
   box-shadow: 1px 1px 5px #c5c5c5;
 }
 
-/* SCORE-CONTAINER */
-section#game #score-container {
-  font-size: 20px;
-  height: 25px;
-  text-align: center;
+/* BOARD-SCORE SCORE-CONTAINER */
+section#game #board-score #score-container {
+  display: flex;
+  flex-grow: 0.5;
+  font-size: 16px;
+  gap: 3px;
+  justify-content: flex-start;
 }
-section#game #score-container #score-total {
+@media (min-height: 500px) {
+  section#game #board-score #score-container {
+    align-content: end;
+    display: block;
+    flex-grow: 1;
+    font-size: 20px;
+    height: 25px;
+    justify-content: center;
+    text-align: center;
+  }
+}
+section#game #board-score #score-container #score-total {
   font-family: "Changa Bold";
   font-weight: 700;
 }
