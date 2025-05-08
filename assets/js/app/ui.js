@@ -6,7 +6,7 @@ Bogdle.ui = {}
 
 // reset UI tiles to default state
 Bogdle.ui._resetInput = function () {
-  if (Bogdle.__getState().status == 'IN_PROGRESS') {
+  if (Bogdle.__getState().gameState == 'IN_PROGRESS') {
     Bogdle.ui._resetTiles()
 
     Bogdle._enableHint()
