@@ -120,7 +120,7 @@ Bogdle.ui._removeLastLetter = function () {
 // dynamically resize board depending on viewport
 Bogdle.ui._resizeBoard = function () {
   const boardContainer = document.querySelector('#board-container')
-  const boardHeight = boardContainer.clientHeight + 130
+  const boardHeight = boardContainer.clientHeight + 110
   const containerHeight = Math.min(Math.floor(boardHeight), 350)
   const tileHeight = 2.75 * Math.floor(containerHeight / 3)
 
