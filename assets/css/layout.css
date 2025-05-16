@@ -207,7 +207,6 @@ header .title {
 @media (min-width: 768px) {
   header .title {
     font-size: 20px;
-    letter-spacing: 0.01em;
   }
 }
 header .menu-right {
@@ -238,7 +237,7 @@ section#game {
 
 /* GAME->MODE-CONTAINER */
 section#game #mode-container {
-  height: 60px;
+  height: 45px;
   margin: 0 auto;
   text-transform: uppercase;
   text-underline-offset: 2px;
@@ -246,14 +245,19 @@ section#game #mode-container {
 }
 @media (min-height: 500px) {
   section#game #mode-container {
-    height: 80px;
+    height: 65px;
   }
 }
 section#game #mode-container .setting-row {
   font-size: 20px;
   margin: 0 auto;
-  padding: 4px;
+  padding: 0 5px;
   text-align: center;
+}
+@media (min-height: 500px) {
+  section#game #mode-container .setting-row {
+    padding: 5px;
+  }
 }
 section#game #mode-container .setting-row a {
   color: var(--black);
@@ -280,7 +284,7 @@ section#game #mode-container .setting-row button#button-create-new i {
 }
 /* GAME->MODE-CONTAINER->GAMEMODE-CONTAINER */
 section#game #mode-container #gamemode-container {
-  height: 15px;
+  height: 20px;
 }
 @media (min-height: 500px) {
   section#game #mode-container #gamemode-container {
@@ -341,13 +345,15 @@ section#game #guess-container {
 @media (min-width: 350px) and (min-height: 500px) {
   section#game #guess-container {
     font-size: 3.5em;
-    height: 30px;
+    height: 40px;
+    padding: 0.1em 0;
   }
 }
 @media (min-width: 768px) and (min-height: 500px) {
   section#game #guess-container {
     font-size: 5em;
     height: 60px;
+    padding: 0.2em 0;
   }
 }
 section#game #guess-container #guess {
@@ -375,7 +381,7 @@ section#game #board-score {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-  gap: 10px;
+  gap: 0;
 }
 @media (min-height: 500px) {
   section#game #board-score {
@@ -436,18 +442,19 @@ section#game #board-score #board-container #board .row .tile.animate__animated {
 section#game #board-score #score-container {
   display: flex;
   flex-grow: 0.5;
-  font-size: 16px;
+  font-size: 20px;
   gap: 3px;
   justify-content: flex-start;
+  padding-left: 10px;
 }
 @media (min-height: 500px) {
   section#game #board-score #score-container {
     align-content: end;
     display: block;
     flex-grow: 1;
-    font-size: 20px;
     height: 25px;
     justify-content: center;
+    padding: 5px;
     text-align: center;
   }
 }

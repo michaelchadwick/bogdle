@@ -148,21 +148,18 @@ button.share.tiny {
   color: #364333;
   display: inline-flex;
   font-family: "Changa Bold";
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   justify-content: center;
   line-height: 1.25rem;
+  min-height: 45px;
+  min-width: 45px;
   vertical-align: middle;
   text-transform: uppercase;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   width: 100%;
-}
-@media (min-height: 415px) {
-  .tile {
-    font-size: 2em;
-  }
 }
 @media (min-height: 500px) {
   .tile {

@@ -120,13 +120,22 @@ Bogdle.ui._removeLastLetter = function () {
 // dynamically resize board depending on viewport
 Bogdle.ui._resizeBoard = function () {
   const boardContainer = document.querySelector('#board-container')
-  const boardHeight = boardContainer.clientHeight + 110
-  const containerHeight = Math.min(Math.floor(boardHeight), 350)
-  const tileHeight = 2.75 * Math.floor(containerHeight / 3)
-
   const board = document.querySelector('#board')
-  board.style.width = `${containerHeight}px`
-  board.style.height = `${tileHeight}px`
+  const shortestDim = Math.min(Math.floor(boardContainer.clientHeight + 110), 350)
+  const tileHeight = 2 * Math.floor(shortestDim / 3)
+  const boardHeight = document.body.clientHeight >= 500 ? tileHeight : tileHeight * 0.85
+  const boardWidth = document.body.clientHeight >= 500 ? shortestDim : shortestDim * 0.75
+
+  Bogdle._logStatus(
+    `_resizeBoard:\n\tviewp: ${document.body.clientWidth} W x ${
+      document.body.clientHeight
+    } H,\n\tboard: ${board.clientWidth} W x ${board.clientHeight} H,\n\ttiles: ${
+      tileHeight / 3
+    } W x ${tileHeight / 3} H`
+  )
+
+  document.querySelector('#board').style.height = `${boardHeight}px`
+  document.querySelector('#board').style.width = `${boardWidth}px`
 }
 
 Bogdle.ui._increaseScore = function () {
