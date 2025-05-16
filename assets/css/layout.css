@@ -353,7 +353,6 @@ section#game #guess-container {
   section#game #guess-container {
     font-size: 5em;
     height: 60px;
-    padding: 0.2em 0;
   }
 }
 section#game #guess-container #guess {

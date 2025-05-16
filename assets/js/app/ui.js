@@ -123,8 +123,8 @@ Bogdle.ui._resizeBoard = function () {
   const board = document.querySelector('#board')
   const shortestDim = Math.min(Math.floor(boardContainer.clientHeight + 110), 350)
   const tileHeight = 2 * Math.floor(shortestDim / 3)
-  const boardHeight = document.body.clientHeight >= 500 ? tileHeight : tileHeight * 0.85
-  const boardWidth = document.body.clientHeight >= 500 ? shortestDim : shortestDim * 0.75
+  const boardHeight = document.body.clientHeight >= 500 ? tileHeight * 1.1 : tileHeight * 0.85
+  const boardWidth = document.body.clientHeight >= 500 ? shortestDim * 1.05 : shortestDim * 0.65
 
   Bogdle._logStatus(
     `_resizeBoard:\n\tviewp: ${document.body.clientWidth} W x ${
