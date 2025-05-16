@@ -442,7 +442,7 @@ section#game #board-score #score-container {
   display: flex;
   flex-grow: 0.5;
   font-size: 20px;
-  gap: 3px;
+  gap: 5px;
   justify-content: flex-start;
   padding-left: 10px;
 }
