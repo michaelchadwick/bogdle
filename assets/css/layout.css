@@ -231,7 +231,7 @@ section#game {
 }
 @media (min-height: 500px) {
   section#game {
-    max-width: 515px;
+    max-width: 545px;
   }
 }
 
@@ -333,6 +333,7 @@ section#game #guess-container {
   margin: 0 auto;
   max-width: 100%;
   min-height: 30px;
+  padding: 0.2em 0;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -346,7 +347,6 @@ section#game #guess-container {
   section#game #guess-container {
     font-size: 3.5em;
     height: 40px;
-    padding: 0.1em 0;
   }
 }
 @media (min-width: 768px) and (min-height: 500px) {
