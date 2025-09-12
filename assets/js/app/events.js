@@ -144,47 +144,54 @@ Bogdle._attachEventListeners = function () {
 
   // gotta use keydown, not keypress, or else Delete/Backspace aren't recognized
   document.addEventListener('keydown', (event) => {
-    if (event.code == 'Enter') {
-      Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
-    } else if (event.code == 'Backspace' || event.code == 'Delete') {
-      Bogdle.ui._removeLastLetter()
-    } else if (event.code == 'Space') {
-      Bogdle.ui._shuffleTiles()
-    } else if (event.code == 'Slash') {
-      Bogdle._initHint()
-    } else {
-      const excludedKeys = ['Alt', 'Control', 'Meta', 'Shift', 'ShiftLeft', 'ShiftRight']
-      const validLetters = Bogdle.__getConfig().letters.map((l) => l.toUpperCase())
-      const pressedLetter = event.code.charAt(event.code.length - 1)
+    switch (event.code) {
+      case 'Enter':
+        Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
+        break
+      case 'Backspace':
+      case 'Delete':
+        Bogdle.ui._removeLastLetter()
+        break
+      case 'Space':
+        Bogdle.ui._shuffleTiles()
+        break
+      case 'Slash':
+        Bogdle._initHint()
+        break
+      default: {
+        const excludedKeys = ['Alt', 'Control', 'Meta', 'Shift', 'ShiftLeft', 'ShiftRight']
+        const validLetters = Bogdle.__getConfig().letters.map((l) => l.toUpperCase())
+        const pressedLetter = event.code.charAt(event.code.length - 1)
 
-      if (!excludedKeys.some((key) => event.getModifierState(key))) {
-        if (validLetters.includes(pressedLetter)) {
-          // find any available tiles to select
-          const boardTiles = Array.from(Bogdle.dom.interactive.tiles)
+        if (!excludedKeys.some((key) => event.getModifierState(key))) {
+          if (validLetters.includes(pressedLetter)) {
+            // find any available tiles to select
+            const boardTiles = Array.from(Bogdle.dom.interactive.tiles)
 
-          const availableTiles = boardTiles.filter(
-            (tile) => tile.innerHTML.toUpperCase() == pressedLetter && tile.dataset.state == 'tbd'
-          )
+            const availableTiles = boardTiles.filter(
+              (tile) => tile.innerHTML.toUpperCase() == pressedLetter && tile.dataset.state == 'tbd'
+            )
 
-          // if we found one, select first found
-          // this only works in Findle, not Bogdle
-          if (availableTiles.length) {
-            const tileToPush = availableTiles[0]
+            // if we found one, select first found
+            // this only works in Findle, not Bogdle
+            if (availableTiles.length) {
+              const tileToPush = availableTiles[0]
 
-            tileToPush.dataset.state = 'selected'
+              tileToPush.dataset.state = 'selected'
 
-            // push another selected tile onto selected array
-            Bogdle.__getConfig().tilesSelected.push(tileToPush.dataset.pos)
+              // push another selected tile onto selected array
+              Bogdle.__getConfig().tilesSelected.push(tileToPush.dataset.pos)
 
-            // add selected tile to guess
-            Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
+              // add selected tile to guess
+              Bogdle.dom.guess.innerHTML += tileToPush.innerHTML
 
-            // do a little dance
-            Bogdle._animateCSS(`#${tileToPush.id}`, 'pulse')
-            Bogdle._audioPlay('tile_click')
+              // do a little dance
+              Bogdle._animateCSS(`#${tileToPush.id}`, 'pulse')
+              Bogdle._audioPlay('tile_click')
 
-            // check guess for validity
-            Bogdle._checkGuess()
+              // check guess for validity
+              Bogdle._checkGuess()
+            }
           }
         }
       }
