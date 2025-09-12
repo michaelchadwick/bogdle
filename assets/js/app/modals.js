@@ -15,6 +15,8 @@ Bogdle.modalOpen = async function (type, shareType = null) {
       modalText = `
         <p>Find all the words in the jumble of letters! Select letters in any order and then hit <button class="help"><i class="fa-solid fa-check"></i></button>. Use <button class="help wide">HINT?</button> for help if you're stuck ('/' on keyboard to cycle).</p>
 
+        <br />
+
         <div class="flex">
           <div>
             <h4>Daily</h4>
@@ -33,14 +35,18 @@ Bogdle.modalOpen = async function (type, shareType = null) {
           <li><span class="valid first-guess">WORD</span> - valid, unsubmitted word</li>
         </ul>
 
-        <ul class="help">
-          <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
-          <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Back/Del)</li>
-          <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
-          <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
-          <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
-          <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
-          <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle (Free mode)</li>
+        <ul class="help flex">
+          <div>
+            <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
+            <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Back/Del)</li>
+            <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
+            <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
+          </div>
+          <div>
+            <li><button class="help"><i class="fa-solid fa-list-check"></i></button> Show current progress</li>
+            <li><button class="help"><i class="fa-solid fa-book"></i></button> Lookup valid word in dictionary</li>
+            <li><button class="help"><i class="fa-solid fa-circle-plus"></i></button> Create new puzzle (Free mode)</li>
+          </div>
         </ul>
 
         <hr />
