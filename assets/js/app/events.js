@@ -148,6 +148,9 @@ Bogdle._attachEventListeners = function () {
       case 'Enter':
         Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
         break
+      case 'Escape':
+        Bogdle.ui._resetInput()
+        break
       case 'Backspace':
       case 'Delete':
         Bogdle.ui._removeLastLetter()
