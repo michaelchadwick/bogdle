@@ -39,7 +39,7 @@ Bogdle.modalOpen = async function (type, shareType = null) {
           <div>
             <li><button class="help"><i class="fa-solid fa-check"></i></button> Submit word (Enter/Return)</li>
             <li><button class="help"><i class="fa-solid fa-backspace"></i></button> Delete last letter in guess (Back/Del)</li>
-            <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear entire guess</li>
+            <li><button class="help"><i class="fa-solid fa-xmark"></i></button> Clear guess (Escape)</li>
             <li><button class="help"><i class="fa-solid fa-shuffle"></i></button> Shuffle the tiles (Space)</li>
           </div>
           <div>
