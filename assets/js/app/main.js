@@ -108,6 +108,7 @@ Bogdle._createNewSolutionSet = async function (gameMode, newWord = null) {
   Bogdle.__setState('gameState', 'IN_PROGRESS', gameMode)
   Bogdle.__setState('gameWon', false, gameMode)
   Bogdle.__setState('guessedWords', [], gameMode)
+  Bogdle.__setState('hintsUsed', 0, gameMode)
   Bogdle.__setState('lastCompletedTime', null, gameMode)
   Bogdle.__setState('lastPlayedTime', null, gameMode)
   Bogdle.__setState('pangramFound', false, gameMode)
