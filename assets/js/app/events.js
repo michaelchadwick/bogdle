@@ -73,40 +73,40 @@ Bogdle._attachEventListeners = function () {
   })
 
   // ✅ submit word
-  Bogdle.dom.interactive.btnSubmit.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnSubmit.addEventListener('click', () => {
     Bogdle._submitWord(Bogdle.dom.guess.innerHTML)
   })
 
   // ⌫ backspace
-  Bogdle.dom.interactive.btnBackspace.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnBackspace.addEventListener('click', () => {
     Bogdle.ui._removeLastLetter()
   })
 
   // X clear
-  Bogdle.dom.interactive.btnClearGuess.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnClearGuess.addEventListener('click', () => {
     Bogdle.ui._resetInput()
   })
 
   // 🔀 shuffle
-  Bogdle.dom.interactive.btnShuffle.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnShuffle.addEventListener('click', () => {
     Bogdle.ui._shuffleTiles()
   })
 
   // := show current game word list progress
-  Bogdle.dom.interactive.btnShowProgress.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnShowProgress.addEventListener('click', () => {
     Bogdle.modalOpen('show-progress')
   })
 
-  // + create new solution
-  Bogdle.dom.interactive.btnCreateNew.addEventListener('click', () => {
-    Bogdle._confirmNewFree()
-  })
-
   // 📕 dictionary lookup
-  Bogdle.dom.interactive.btnGuessLookup.addEventListener('click', () => {
+  Bogdle.dom.mainUI.btnGuessLookup.addEventListener('click', () => {
     if (Bogdle.dom.guess.classList.contains('valid')) {
       Bogdle.modalOpen('dictionary')
     }
+  })
+
+  // + create new solution
+  Bogdle.dom.mainUI.btnCreateNew.addEventListener('click', () => {
+    Bogdle._confirmNewFree()
   })
 
   // local debug buttons

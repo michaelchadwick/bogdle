@@ -26,6 +26,12 @@ Bogdle.dom.interactive = {
   difficultyContainerLinks: document.querySelectorAll('#difficulty-container a'),
   gameModeDailyLink: document.getElementById('gamemode-0'),
   gameModeFreeLink: document.getElementById('gamemode-1'),
+  btnHint: document.getElementById('button-hint'),
+  btnHintReset: document.getElementById('button-hint-reset'),
+  tiles: document.getElementsByClassName('tile'),
+}
+// DOM > main UI buttons
+Bogdle.dom.mainUI = {
   btnSubmit: document.getElementById('button-submit'),
   btnBackspace: document.getElementById('button-backspace'),
   btnClearGuess: document.getElementById('button-clear-guess'),
@@ -33,9 +39,6 @@ Bogdle.dom.interactive = {
   btnShowProgress: document.getElementById('button-show-progress'),
   btnGuessLookup: document.getElementById('button-guess-lookup'),
   btnCreateNew: document.getElementById('button-create-new'),
-  btnHint: document.getElementById('button-hint'),
-  btnHintReset: document.getElementById('button-hint-reset'),
-  tiles: document.getElementsByClassName('tile'),
 }
 // DOM > interactive elements (debug)
 Bogdle.dom.interactive.debug = {

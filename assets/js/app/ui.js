@@ -24,7 +24,7 @@ Bogdle.ui._resetTiles = function () {
 Bogdle.ui._resetGuess = function () {
   Bogdle.dom.guess.innerHTML = ''
   Bogdle.dom.guess.classList.remove('valid')
-  Bogdle.dom.interactive.btnGuessLookup.disabled = true
+  Bogdle.dom.mainUI.btnGuessLookup.disabled = true
 }
 
 Bogdle.ui._disableUITiles = function () {
