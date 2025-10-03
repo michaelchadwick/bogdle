@@ -271,7 +271,7 @@ Bogdle._loadSettings = function () {
     Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
     Bogdle.dom.interactive.difficultyContainer.classList.add('show')
     Bogdle.dom.dailyDetails.classList.remove('show')
-    Bogdle.dom.interactive.btnCreateNew.disabled = false
+    Bogdle.dom.interactive.btnCreateNew.removeAttribute('disabled')
   }
 
   // STATE->FREE->DIFFICULTY
@@ -326,7 +326,7 @@ Bogdle._changeSetting = async function (setting, value) {
             Bogdle.dom.interactive.gameModeFreeLink.dataset.active = false
             Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
             Bogdle.dom.dailyDetails.classList.add('show')
-            Bogdle.dom.interactive.btnCreateNew.disabled = true
+            Bogdle.dom.interactive.btnCreateNew.setAttribute('disabled')
 
             await Bogdle._loadExistingSolutionSet('daily', Bogdle.__getState('daily').seedWord)
 
@@ -344,7 +344,7 @@ Bogdle._changeSetting = async function (setting, value) {
             Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
             Bogdle.dom.interactive.difficultyContainer.classList.add('show')
             Bogdle.dom.dailyDetails.classList.remove('show')
-            Bogdle.dom.interactive.btnCreateNew.disabled = false
+            Bogdle.dom.interactive.btnCreateNew.removeAttribute('disabled')
 
             await Bogdle._loadExistingSolutionSet('free', Bogdle.__getState('free').seedWord)
 
