@@ -24,7 +24,7 @@ Bogdle.ui._resetTiles = function () {
 Bogdle.ui._resetGuess = function () {
   Bogdle.dom.guess.innerHTML = ''
   Bogdle.dom.guess.classList.remove('valid')
-  Bogdle.dom.mainUI.btnGuessLookup.disabled = true
+  Bogdle.dom.mainUI.btnGuessLookup.setAttribute('disabled', '')
 }
 
 Bogdle.ui._disableUITiles = function () {
@@ -46,7 +46,11 @@ Bogdle.ui._disableUIButtons = function () {
 }
 Bogdle.ui._enableUIButtons = function () {
   Object.values(Bogdle.dom.mainUI).forEach((btn) => {
-    if (btn.id !== 'button-show-progress') {
+    const exceptions = ['button-show-progress']
+    if (Bogdle.__getGameMode() == 'daily') {
+      exceptions.push('button-create-new')
+    }
+    if (!exceptions.includes(btn.id)) {
       btn.removeAttribute('disabled')
     }
   })
@@ -126,13 +130,13 @@ Bogdle.ui._resizeBoard = function () {
   const boardHeight = document.body.clientHeight >= 500 ? tileHeight * 1.1 : tileHeight * 0.85
   const boardWidth = document.body.clientHeight >= 500 ? shortestDim * 1.05 : shortestDim * 0.65
 
-  Bogdle._logStatus(
-    `_resizeBoard:\n\tviewp: ${document.body.clientWidth} W x ${
-      document.body.clientHeight
-    } H,\n\tboard: ${board.clientWidth} W x ${board.clientHeight} H,\n\ttiles: ${
-      tileHeight / 3
-    } W x ${tileHeight / 3} H`
-  )
+  // Bogdle._logStatus(
+  //   `_resizeBoard:\n\tviewp: ${document.body.clientWidth} W x ${
+  //     document.body.clientHeight
+  //   } H,\n\tboard: ${board.clientWidth} W x ${board.clientHeight} H,\n\ttiles: ${
+  //     tileHeight / 3
+  //   } W x ${tileHeight / 3} H`
+  // )
 
   document.querySelector('#board').style.height = `${boardHeight}px`
   document.querySelector('#board').style.width = `${boardWidth}px`

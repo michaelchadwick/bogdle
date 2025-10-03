@@ -271,7 +271,7 @@ Bogdle._loadSettings = function () {
     Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
     Bogdle.dom.interactive.difficultyContainer.classList.add('show')
     Bogdle.dom.dailyDetails.classList.remove('show')
-    Bogdle.dom.interactive.btnCreateNew.removeAttribute('disabled')
+    Bogdle.dom.mainUI.btnCreateNew.removeAttribute('disabled')
   }
 
   // STATE->FREE->DIFFICULTY
@@ -305,6 +305,7 @@ Bogdle._changeSetting = async function (setting, value) {
       if (Bogdle.__getGameMode() != value) {
         switch (value) {
           case 'daily':
+            console.log('switched to daily')
             // get seedWord for today
             if (!Bogdle.__getState('daily').seedWord) {
               try {
@@ -326,7 +327,7 @@ Bogdle._changeSetting = async function (setting, value) {
             Bogdle.dom.interactive.gameModeFreeLink.dataset.active = false
             Bogdle.dom.interactive.difficultyContainer.classList.remove('show')
             Bogdle.dom.dailyDetails.classList.add('show')
-            Bogdle.dom.interactive.btnCreateNew.setAttribute('disabled')
+            Bogdle.dom.mainUI.btnCreateNew.setAttribute('disabled', '')
 
             await Bogdle._loadExistingSolutionSet('daily', Bogdle.__getState('daily').seedWord)
 
@@ -335,6 +336,7 @@ Bogdle._changeSetting = async function (setting, value) {
             break
 
           case 'free':
+            console.log('switched to free')
             Bogdle._saveSetting('gameMode', 'free')
             Bogdle._clearHint()
             Bogdle.ui._enableUIButtons()
@@ -344,7 +346,8 @@ Bogdle._changeSetting = async function (setting, value) {
             Bogdle.dom.interactive.gameModeFreeLink.dataset.active = true
             Bogdle.dom.interactive.difficultyContainer.classList.add('show')
             Bogdle.dom.dailyDetails.classList.remove('show')
-            Bogdle.dom.interactive.btnCreateNew.removeAttribute('disabled')
+            console.log('foo')
+            Bogdle.dom.mainUI.btnCreateNew.removeAttribute('disabled')
 
             await Bogdle._loadExistingSolutionSet('free', Bogdle.__getState('free').seedWord)
 

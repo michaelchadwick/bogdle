@@ -491,7 +491,7 @@ Bogdle._submitWord = function (word) {
           Bogdle.ui._increaseScore()
 
           // get down tonight
-          Bogdle._saveGame(Bogdle.__getGameMode())
+          Bogdle._saveGame(Bogdle.__getGameMode(), 'submitWord')
 
           // get down tonight
           Bogdle._checkWinState()
@@ -528,7 +528,7 @@ Bogdle._submitWord = function (word) {
 Bogdle._checkGuess = function () {
   // reset classes
   Bogdle.dom.guess.classList.remove('valid', 'first-guess', 'pangram', 'animate__infinite')
-  Bogdle.dom.interactive.btnGuessLookup.disabled = true
+  Bogdle.dom.mainUI.btnGuessLookup.setAttribute('disabled', '')
 
   // guess valid length?
   if (Bogdle.dom.guess.innerHTML.length > 2) {
@@ -541,7 +541,7 @@ Bogdle._checkGuess = function () {
         // guess == valid word?
         if (Object.keys(solutionSet[key]).includes(word)) {
           Bogdle.dom.guess.classList.add('valid')
-          Bogdle.dom.interactive.btnGuessLookup.disabled = false
+          Bogdle.dom.mainUI.btnGuessLookup.removeAttribute('disabled')
 
           // and it's the first time?
           if (!solutionSet[key][word]) {
@@ -590,7 +590,7 @@ Bogdle._checkWinState = function () {
         Bogdle.__setState('lastCompletedTime', now)
         Bogdle.__setState('lastPlayedTime', now)
 
-        Bogdle._saveGame(Bogdle.__getGameMode())
+        Bogdle._saveGame(Bogdle.__getGameMode(), 'checkWinState')
       }
 
       Bogdle.modalOpen('win-game')

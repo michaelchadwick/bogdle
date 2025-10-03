@@ -5,10 +5,7 @@
 Bogdle._initHint = function () {
   if (!Bogdle.__getConfig().hintWord) {
     const wordsLeft = Bogdle.__getUnGuessedWords()
-    Bogdle.__setConfig(
-      'hintWord',
-      wordsLeft[Math.floor(Math.random() * wordsLeft.length)]
-    )
+    Bogdle.__setConfig('hintWord', wordsLeft[Math.floor(Math.random() * wordsLeft.length)])
 
     Array.from(Bogdle.__getConfig().hintWord).forEach((l) => {
       Bogdle.__getConfig().hintObscuredWord.push('_')
@@ -17,7 +14,7 @@ Bogdle._initHint = function () {
     Bogdle.dom.interactive.btnHintReset.classList.add('show')
 
     Bogdle.__getState().hintsUsed++
-    Bogdle._saveGame(Bogdle.__getGameMode())
+    Bogdle._saveGame(Bogdle.__getGameMode(), 'initHint')
   }
 
   Bogdle._cycleHint()
@@ -46,22 +43,20 @@ Bogdle._cycleHint = function () {
 
       if (Bogdle.__getConfig().hintWord[idx]) {
         if (Bogdle.__getConfig().hintObscuredWord[idx] == '_') {
-          Bogdle.__getConfig().hintObscuredWord[idx] =
-            Bogdle.__getConfig().hintWord[idx]
+          Bogdle.__getConfig().hintObscuredWord[idx] = Bogdle.__getConfig().hintWord[idx]
           foundEmpty = true
         }
       }
     }
 
-    Bogdle.dom.interactive.btnHint.innerHTML =
-      Bogdle.__getConfig().hintObscuredWord.join('')
+    Bogdle.dom.interactive.btnHint.innerHTML = Bogdle.__getConfig().hintObscuredWord.join('')
 
     Bogdle.__getConfig().hintObscuredWordCounter++
   }
 
   if (Bogdle.__getConfig().hintObscuredWordCounter == maxLetters) {
     Bogdle.dom.interactive.btnHint.classList.add('not-a-button')
-    Bogdle.dom.interactive.btnHint.setAttribute('disabled', true)
+    Bogdle.dom.interactive.btnHint.setAttribute('disabled', '')
   }
 }
 
@@ -79,11 +74,11 @@ Bogdle._clearHint = function () {
 }
 
 Bogdle._disableHint = function () {
-  Bogdle.dom.interactive.btnHint.disabled = true
+  Bogdle.dom.interactive.btnHint.setAttribute('disabled', '')
 }
 
 Bogdle._enableHint = function () {
-  Bogdle.dom.interactive.btnHint.disabled = false
+  Bogdle.dom.interactive.btnHint.removeAttribute('disabled')
 }
 
 // get array of words not yet guessed for hint system
