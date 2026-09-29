@@ -461,3 +461,7 @@ section#game #board-score #score-container #score-total {
   font-family: "Changa Bold";
   font-weight: 700;
 }
+
+header .js-required {
+  display: none;
+}

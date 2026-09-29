@@ -19,6 +19,14 @@ Bogdle.state = BOGDLE_DEFAULTS.state
 
 // start the engine
 Bogdle.initApp = async () => {
+  // remove js-required hidey classes
+  const nojsElems = document.querySelectorAll('.js-required')
+  if (nojsElems) {
+    nojsElems.forEach((elem) => {
+      elem.classList.remove('js-required')
+    })
+  }
+
   // if local dev, show debug stuff
   if (Bogdle.env == 'local') {
     Bogdle._initDebug()
